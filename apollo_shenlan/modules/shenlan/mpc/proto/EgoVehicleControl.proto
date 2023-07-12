@@ -1,0 +1,34 @@
+syntax = "proto2";
+package apollo.shenlan.mpc;
+
+import "modules/common/proto/header.proto";
+
+// This represents a vehicle control message sent to CARLA simulator
+
+message EgoVehicleControl{
+
+ optional  apollo.common.Header header = 1;
+
+// The CARLA vehicle control data
+
+// 0. <= throttle <= 1.
+ optional float throttle = 2;
+
+// -1. <= steer <= 1.
+ optional float steer = 3;
+
+// 0. <= brake <= 1.
+ optional float brake = 4;
+
+// hand_brake 0 or 1
+ optional  bool hand_brake = 5;
+
+// reverse 0 or 1
+ optional  bool reverse = 6;
+
+// gear
+ optional  int32 gear = 7;
+
+// manual gear shift
+ optional  bool manual_gear_shift = 8;
+}

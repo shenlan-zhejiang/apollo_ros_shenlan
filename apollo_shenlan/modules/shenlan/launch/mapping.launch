@@ -1,0 +1,7 @@
+<cyber>
+    <module>
+        <name>shenlan_mapping</name>
+        <dag_conf>/apollo/modules/shenlan/mapping/dag/mapping.dag</dag_conf>
+        <process_name>shenlan_mapping</process_name>
+    </module>
+</cyber>

@@ -1,0 +1,3 @@
+digraph G {
+"map" -> "car_0_pos"[label="Broadcaster: /car_0_planner_node\nAverage rate: 82.225 Hz\nMost recent transform: 1676884267.316 \nBuffer length: 4.998 sec\n"];
+}

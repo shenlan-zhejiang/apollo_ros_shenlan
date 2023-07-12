@@ -1,0 +1,15 @@
+syntax = "proto2";
+package apollo.shenlan.mpc;
+
+import "modules/common/proto/geometry.proto";
+
+message SingleMinco {
+  optional double start_time = 1;
+  optional apollo.common.Point3D head_x = 2;
+  optional apollo.common.Point3D head_y = 3;
+  optional apollo.common.Point3D tail_x = 4;
+  optional apollo.common.Point3D tail_y = 5;
+  repeated apollo.common.Point3D pos_pts = 6;
+  repeated double t_pts = 7;
+  optional bool reverse = 8;
+}

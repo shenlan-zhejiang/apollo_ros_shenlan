@@ -1,0 +1,7 @@
+<cyber>
+    <module>
+        <name>shenlan_mpc</name>
+        <dag_conf>/apollo/modules/shenlan/mpc/dag/mpc.dag</dag_conf>
+        <process_name>shenlan_mpc</process_name>
+    </module>
+</cyber>

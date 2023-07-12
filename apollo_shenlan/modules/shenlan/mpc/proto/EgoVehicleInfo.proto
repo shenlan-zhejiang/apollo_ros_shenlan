@@ -1,0 +1,26 @@
+syntax = "proto2";
+package apollo.shenlan.mpc;
+
+//import "modules/common/proto/header.proto";
+import "modules/common/proto/geometry.proto";
+
+message EgoVehicleInfo {
+  optional uint32 id = 1;
+  optional string type = 2;
+  optional string rolename = 3;
+  //repeated CarlaEgoVehicleInfoWheel wheels = 4;
+  optional float max_rpm = 5;
+  optional float moi = 6;
+  optional float damping_rate_full_throttle = 7;
+  optional float damping_rate_zero_throttle_clutch_engaged = 8;
+  optional float damping_rate_zero_throttle_clutch_disengaged = 9;
+  optional bool use_gear_autobox = 10;
+  optional float gear_switch_time = 11;
+  optional float clutch_strength = 12;
+  optional float final_ratio = 13;
+  //repeated CarlaEgoVehicleInfoGear forward_gears = 14;
+  optional float mass = 15;
+  optional float drag_coefficient = 16;
+  optional apollo.common.Point3D center_of_mass = 17;
+  optional float wheelbase = 18;
+}

@@ -1,0 +1,191 @@
+{   
+    "objects": 
+    [
+        {
+            "type": "spectator",
+            "id": "spectator_viz",
+            "spawn_point": {"x": 293.75, "y": -94.0, "z": 0.5, "roll": 0.0, "pitch": 90.0, "yaw": -180.0}
+        },
+        {
+            "type": "vehicle.tesla.model3",
+            "id": "agent_0",
+            "color": "255, 0, 0",
+            "spawn_point": {"x": 265.0, "y": -135.0, "z": 0.5, "roll": 0.0, "pitch": 0.0, "yaw": 90.0},
+            "sensors":
+            [
+                {
+                    "type": "sensor.pseudo.tf",
+                    "id": "tf"
+                },
+                {
+                    "type": "sensor.pseudo.objects",
+                    "id": "objects"
+                },
+                {
+                    "type": "sensor.pseudo.odom",
+                    "id": "odometry"
+                },
+                {
+                    "type": "sensor.pseudo.speedometer",
+                    "id": "speedometer"
+                },
+                {
+                    "type": "actor.pseudo.control",
+                    "id": "control"
+                },
+                {
+                    "type": "sensor.other.imu",
+                    "id": "imu",
+                    "spawn_point": {"x": 2.0, "y": 0.0, "z": 2.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+                    "noise_accel_stddev_x": 0.0, "noise_accel_stddev_y": 0.0, "noise_accel_stddev_z": 0.0,
+                    "noise_gyro_stddev_x": 0.0, "noise_gyro_stddev_y": 0.0, "noise_gyro_stddev_z": 0.0,
+                    "noise_gyro_bias_x": 0.0, "noise_gyro_bias_y": 0.0, "noise_gyro_bias_z": 0.0
+                },
+                {
+                    "type": "sensor.lidar.ray_cast",
+                    "id": "lidar",
+                    "spawn_point": {"x": 0.0, "y": 0.0, "z": 3.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+                    "range": 50,
+                    "channels": 64,
+                    "points_per_second": 650000,
+                    "upper_fov": 3.0,
+                    "lower_fov": -22.0,
+                    "rotation_frequency": 20,
+                    "noise_stddev": 0.0
+                }
+            ]
+        },
+        {
+            "type": "vehicle.tesla.model3",
+            "id": "agent_1",
+            "color": "255, 150, 180",
+            "spawn_point": {"x": 280.0, "y": -135.0, "z": 0.5, "roll": 0.0, "pitch": 0.0, "yaw": 90.0},
+            "sensors":
+            [
+                {
+                    "type": "sensor.pseudo.tf",
+                    "id": "tf"
+                },
+                {
+                    "type": "sensor.pseudo.odom",
+                    "id": "odometry"
+                },
+                {
+                    "type": "actor.pseudo.control",
+                    "id": "control"
+                },
+                {
+                    "type": "sensor.lidar.ray_cast",
+                    "id": "lidar",
+                    "spawn_point": {"x": 0.0, "y": 0.0, "z": 3.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+                    "range": 50,
+                    "channels": 64,
+                    "points_per_second": 650000,
+                    "upper_fov": 3.0,
+                    "lower_fov": -22.0,
+                    "rotation_frequency": 20,
+                    "noise_stddev": 0.0
+                }
+            ]
+        },
+        {
+            "type": "vehicle.tesla.model3",
+            "id": "agent_2",
+            "color": "186, 85, 211",
+            "spawn_point": {"x": 295.0, "y": -135.0, "z": 0.5, "roll": 0.0, "pitch": 0.0, "yaw": 90.0},
+            "sensors":
+            [
+                {
+                    "type": "sensor.pseudo.tf",
+                    "id": "tf"
+                },
+                {
+                    "type": "sensor.pseudo.odom",
+                    "id": "odometry"
+                },
+                {
+                    "type": "actor.pseudo.control",
+                    "id": "control"
+                },
+                {
+                    "type": "sensor.lidar.ray_cast",
+                    "id": "lidar",
+                    "spawn_point": {"x": 0.0, "y": 0.0, "z": 3.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+                    "range": 50,
+                    "channels": 64,
+                    "points_per_second": 650000,
+                    "upper_fov": 3.0,
+                    "lower_fov": -22.0,
+                    "rotation_frequency": 20,
+                    "noise_stddev": 0.0
+                }
+            ]
+        },
+        {
+            "type": "vehicle.tesla.model3",
+            "id": "agent_3",
+            "color": "255, 250, 250",
+            "spawn_point": {"x": 310.0, "y": -135.0, "z": 0.5, "roll": 0.0, "pitch": 0.0, "yaw": 90.0},
+            "sensors":
+            [
+                {
+                    "type": "sensor.pseudo.tf",
+                    "id": "tf"
+                },
+                {
+                    "type": "sensor.pseudo.odom",
+                    "id": "odometry"
+                },
+                {
+                    "type": "actor.pseudo.control",
+                    "id": "control"
+                },
+                {
+                    "type": "sensor.lidar.ray_cast",
+                    "id": "lidar",
+                    "spawn_point": {"x": 0.0, "y": 0.0, "z": 3.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+                    "range": 50,
+                    "channels": 64,
+                    "points_per_second": 650000,
+                    "upper_fov": 3.0,
+                    "lower_fov": -22.0,
+                    "rotation_frequency": 20,
+                    "noise_stddev": 0.0
+                }
+            ]
+        },
+        {
+            "type": "vehicle.tesla.model3",
+            "id": "agent_4",
+            "color": "72, 118, 255",
+            "spawn_point": {"x":325.0, "y": -135.0, "z": 0.5, "roll": 0.0, "pitch": 0.0, "yaw": 90.0},
+            "sensors":
+            [
+                {
+                    "type": "sensor.pseudo.tf",
+                    "id": "tf"
+                },
+                {
+                    "type": "sensor.pseudo.odom",
+                    "id": "odometry"
+                },
+                {
+                    "type": "actor.pseudo.control",
+                    "id": "control"
+                },
+                {
+                    "type": "sensor.lidar.ray_cast",
+                    "id": "lidar",
+                    "spawn_point": {"x": 0.0, "y": 0.0, "z": 3.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+                    "range": 50,
+                    "channels": 64,
+                    "points_per_second": 650000,
+                    "upper_fov": 3.0,
+                    "lower_fov": -22.0,
+                    "rotation_frequency": 20,
+                    "noise_stddev": 0.0
+                }
+            ]
+        }
+    ]
+}

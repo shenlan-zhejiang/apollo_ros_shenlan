@@ -1,0 +1,4 @@
+topic_name: "/apollo/Planning"
+bind_port: 8904
+proto_name: "ADCTrajectory"
+enable_timeout: false

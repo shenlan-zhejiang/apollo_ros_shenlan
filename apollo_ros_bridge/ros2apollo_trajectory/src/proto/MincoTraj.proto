@@ -1,0 +1,18 @@
+syntax = "proto2";
+package apollo.shenlan.mpc;
+
+//import "geometry.proto";
+import "SingleMinco.proto";
+
+message MincoTraj {
+
+
+
+  repeated SingleMinco trajs = 1;
+
+
+
+}
+
+
+

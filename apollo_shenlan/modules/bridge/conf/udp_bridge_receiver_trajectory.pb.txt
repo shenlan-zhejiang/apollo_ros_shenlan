@@ -1,0 +1,4 @@
+topic_name: "/apollo/shenlan/minco/trajectory"
+bind_port: 8903
+proto_name: "Trajectory"
+enable_timeout: false

@@ -1,0 +1,102 @@
+module_config {
+    module_library: "/apollo/bazel-bin/modules/bridge/libudp_bridge_sender_component.so"
+    components {
+
+        class_name: "UDPBridgeSenderComponent<planning::ADCTrajectory>"
+        config {
+            name: "bridge_sender_ADCTrajectory"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_adctrajectory.pb.txt"
+            readers {
+              channel: "/apollo/planning"
+            }
+      }
+   }
+
+    components {
+
+        class_name: "UDPBridgeSenderComponent<localization::LocalizationEstimate>"
+        config {
+            name: "bridge_sender_LocalizationEstimate"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_localization.pb.txt"
+            readers {
+              channel: "/apollo/localization/pose"
+            }
+      }
+   }
+
+    components {
+
+        class_name: "UDPBridgeSenderComponent<canbus::Chassis>"
+        config {
+            name: "bridge_sender_Chassis"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_chassis.pb.txt"
+            readers {
+              channel: "/apollo/canbus/chassis"
+            }
+      }
+    }
+
+    components {
+
+        class_name: "UDPBridgeSenderComponent<drivers::PointCloud>"
+        config {
+            name: "bridge_sender_Lidar"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_lidar.pb.txt"
+            readers {
+              channel: "/apollo/sensor/velodyne128/compensator/PointCloud2"
+              # channel: "/apollo/sensor/lidar/compensator/PointCloud2"
+              # channel: "/apollo/sensor/lidar/PointCloud2"
+
+            }
+      }
+    }
+
+    components {
+
+        class_name: "UDPBridgeSenderComponent<drivers::PointCloud>"
+        config {
+            name: "bridge_sender_LidarTransformed"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_lidartransformed.pb.txt"
+            readers {
+              channel: "/apollo/shenlan/mapping/pc_transformed"
+            }
+      }
+    }
+
+    components {
+
+        class_name: "UDPBridgeSenderComponent<drivers::PointCloud>"
+        config {
+            name: "bridge_sender_LidarMap"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_lidarmap.pb.txt"
+            readers {
+              channel: "/apollo/shenlan/mapping/gird_map"
+            }
+      }
+    }
+
+    components {
+
+        class_name: "UDPBridgeSenderComponent<transform::TransformStampeds>"
+        config {
+            name: "bridge_sender_Transform"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_tf.pb.txt"
+            readers {
+              channel: "/tf"
+            }
+      }
+    }
+
+    components {
+
+        class_name: "UDPBridgeSenderComponent<transform::TransformStampeds>"
+        config {
+            name: "bridge_sender_TransformStatic"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_tfstatic.pb.txt"
+            readers {
+              channel: "/tf"
+            }
+      }
+    }
+
+}

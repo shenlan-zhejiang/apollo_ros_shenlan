@@ -1,0 +1,19 @@
+syntax = "proto2";
+package apollo.shenlan.mpc;
+
+import "header.proto";
+//import "geometry.proto";
+//import "SingleMinco.proto";
+import "MincoTraj.proto";
+import "nav_path.proto";
+message Trajectory{
+
+optional apollo.common.Header header = 1;
+
+optional int32 traj_type = 2 [default = 1];           //#0: Test Path,   1: Minco Path
+
+optional Nav_path nav_path = 3;
+
+optional MincoTraj minco_path = 4;
+
+}

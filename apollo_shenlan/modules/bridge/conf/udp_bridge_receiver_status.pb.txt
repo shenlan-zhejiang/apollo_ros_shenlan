@@ -1,0 +1,4 @@
+topic_name: "/apollo/shenlan/minco/status"
+bind_port: 8902
+proto_name: "EgoVehicleStatus"
+enable_timeout: false

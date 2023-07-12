@@ -1,0 +1,60 @@
+  <launch>
+    <!-- <param name="use_sim_time" value="false"/> -->
+    <arg name="map_size_x" value="300.0"/>
+    <arg name="map_size_y" value="300.0"/>
+    <arg name="map_size_z" value="3.0"/>
+
+    <arg name="origin_x" value="-150.0"/>
+    <arg name="origin_y" value="-150.0"/>
+    <arg name="origin_z" value="0.1"/>
+
+    <arg name="lidar_height" value="3.0"/>
+    <arg name="cars_num" value="1" />
+
+    <!-- <arg name="odom_topic" value="visual_slam/odom" /> -->
+    <include file="$(find traj_planner)/launch/rviz.launch">
+    </include>
+
+    <include file="$(find swarm_bridge)/launch/bridge.launch">
+        <arg name="car_id" value="999" />
+        <arg name="broadcast_ip" value="127.0.0.255" />
+    </include>
+
+    <include file="$(find traj_planner)/launch/run_in_sim.launch">
+        <arg name="cars_num" value="$(arg cars_num)" />
+        <arg name="car_id" value="0"/>
+        <arg name="car_width" value="2.1"/>
+        <arg name="car_length" value="4.80"/>
+        <arg name="car_wheelbase" value="3.00"/>
+        <arg name="car_front_suspension" value="0.93"/>
+        <arg name="car_rear_suspension" value="1.10"/>
+        <arg name="car_max_steering_angle" value="55.0"/>
+        <arg name="car_d_cr" value="1.3864"/>
+        
+        <arg name="init_x" value="0.0"/>
+        <arg name="init_y" value="0.0"/>
+        <arg name="init_z" value="0.1"/>
+
+        <arg name="target_x" value="325.0"/>
+        <arg name="target_y" value="-55.0"/>
+        <arg name="target_yaw" value="1.57"/>
+
+        <arg name="map_size_x" value="$(arg map_size_x)"/>
+        <arg name="map_size_y" value="$(arg map_size_y)"/>
+        <arg name="map_size_z" value="$(arg map_size_z)"/>
+
+        <arg name="origin_x" value="$(arg origin_x)"/>
+        <arg name="origin_y" value="$(arg origin_y)"/>
+        <arg name="origin_z" value="$(arg origin_z)"/>
+
+        <arg name="lidar_height" value="$(arg lidar_height)"/>
+        
+        <arg name="odom_topic" value="/apollo/agent_0/odometry"/>
+        <arg name="lidar_topic" value="/apollo/agent_0/lidar"/>
+        <!-- <arg name="odom_topic" value="/carla/ego_vehicle/odometry"/> -->
+        <!-- <arg name="lidar_topic" value="/carla/ego_vehicle/lidar"/> -->
+
+        <arg name="map_pub_topic" value="/agent_0/map"/>
+    </include>
+
+  </launch>

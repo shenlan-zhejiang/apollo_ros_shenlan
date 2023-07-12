@@ -1,0 +1,12 @@
+syntax = "proto2";
+package apollo.shenlan.mpc;
+
+import "modules/common/proto/geometry.proto";
+import "modules/common/proto/header.proto";
+import "modules/localization/proto/pose.proto";
+
+message Nav_path{
+optional apollo.common.Header header = 1;
+repeated apollo.localization.Pose Pose = 2;
+}
+

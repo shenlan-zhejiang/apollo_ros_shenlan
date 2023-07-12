@@ -1,0 +1,76 @@
+vehicle_conf {
+    cars_num: 1
+    car_id: 0
+    car_width: 2.11
+    car_length: 4.933
+    car_wheelbase: 2.8448
+    car_max_steering_angle: 20.0
+    car_d_cr: 1.3864
+}
+
+mapping_conf {
+    origin_x: 587061
+    origin_y: 4141628
+    origin_z: 0
+    map_origin_x: -200
+    map_origin_y: -200
+    map_origin_z: 0
+    map_size_x: 400
+    map_size_y: 400
+    map_size_z: 10
+    resolution: 0.3
+    min_ray_length: 0.0
+    max_ray_length: 30.0
+    prob_hit_log: 1.2
+    prob_miss_log: -0.3
+    clamp_min_log: -2.0
+    clamp_max_log: 2.0
+    min_occupancy_log: 1.39
+    lidar_height: 2.0
+}
+
+replanfsm_conf {
+    target_x: 0
+    target_y: 0
+    target_yaw: 1.0
+    target_vel: 0.0
+}
+
+kinoastar_conf {
+    horizon: 50
+    yaw_resolution: 0.3
+    lambda_heu: 5.0
+    allocate_num: 100000
+    check_num: 5
+    max_seach_time: 1000.1
+    traj_forward_penalty: 1.0
+    traj_back_penalty: 2.5
+    traj_gear_switch_penalty: 15.0
+    traj_steer_penalty: 0.5
+    traj_steer_change_penalty: 0.0
+    step_arc: 0.9
+    checkl: 0.9
+    time_resolution: 0.1
+    distance_resolution: 0.5
+    velocity_resolution: 1.0
+}
+
+trajplanner_conf {
+    traj_resolution: 8
+    destraj_resolution: 20
+    wei_obs: 7000.0
+    wei_surround: 7000.0
+    wei_feas: 1000.0
+    wei_sqrvar: 1000.0
+    wei_time: 500.0
+    surround_clearance: 1.0
+    max_vel: 5.0
+    min_vel: -5.0
+    max_acc: 2.0
+    min_acc: -2.0
+    max_cur: 0.3
+    traj_piece_duration: 1
+    traj_res: 8
+    dense_traj_res: 20
+    half_margin: 0.25
+}

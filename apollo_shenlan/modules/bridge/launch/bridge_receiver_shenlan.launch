@@ -1,0 +1,13 @@
+<cyber>
+    <module>
+        <name>bridge_receiver_status</name>
+        <dag_conf>/apollo/modules/bridge/dag/bridge_receiver_status.dag</dag_conf>
+        <process_name>udp_bridge_receiver_status</process_name>
+    </module>
+
+    <module>
+        <name>bridge_receiver_trajectory</name>
+        <dag_conf>/apollo/modules/bridge/dag/bridge_receiver_trajectory.dag</dag_conf>
+        <process_name>udp_bridge_receiver_trajectory</process_name>
+    </module>
+</cyber>

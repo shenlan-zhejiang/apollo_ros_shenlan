@@ -1,0 +1,18 @@
+module_config{
+
+    module_library:"/apollo/bazel-bin/modules/shenlan/mpc/libmpc_component.so"
+    
+    components {
+        
+        class_name: "MpcShenlanComponent"
+        config{
+             name:"shenlan_mpc"
+             readers{
+                 channel:"/apollo/shenlan/minco/trajectory"
+             }
+             readers{
+                 channel:"/apollo/shenlan/minco/status"
+             }        
+        }
+    }
+}
