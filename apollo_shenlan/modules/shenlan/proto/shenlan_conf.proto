@@ -31,6 +31,9 @@ message MappingConf {
   optional double clamp_max_log = 16 [default = 2.0];
   optional double min_occupancy_log = 17 [default = 1.39];
   optional double lidar_height = 18 [default = 2.0];
+  optional double obs_low = 19 [default = -3.0];
+  optional double obs_high = 20 [default = 0.0];
+  optional double obs_circle = 21 [default = 9.0];
 }
 
 message ReplanFSMConf {

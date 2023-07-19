@@ -66,6 +66,7 @@ public:
     Eigen::Vector3d sensor_range_;
     Eigen::Vector3d center_position_, lidar2car_;
     double resolution_, resolution_inv_, lidar_height_;
+    double obs_low_, obs_high_, obs_circle_;
     double min_ray_length_, max_ray_length_;
     Eigen::Vector3d local_range_min_, local_range_max_;
     double prob_hit_log_, prob_miss_log_, clamp_min_log_, clamp_max_log_;

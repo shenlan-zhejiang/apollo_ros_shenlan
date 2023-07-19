@@ -96,10 +96,10 @@ bool MappingShenlanComponent::Proc( const std::shared_ptr<localization::Localiza
       Eigen::Vector3d LaserCloudTransformed_XYZ = Rotation_matrix * LaserCloudIn_XYZ + mp_.center_position_;
 
       Eigen::Vector3d pc_position = LaserCloudTransformed_XYZ - mp_.center_position_;
-      if(pc_position(2) < -3 || pc_position(2) > 0) {
+      if(pc_position(2) < mp_.obs_low_ || pc_position(2) > mp_.obs_high_) {
           continue;
       }
-      if(pc_position(0) * pc_position(0) + pc_position(1) * pc_position(1) < 5) {
+      if(pc_position(0) * pc_position(0) + pc_position(1) * pc_position(1) < mp_.obs_circle_) {
           continue;
       }
 
@@ -140,22 +140,39 @@ bool MappingShenlanComponent::Proc( const std::shared_ptr<localization::Localiza
  
 void MappingShenlanComponent::globalOccPc(const std::shared_ptr<drivers::PointCloud> &msg)
 {
+    // for (int x = 0; x < mp_.global_map_size_[0]; ++x)
+    // {
+    //     for (int y = 0; y < mp_.global_map_size_[1]; ++y)
+    //     {
+    //         if (mp_.occupancy_buffer_2d_.at(y * mp_.global_map_size_[0] + x) > 0.5)
+    //         {
+    //             Eigen::Vector2i idx(x, y);
+    //             Eigen::Vector2d pos;
+    //             mp_.indexToPos2d(idx, pos);
+    //             PointXYZIT *point = msg->add_point();
+    //             point->set_x(pos[0]);
+    //             point->set_y(pos[1]);
+    //             point->set_z(0);
+    //         }
+    //     }
+    // }
+
     for (int x = 0; x < mp_.global_map_size_[0]; ++x)
-    {
-        for (int y = 0; y < mp_.global_map_size_[1]; ++y)
-        {
-            if (mp_.occupancy_buffer_2d_.at(y * mp_.global_map_size_[0] + x) > 0.5)
-            {
-                Eigen::Vector2i idx(x, y);
-                Eigen::Vector2d pos;
-                mp_.indexToPos2d(idx, pos);
-                PointXYZIT *point = msg->add_point();
-                point->set_x(pos[0]);
-                point->set_y(pos[1]);
-                point->set_z(0.2);
-            }
-        }
-    }
+      for (int y = 0; y < mp_.global_map_size_[1]; ++y)
+          for (int z = 0; z < mp_.global_map_size_[2]; ++z)
+          {
+              if (mp_.occupancy_buffer_[x * mp_.grid_size_y_multiply_z_ + y * mp_.global_map_size_(2) + z] > mp_.min_occupancy_log_)
+              {
+                  Eigen::Vector3i idx(x, y, z);
+                  Eigen::Vector3d pos;
+                  mp_.indexToPos(idx, pos);
+                  PointXYZIT *point = msg->add_point();
+                  point->set_x(pos[0]);
+                  point->set_y(pos[1]);
+                  point->set_z(pos[2]);
+              }
+          }
+
     auto timestamp = Clock::NowInSeconds();
     msg->set_height(1);
     msg->set_width(msg->point_size() / msg->height());

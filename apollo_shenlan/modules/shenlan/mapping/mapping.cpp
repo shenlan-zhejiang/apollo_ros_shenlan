@@ -27,7 +27,10 @@ void MappingProcess::init(apollo::shenlan::ShenlanConf &shenlan_conf) //double _
     clamp_max_log_ = shenlan_conf.mapping_conf().clamp_max_log();//2.0;
     min_occupancy_log_ = shenlan_conf.mapping_conf().min_occupancy_log();//1.39;
     lidar_height_ = shenlan_conf.mapping_conf().lidar_height();//3.0;
-
+    obs_low_ = shenlan_conf.mapping_conf().obs_low();
+    obs_high_ = shenlan_conf.mapping_conf().obs_high();
+    obs_circle_ = shenlan_conf.mapping_conf().obs_circle();
+    
     // odom_topic_ = odom_topic_;
     // lidar_topic_ = lidar_topic_;
     // map_frame_id_ = map_frame_id_;

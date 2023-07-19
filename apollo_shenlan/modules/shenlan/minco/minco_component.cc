@@ -5,7 +5,7 @@ namespace shenlan {
 
 bool MincoShenlanComponent::Init() 
 {
-  ACHECK(GetProtoConfig(&shenlan_conf)) << " CANNOT FIND CONF";
+  ACHECK(GetProtoConfig(&shenlan_conf)) << "Unable to load shenlan conf file";
 
   RFSM.init(shenlan_conf);
   RFSM.mapping_ptr_ = std::make_shared<apollo::shenlan::MappingProcess>();
@@ -124,10 +124,10 @@ void MincoShenlanComponent::CreateMapCallback(const std::shared_ptr<localization
       Eigen::Vector3d LaserCloudTransformed_XYZ = Rotation_matrix * LaserCloudIn_XYZ + RFSM.mapping_ptr_->center_position_;
 
       Eigen::Vector3d pc_position = LaserCloudTransformed_XYZ - RFSM.mapping_ptr_->center_position_;
-      if(pc_position(2) < -3 || pc_position(2) > 0) {
+      if(pc_position(2) < RFSM.mapping_ptr_->obs_low_ || pc_position(2) > RFSM.mapping_ptr_->obs_high_) {
           continue;
       }
-      if(pc_position(0) * pc_position(0) + pc_position(1) * pc_position(1) < 5) {
+      if(pc_position(0) * pc_position(0) + pc_position(1) * pc_position(1) < RFSM.mapping_ptr_->obs_circle_) {
           continue;
       }
 
@@ -168,22 +168,39 @@ void MincoShenlanComponent::CreateMapCallback(const std::shared_ptr<localization
 
 void MincoShenlanComponent::globalOccPc(const std::shared_ptr<drivers::PointCloud> &msg)
 {
+    // for (int x = 0; x < RFSM.mapping_ptr_->global_map_size_[0]; ++x)
+    // {
+    //     for (int y = 0; y < RFSM.mapping_ptr_->global_map_size_[1]; ++y)
+    //     {
+    //         if (RFSM.mapping_ptr_->occupancy_buffer_2d_.at(y * RFSM.mapping_ptr_->global_map_size_[0] + x) > 0.5)
+    //         {
+    //             Eigen::Vector2i idx(x, y);
+    //             Eigen::Vector2d pos;
+    //             RFSM.mapping_ptr_->indexToPos2d(idx, pos);
+    //             apollo::drivers::PointXYZIT *point = msg->add_point();
+    //             point->set_x(pos[0]);
+    //             point->set_y(pos[1]);
+    //             point->set_z(0);
+    //         }
+    //     }
+    // }
+
     for (int x = 0; x < RFSM.mapping_ptr_->global_map_size_[0]; ++x)
-    {
-        for (int y = 0; y < RFSM.mapping_ptr_->global_map_size_[1]; ++y)
-        {
-            if (RFSM.mapping_ptr_->occupancy_buffer_2d_.at(y * RFSM.mapping_ptr_->global_map_size_[0] + x) > 0.5)
-            {
-                Eigen::Vector2i idx(x, y);
-                Eigen::Vector2d pos;
-                RFSM.mapping_ptr_->indexToPos2d(idx, pos);
-                apollo::drivers::PointXYZIT *point = msg->add_point();
-                point->set_x(pos[0]);
-                point->set_y(pos[1]);
-                point->set_z(0.2);
-            }
-        }
-    }
+      for (int y = 0; y < RFSM.mapping_ptr_->global_map_size_[1]; ++y)
+          for (int z = 0; z < RFSM.mapping_ptr_->global_map_size_[2]; ++z)
+          {
+              if (RFSM.mapping_ptr_->occupancy_buffer_[x * RFSM.mapping_ptr_->grid_size_y_multiply_z_ + y * RFSM.mapping_ptr_->global_map_size_(2) + z] > RFSM.mapping_ptr_->min_occupancy_log_)
+              {
+                  Eigen::Vector3i idx(x, y, z);
+                  Eigen::Vector3d pos;
+                  RFSM.mapping_ptr_->indexToPos(idx, pos);
+                  apollo::drivers::PointXYZIT *point = msg->add_point();
+                  point->set_x(pos[0]);
+                  point->set_y(pos[1]);
+                  point->set_z(pos[2]);
+              }
+          }
+
     auto timestamp = apollo::cyber::Time::Now().ToSecond();
     msg->set_height(1);
     msg->set_width(msg->point_size() / msg->height());
