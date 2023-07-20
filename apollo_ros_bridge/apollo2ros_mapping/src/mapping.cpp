@@ -202,7 +202,7 @@ void *parse_data(void *para_)
   point_cloud_.header.seq = obj2.header().sequence_num();
   // point_cloud_.header.stamp = ros::Time(obj2.header().timestamp_sec());
   point_cloud_.header.stamp = ros::Time::now(); // Clock::NowInSeconds(); //ros::Time::now(); //(obj2.header().timestamp_sec()); //apollo time Clock::NowInSeconds()
-  point_cloud_.header.frame_id = "lidar";
+  point_cloud_.header.frame_id = "map";
   point_cloud_.channels.resize(1);
   point_cloud_.channels[0].name = "intensities";
 
@@ -210,8 +210,8 @@ void *parse_data(void *para_)
 
   for (auto iter : obj2.point()) {
     geometry_msgs::Point32 pt;
-    pt.x = iter.x();
-    pt.y = iter.y();
+    pt.x = iter.x() - 587061;;
+    pt.y = iter.y() - 4141628;
     pt.z = iter.z();
     point_cloud_.points.emplace_back(pt);
     point_cloud_.channels[0].values.emplace_back(iter.intensity());

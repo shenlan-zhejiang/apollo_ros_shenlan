@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(tfstatic2)
+project(pointcloud)
 
 set(CMAKE_BUILD_TYPE "Release")
 ADD_COMPILE_OPTIONS(-std=c++11 )
@@ -30,13 +30,13 @@ include_directories(
 
 file(GLOB PROTO_SRC "proto/*.cc")
 
-add_executable( tfstatic2 
-    tfstatic2.cpp
+add_executable( pointcloud 
+    pointcloud.cpp
     ${PROTO_SRC}
     bridge/bridge_header.cc
     )
 
-target_link_libraries( tfstatic2
+target_link_libraries( pointcloud
     ${catkin_LIBRARIES}
     /usr/local/lib
     protobuf

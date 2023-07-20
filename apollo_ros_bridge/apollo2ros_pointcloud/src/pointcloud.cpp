@@ -196,7 +196,7 @@ void *parse_data(void *para_)
   }
   */
 
-  // rostopic echo mapping2
+  // rostopic echo pointcloud
   sensor_msgs::PointCloud point_cloud_;
   std::string str_timestamps;
   point_cloud_.header.seq = obj2.header().sequence_num();
@@ -219,7 +219,7 @@ void *parse_data(void *para_)
 
   sensor_msgs::PointCloud2 point_cloud2_;
   // point_cloud2_.header.stamp = ros::Time(obj2.header().timestamp_sec()); //apollo time
-  // point_cloud2_.header.frame_id = "agent_0/mapping2";
+  // point_cloud2_.header.frame_id = "agent_0/pointcloud";
   convertPointCloudToPointCloud2(point_cloud_, point_cloud2_);
 
   // std::cout << "point_cloud_.header.seq : " << obj2.header().sequence_num() << "====" << point_cloud_.header.seq << std::endl;
@@ -340,7 +340,7 @@ bool receive(struct para_t *para) {
 }
 
 int main(int argc, char *argv[]) {
-  ros::init(argc, argv, "mapping2"); //节点名为study，随便取
+  ros::init(argc, argv, "pointcloud"); //节点名为study，随便取
   ros::NodeHandle n;
   struct para_t para;
   memset(para.buf, 0, sizeof(char *) * CAPACITY);
@@ -348,8 +348,8 @@ int main(int argc, char *argv[]) {
     para.seq[idx] = -1;
   }
   para.cap = 0;
-  para.pub = n.advertise<sensor_msgs::PointCloud2>("/apollo/agent_0/mapping2", 1000);
-  para.relation_pub = n.advertise<std_msgs::String>("/apollo/agent_0/relation_mapping2", 1000);
+  para.pub = n.advertise<sensor_msgs::PointCloud2>("/apollo/agent_0/pointcloud", 1000);
+  para.relation_pub = n.advertise<std_msgs::String>("/apollo/agent_0/relation_pointcloud", 1000);
   para.counter_pub = 0;
   para.port = 8906;
   para.pfd = -1;
