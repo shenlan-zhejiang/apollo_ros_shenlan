@@ -34,8 +34,9 @@ namespace path_searching
   //void KinoAstar::init(ros::NodeHandle& nh)
   void KinoAstar::init(apollo::shenlan::ShenlanConf &shenlan_conf)
   {
-      //std::cout << "KinoAstar init" << std::endl;
-      //nh_ = nh;
+
+    //std::cout << "KinoAstar init" << std::endl;
+    //nh_ = nh;
       //apollo::shenlan::KinoAstarConf kinoastar_conf;
       horizon_= shenlan_conf.kinoastar_conf().horizon();//50;
       yaw_resolution_= shenlan_conf.kinoastar_conf().yaw_resolution();//0.3;
@@ -75,7 +76,7 @@ namespace path_searching
 
       use_node_num_ = 0;
       use_time_node_num_ = 0;
-      iter_num_ = 0;
+      iter_num_ = 0; 
 
       have_received_trajs_.resize(cars_num_);
       swarm_traj_container_.resize(cars_num_);
@@ -88,15 +89,7 @@ namespace path_searching
 
       // resolution_ = cfg_.map_cfg().map_resl();
       // nh_.param("mapping/resolution", resolution_, 0.2);
-      //resolution_ = map_ptr_->getResolution();
-      resolution_ = shenlan_conf.mapping_conf().resolution();
-      map_size_(0) = shenlan_conf.mapping_conf().map_size_x();
-      map_size_(1) = shenlan_conf.mapping_conf().map_size_y();
-      map_size_(2) = shenlan_conf.mapping_conf().map_size_z();
-      global_map_size_(0) = ceil(map_size_(0) / resolution_);
-      global_map_size_(1) = ceil(map_size_(1) / resolution_);
-      global_map_size_(2) = ceil(map_size_(2) / resolution_);
-
+      resolution_ = map_ptr_->getResolution();
       // origin_(0) = -0.5*map_size_3d_(0);
       // origin_(1) = -0.5*map_size_3d_(1);
       yaw_origin_ = -M_PI;
@@ -298,40 +291,7 @@ namespace path_searching
   //   }
 
   // }
-
-  void posToIndex2d_self(const Eigen::Vector2d& pos, Eigen::Vector2i& id, Eigen::Vector2d& origin_, double inv_resolution_)
-  {
-      for(int i = 0; i < 2; i++)
-          id(i) = floor((pos(i) - origin_(i)) * inv_resolution_);
-  }
-  
-  int getVoxelState2d_self(const Eigen::Vector2d &pos, Eigen::Vector2d& origin_, double inv_resolution_, Eigen::Vector3i& global_map_size_, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
-  {
-      Eigen::Vector2i id;
-
-      posToIndex2d_self(pos, id, origin_, inv_resolution_);
-      
-      if(id(0) < 0 || id(0) >= global_map_size_(0) || id(1) < 0 || id(1) >= global_map_size_(1)) {
-          return -1;
-      } else if(buf_msg->occupancy_buffer_2d(id(1) * global_map_size_(0) + id(0)) > 0.5) {
-          return 1;
-      } else {
-          return 0;
-      }      
-  }
-
-  bool isInMap2d_self(const Eigen::Vector2d &pos, Eigen::Vector2d& origin_, double inv_resolution_, Eigen::Vector3i& global_map_size_)
-  {
-      Eigen::Vector2i idx;
-      posToIndex2d_self(pos, idx, origin_, inv_resolution_);
-      if(idx(0) < 0 || idx(0) >= global_map_size_(0) || idx(1) < 0 || idx(1) >= global_map_size_(1))
-          return false;
-      else
-          return true;
-  }
-
-
-  void KinoAstar::checkCollisionUsingPosAndYaw(const Eigen::Vector3d &state, bool &res, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
+  void KinoAstar::checkCollisionUsingPosAndYaw(const Eigen::Vector3d &state, bool &res)
   {
       res = false;
       Eigen::Vector2d pos = state.head(2);
@@ -352,10 +312,9 @@ namespace path_searching
           while(raycaster.step(ray_pt))
           {
               Eigen::Vector2d tmp = (ray_pt + half) * resolution_;
-              //if(map_ptr_->getVoxelState2d(tmp) == 1)
-              if(getVoxelState2d_self(tmp, origin_, inv_resolution_, global_map_size_, buf_msg) == 1)
+              if(map_ptr_->getVoxelState2d(tmp) == 1)
               {
-                  std::cout << "Collision!" << std::endl;
+                  // ROS_ERROR("Collision!");
                   res = true;
                   return;
                   // break;
@@ -373,7 +332,7 @@ namespace path_searching
       }
   }
 
-  void KinoAstar::checkCollisionUsingLine(const Eigen::Vector2d &start_pt, const Eigen::Vector2d &end_pt, bool &res, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
+  void KinoAstar::checkCollisionUsingLine(const Eigen::Vector2d &start_pt, const Eigen::Vector2d &end_pt, bool &res)
   {
       res = false;
       RayCaster raycaster;
@@ -394,10 +353,9 @@ namespace path_searching
       while(raycaster.step(ray_pt))
       {
           Eigen::Vector2d tmp = (ray_pt + half) * resolution_;
-          //if(map_ptr_->getVoxelState2d(tmp) == 1)
-          if(getVoxelState2d_self(tmp, origin_, inv_resolution_, global_map_size_, buf_msg) == 1)
+          if(map_ptr_->getVoxelState2d(tmp) == 1)
           {
-              std::cout << "Collision!" << std::endl;
+              // ROS_ERROR("collision!");
               res = true;
               return;
           }
@@ -430,11 +388,11 @@ namespace path_searching
           vec_normalVecs_and_points.push_back(normal_vector_and_point);
       }
 
-      //map_ptr_->setFreeSpacesForMapping(vec_normalVecs_and_points);
+      map_ptr_->setFreeSpacesForMapping(vec_normalVecs_and_points);
   }
 
   int KinoAstar::search(Eigen::Vector4d start_state, Eigen::Vector2d init_ctrl,
-                               Eigen::Vector4d end_state, bool use3d, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
+                               Eigen::Vector4d end_state, bool use3d)
   {
     //std::cout << "1111111111KinoAstar::search1111111111" << std::endl;
     bool isocc = false;  bool initsearch = false;
@@ -459,9 +417,7 @@ namespace path_searching
     start_ctrl_ = init_ctrl;
     end_state_ = end_state;
     Eigen::Vector2i end_index;
-    //map_ptr_->posToIndex2d(end_state.head(2), end_index);
-    posToIndex2d_self(end_state.head(2), end_index, origin_, inv_resolution_);
-
+    map_ptr_->posToIndex2d(end_state.head(2), end_index);
     /* ---------- initialize ---------- */
     
     //std::cout << "1111111111KinoAstar::search::initialize1111111111" << std::endl;
@@ -470,9 +426,7 @@ namespace path_searching
     PathNodePtr cur_node = path_node_pool_[0];
     cur_node->parent = NULL;
     cur_node->state = start_state.head(3);
-    //map_ptr_->posToIndex2d(start_state.head(2), cur_node->index);
-    posToIndex2d_self(start_state.head(2), cur_node->index, origin_, inv_resolution_);
-
+    map_ptr_->posToIndex2d(start_state.head(2), cur_node->index);
     cur_node->yaw_idx = yawToIndex(start_state[2]);
     cur_node->g_score = 0.0;
     cur_node->input = Eigen::Vector2d(0.0,0.0);
@@ -599,17 +553,15 @@ namespace path_searching
         //   continue;
         // }
         Eigen::Vector2d pro_pos = pro_state.head(2);
-        //if( !map_ptr_->isInMap2d(pro_pos) )
-        if( isInMap2d_self(pro_pos, origin_, inv_resolution_, global_map_size_))
+        if( !map_ptr_->isInMap2d(pro_pos) )
         {
             std::cout << "[Kino Astar]: out of map range" << endl;
             continue;
         }
         /* not in close set */
         Eigen::Vector2i pro_id;
-
-        //map_ptr_->posToIndex2d(pro_state.head(2), pro_id);
-        posToIndex2d_self(pro_state.head(2), pro_id, origin_, inv_resolution_);
+        map_ptr_->posToIndex2d(pro_state.head(2), pro_id);
+        // Eigen::Vector2i pro_id = map_ptr_->posToIndex2d(pro_state.head(2));
         double pro_yaw_id = yawToIndex(pro_state[2]);
         PathNodePtr pro_node;
         if(use3d)
@@ -673,12 +625,11 @@ namespace path_searching
             Eigen::Vector2d last_nearest_pos = last_path_pos_[nearest_idx_ + cur_node->number];
             bool collision_between_two_nodes;
             checkCollisionUsingLine(pro_pos, last_nearest_pos, collision_between_two_nodes);   
-            //if(collision_between_two_nodes && map_ptr_->getVoxelState2d(last_nearest_pos) != 1)
-            if(collision_between_two_nodes && getVoxelState2d_self(last_nearest_pos, origin_, inv_resolution_, global_map_size_, buf_msg) != 1)
+            if(collision_between_two_nodes && map_ptr_->getVoxelState2d(last_nearest_pos) != 1)   
             {
               // tmp_g_score += 100;
               continue;
-            }
+            }      
           }
         }
 
@@ -690,7 +641,7 @@ namespace path_searching
         // "h: "<<lambda_heu_ * getHeu(pro_state, end_state)<<"\n";
         /* ---------- compare expanded node in this loop ---------- */
         if (pro_node == NULL)
-        { 
+        {
           pro_node = path_node_pool_[use_node_num_];
           pro_node->index = pro_id;
           pro_node->state = pro_state;

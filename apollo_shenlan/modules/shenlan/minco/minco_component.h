@@ -28,13 +28,13 @@
 namespace apollo{
 namespace shenlan{
 
-class MincoShenlanComponent final : public cyber::Component<localization::LocalizationEstimate, drivers::PointCloud> 
+class MincoShenlanComponent final : public cyber::Component<localization::LocalizationEstimate, drivers::PointCloud, apollo::shenlan::OccupancyBuffer> 
 {
     public:
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     public:
         bool Init() override;
-        bool Proc( const std::shared_ptr<localization::LocalizationEstimate> &odm_, const std::shared_ptr<drivers::PointCloud> &pc_) override;
+        bool Proc( const std::shared_ptr<localization::LocalizationEstimate> &odm_, const std::shared_ptr<drivers::PointCloud> &pc_, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_) override;
 
         std::string Name() const {return "minco_shenlan";}
     private:
@@ -49,7 +49,7 @@ class MincoShenlanComponent final : public cyber::Component<localization::Locali
         //void OdomCallback(const nav_msgs::Odometry& msg);
         //void SwarmTrajCallback(const swarm_bridge::Trajectory& traj_msg);
         void execFSMCallback();
-        void checkCollisionCallback();
+        void checkCollisionCallback(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &msg);
 
         std::shared_ptr<cyber::Writer<drivers::PointCloud>> pc_writer_;
         std::shared_ptr<cyber::Writer<drivers::PointCloud>> map_writer_;

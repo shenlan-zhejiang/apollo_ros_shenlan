@@ -105,8 +105,8 @@ public:
     double traj_piece_duration_;
     int traj_res_, dense_traj_res_;
 
-    bool checkCollisionWithObs(const double& t_now);
-    bool checkCollisionWithOtherCars(const double& t_now);
+    bool checkCollisionWithObs(const double& t_now, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg = nullptr);
+    bool checkCollisionWithOtherCars(const double& t_now, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg = nullptr);
 
     bool getKinoPath(Eigen::Vector4d &end_state, bool first_search);
     void displayKinoPath(std::shared_ptr<plan_utils::KinoTrajData> kino_trajs);
@@ -157,6 +157,7 @@ private:
     bool is_init;
     int cars_num_;
     double car_d_cr_, car_length_, car_width_, car_wheelbase_;
+    double resolution_;
 
     //_____________
     /* Map related */

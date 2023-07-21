@@ -207,7 +207,6 @@ int ReplanFSM::execFSM() {
             }
             else
             {
-                //ROS_ERROR("Out of time budget!");
                 std::cout << "Out of time budget!" << std::endl;
             }
             //planner_ptr_->publishTraj2Controller();

@@ -33,8 +33,8 @@ bool MincoShenlanComponent::Init()
 //   safety_timer_->Start();
 //   std::cout << "2222" << std::endl;
 
-  pc_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/pc_transformed");
-  map_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/gird_map");
+  pc_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/pc_transformed1");
+  map_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/gird_map1");
   traj_writer_ = node_->CreateWriter<apollo::shenlan::mpc::Trajectory>("/apollo/shenlan/minco/mpc_trajectory");
   //adc_writer_ = node_->CreateWriter<apollo::planning::ADCTrajectory>("/apollo/shenlan/minco/ADCTrajectory");
   adc_writer_ = node_->CreateWriter<apollo::planning::ADCTrajectory>("/apollo/planning");
@@ -44,25 +44,9 @@ bool MincoShenlanComponent::Init()
   return true;
 }
 
-// bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::LocalizationEstimate> &odom_msg_, const std::shared_ptr<drivers::PointCloud> &pcl_msg) 
-// {
-//   // std::cout << "************Proc************" << std::endl;
 
-//   std::cout << pcl_msg->header().sequence_num() << " odom " << odom_msg_->header().sequence_num() << std::endl;
-//   if (odom_msg_->header().sequence_num() == 1613777) {
-//     odom_msg = std::make_shared<localization::LocalizationEstimate>(*odom_msg_); //for debug, using odom_msg
-//     return true;
-//   }
-//   if (pcl_msg->header().sequence_num() != 3472) {
-//     return true;
-//   }
-
-//   if (last_seq == (int)(pcl_msg->header().sequence_num())) {
-//     return true;
-//   }
-
-
-bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<drivers::PointCloud> &pcl_msg) 
+//bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<drivers::PointCloud> &pcl_msg) 
+bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<drivers::PointCloud> &pcl_msg, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg) 
 {
 
   //std::cout << "0000" << std::endl;
@@ -72,7 +56,7 @@ bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::Localizatio
   //std::cout << "2222" << std::endl;
   execFSMCallback();
   //std::cout << "3333" << std::endl;
-  checkCollisionCallback();
+  checkCollisionCallback(buf_msg);
   //std::cout << "4444" << std::endl;
   //RFSM.print();
   //exit(0);
@@ -213,7 +197,7 @@ void MincoShenlanComponent::globalOccPc(const std::shared_ptr<drivers::PointClou
     seq_num_map += 1;
 }
 
-void MincoShenlanComponent::checkCollisionCallback()
+void MincoShenlanComponent::checkCollisionCallback(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
 {
     //std::cout << "checkcolli:" << apollo::cyber::Time::Now().ToNanosecond() << std::endl;
     //std::cout << "checkcolli:" << last_seq << std::endl;
@@ -224,11 +208,11 @@ void MincoShenlanComponent::checkCollisionCallback()
 
     // check collision with static obstacles
     if(RFSM.exec_state_ == RFSM.EXEC_TRAJ)
-        RFSM.collision_with_obs_ = RFSM.planner_ptr_->checkCollisionWithObs(time_now);
+        RFSM.collision_with_obs_ = RFSM.planner_ptr_->checkCollisionWithObs(time_now, buf_msg);
 
     // check collision with surround cars
     if(RFSM.exec_state_ == RFSM.EXEC_TRAJ)
-        RFSM.collision_with_othercars_ = RFSM.planner_ptr_->checkCollisionWithOtherCars(time_now);
+        RFSM.collision_with_othercars_ = RFSM.planner_ptr_->checkCollisionWithOtherCars(time_now, buf_msg);
 }
 
 void MincoShenlanComponent::ParkingCallback(const std::shared_ptr<apollo::localization::Pose> &msg)

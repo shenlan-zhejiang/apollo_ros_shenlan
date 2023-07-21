@@ -3,7 +3,7 @@ load("//tools/install:install.bzl", "install")
 load("//tools:cpplint.bzl", "cpplint")
 
 package(default_visibility = ["//visibility:public"])
-minco_COPTS = ['-DMODULE_NAME=\\"minco\\" -Wno-unused-but-set-variable -std=c++14 -g']
+minco_COPTS = ['-DMODULE_NAME=\\"minco\\" -Wno-unused-but-set-variable -std=c++14']
 cc_library(
     name="minco", 
     srcs=["kino_astar.cpp","raycast.cpp","traj_optimizer.cpp", "traj_manager.cpp", "replan_fsm.cpp", "minco_component.cc"],

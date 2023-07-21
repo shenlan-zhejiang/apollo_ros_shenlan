@@ -20,7 +20,7 @@
 #include "modules/common/util/util.h"
 
 #include "modules/shenlan/mapping/mapping.h"
-
+#include<vector>
 namespace apollo {
 namespace shenlan {
 
@@ -42,10 +42,13 @@ public:
 
   std::shared_ptr<cyber::Writer<drivers::PointCloud>> pc_writer_;
   std::shared_ptr<cyber::Writer<drivers::PointCloud>> map_writer_;
+  std::shared_ptr<cyber::Writer<apollo::shenlan::OccupancyBuffer>> buf_writer_;
+
   MappingProcess mp_;
 
   int seq_num_map = 0;
   void globalOccPc(const std::shared_ptr<drivers::PointCloud> &msg);
+  void globalOccArr(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &msg);
 
   int last_seq;
 };

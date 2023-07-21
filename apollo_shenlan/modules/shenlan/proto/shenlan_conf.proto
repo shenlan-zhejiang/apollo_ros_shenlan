@@ -82,6 +82,11 @@ message TrajPlannerConf {
   optional double half_margin = 17 [default = 0.25];
 }
 
+message OccupancyBuffer {
+  repeated double occupancy_buffer = 1;
+  repeated double occupancy_buffer_2d = 2;
+}
+
 message ShenlanConf {
   optional VehicleConf vehicle_conf = 1;
   optional MappingConf mapping_conf = 2;

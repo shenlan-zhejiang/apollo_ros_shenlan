@@ -9,10 +9,15 @@ module_config {
               channel: "/apollo/localization/pose",
             }
             readers {
-              # channel: "/apollo/shenlan/mapping/gird_map"
               channel: "/apollo/sensor/velodyne128/compensator/PointCloud2"
               # channel: "/apollo/sensor/lidar/compensator/PointCloud2"
-            }  
+            }
+            readers {
+              channel: "/apollo/shenlan/mapping/occupancy"
+              # channel: "/apollo/sensor/velodyne128/compensator/PointCloud2"
+              # channel: "/apollo/sensor/lidar/compensator/PointCloud2"
+            }
+
         }
     }
 }
