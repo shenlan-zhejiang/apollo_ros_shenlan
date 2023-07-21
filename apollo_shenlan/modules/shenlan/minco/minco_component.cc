@@ -5,196 +5,51 @@ namespace shenlan {
 
 bool MincoShenlanComponent::Init() 
 {
-  ACHECK(GetProtoConfig(&shenlan_conf)) << "Unable to load shenlan conf file";
+    std::cout << "MincoShenlanComponent::Init" << std::endl;
+    ACHECK(GetProtoConfig(&shenlan_conf)) << "Unable to load shenlan conf file";
 
-  RFSM.init(shenlan_conf);
-  RFSM.mapping_ptr_ = std::make_shared<apollo::shenlan::MappingProcess>();
-  RFSM.mapping_ptr_->init(shenlan_conf);
-  RFSM.planner_ptr_ = std::make_shared<TrajPlanner>();
-  RFSM.planner_ptr_->setMap(RFSM.mapping_ptr_);
-  RFSM.planner_ptr_->init(shenlan_conf);
-  //std::cout << "0000000000" << std::endl;
+    RFSM.init(shenlan_conf);
+    RFSM.planner_ptr_ = std::make_shared<TrajPlanner>();
+    RFSM.planner_ptr_->init(shenlan_conf);
+    // std::cout << "0000000000" << std::endl;
 
-//   cyber::TimerOption opt1;
-//   opt1.oneshot = false;
-//   opt1.callback = boost::bind(&MincoShenlanComponent::execFSMCallback, this);
-//   opt1.period = 20;
-//   exec_timer_ = std::make_shared<cyber::Timer>();
-//   exec_timer_->SetTimerOption(opt1);
-//   exec_timer_->Start();
-  //std::cout << "1111" << std::endl;
+    // cyber::TimerOption opt1;
+    // opt1.oneshot = false;
+    // opt1.callback = boost::bind(&MincoShenlanComponent::execFSMCallback, this);
+    // opt1.period = 20;
+    // exec_timer_ = std::make_shared<cyber::Timer>();
+    // exec_timer_->SetTimerOption(opt1);
+    // exec_timer_->Start();
+    // std::cout << "1111" << std::endl;
 
-//   cyber::TimerOption opt2;
-//   opt2.oneshot = false;
-//   opt2.callback = boost::bind(&MincoShenlanComponent::checkCollisionCallback, this);
-//   opt2.period = 100;
-//   safety_timer_ = std::make_shared<cyber::Timer>();
-//   safety_timer_->SetTimerOption(opt2);
-//   safety_timer_->Start();
-//   std::cout << "2222" << std::endl;
+    // cyber::TimerOption opt2;
+    // opt2.oneshot = false;
+    // opt2.callback = boost::bind(&MincoShenlanComponent::checkCollisionCallback, this);
+    // opt2.period = 100;
+    // safety_timer_ = std::make_shared<cyber::Timer>();
+    // safety_timer_->SetTimerOption(opt2);
+    // safety_timer_->Start();
+    // std::cout << "2222" << std::endl;
 
-  pc_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/pc_transformed1");
-  map_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/gird_map1");
-  traj_writer_ = node_->CreateWriter<apollo::shenlan::mpc::Trajectory>("/apollo/shenlan/minco/mpc_trajectory");
-  //adc_writer_ = node_->CreateWriter<apollo::planning::ADCTrajectory>("/apollo/shenlan/minco/ADCTrajectory");
-  adc_writer_ = node_->CreateWriter<apollo::planning::ADCTrajectory>("/apollo/planning");
-  
-  last_seq = -1;
+    adc_writer_ = node_->CreateWriter<apollo::planning::ADCTrajectory>("/apollo/planning");
+    
+    last_seq = -1;
 
-  return true;
+    return true;
 }
 
 
-//bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<drivers::PointCloud> &pcl_msg) 
-bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<drivers::PointCloud> &pcl_msg, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg) 
+bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg) 
 {
+    // std::cout << "MincoShenlanComponent::Proc" << std::endl;
 
-  //std::cout << "0000" << std::endl;
-  CreateMapCallback(odom_msg, pcl_msg);
-  //std::cout << "1111" << std::endl;
-  OdomCallback(odom_msg);
-  //std::cout << "2222" << std::endl;
-  execFSMCallback();
-  //std::cout << "3333" << std::endl;
-  checkCollisionCallback(buf_msg);
-  //std::cout << "4444" << std::endl;
-  //RFSM.print();
-  //exit(0);
-  return true;
-}
+    OdomCallback(odom_msg);
 
+    execFSMCallback();
 
-void MincoShenlanComponent::CreateMapCallback(const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<drivers::PointCloud> &pcl_msg)
-{
+    checkCollisionCallback(buf_msg);
 
-  last_seq = (int)(pcl_msg->header().sequence_num());
-  //std::cout << "handle new pcl" << std::endl;
-  //std::cout << pcl_msg->header().sequence_num() << " odom " << odom_msg->header().sequence_num() << std::endl;
-
-  RFSM.mapping_ptr_->have_odom_ = true;
-  RFSM.mapping_ptr_->local_map_valid_ = true;
-
-  RFSM.mapping_ptr_->curr_posi_[0] = odom_msg->pose().position().x();// - 587061;
-  RFSM.mapping_ptr_->curr_posi_[1] = odom_msg->pose().position().y();// - 4141628;
-  RFSM.mapping_ptr_->curr_posi_[2] = odom_msg->pose().position().z();
-
-  RFSM.mapping_ptr_->curr_q_.w() = odom_msg->pose().orientation().qw();
-  RFSM.mapping_ptr_->curr_q_.x() = odom_msg->pose().orientation().qx();
-  RFSM.mapping_ptr_->curr_q_.y() = odom_msg->pose().orientation().qy();
-  RFSM.mapping_ptr_->curr_q_.z() = odom_msg->pose().orientation().qz();
-
-  RFSM.mapping_ptr_->curr_twist_[0] = odom_msg->pose().linear_velocity().x();
-  RFSM.mapping_ptr_->curr_twist_[1] = odom_msg->pose().linear_velocity().y();
-  RFSM.mapping_ptr_->curr_twist_[2] = odom_msg->pose().linear_velocity().z();
-
-  //Eigen::Vector3d Position_XYZ(odom_msg->pose().position().x() - 587061, odom_msg->pose().position().y() - 4141628, odom_msg->pose().position().z());
-  Eigen::Vector3d Position_XYZ(odom_msg->pose().position().x(), odom_msg->pose().position().y(), odom_msg->pose().position().z());
-  Eigen::Quaterniond quaternion(odom_msg->pose().orientation().qw(), odom_msg->pose().orientation().qx(), 
-                                odom_msg->pose().orientation().qy(), odom_msg->pose().orientation().qz());
-  Eigen::Matrix3d Rotation_matrix;
-  
-  // Rotation_matrix = quaternion.toRotationMatrix();
-
-  Eigen::Quaterniond quaternion_(0.7071, 0, 0, 0.7071);
-  Rotation_matrix = quaternion.toRotationMatrix() * quaternion_.toRotationMatrix();
-
-  RFSM.mapping_ptr_->center_position_ = Position_XYZ + Rotation_matrix * RFSM.mapping_ptr_->lidar2car_;
-
-  std::shared_ptr<drivers::PointCloud> laserCloudTransformed = std::make_shared<drivers::PointCloud>();
-
-  for(auto iter : pcl_msg->point())
-  {
-      Eigen::Vector3d LaserCloudIn_XYZ(iter.x(), iter.y(), iter.z());
-      Eigen::Vector3d LaserCloudTransformed_XYZ = Rotation_matrix * LaserCloudIn_XYZ + RFSM.mapping_ptr_->center_position_;
-
-      Eigen::Vector3d pc_position = LaserCloudTransformed_XYZ - RFSM.mapping_ptr_->center_position_;
-      if(pc_position(2) < RFSM.mapping_ptr_->obs_low_ || pc_position(2) > RFSM.mapping_ptr_->obs_high_) {
-          continue;
-      }
-      if(pc_position(0) * pc_position(0) + pc_position(1) * pc_position(1) < RFSM.mapping_ptr_->obs_circle_) {
-          continue;
-      }
-
-      apollo::drivers::PointXYZIT *point = laserCloudTransformed->add_point();
-      point->set_x(LaserCloudTransformed_XYZ(0));
-      point->set_y(LaserCloudTransformed_XYZ(1));
-      point->set_z(LaserCloudTransformed_XYZ(2));
-      //point->set_intensity(iter.intensity());
-      //point->set_timestamp(iter.timestamp() * 1e9);
-  }
-
-  RFSM.mapping_ptr_->number_of_points_ = laserCloudTransformed->point().size();
-
-  // set header
-  std::shared_ptr<drivers::PointCloud> msg = laserCloudTransformed;
-  const auto timestamp = pcl_msg->header().timestamp_sec();
-  msg->set_height(1);
-  msg->set_width(msg->point_size() / msg->height());
-  msg->set_is_dense(false);
-  msg->mutable_header()->set_sequence_num(pcl_msg->header().sequence_num());
-  msg->mutable_header()->set_frame_id("map_shenlan");
-  msg->mutable_header()->set_timestamp_sec(timestamp);
-  msg->mutable_header()->set_lidar_timestamp(timestamp * 1e9);
-  msg->set_measurement_time(timestamp);
-
-  pc_writer_->Write(msg);
-
-  RFSM.mapping_ptr_->local_range_min_ = RFSM.mapping_ptr_->center_position_ - RFSM.mapping_ptr_->sensor_range_;
-  RFSM.mapping_ptr_->local_range_max_ = RFSM.mapping_ptr_->center_position_ + RFSM.mapping_ptr_->sensor_range_;
-  RFSM.mapping_ptr_->raycastProcess(RFSM.mapping_ptr_->center_position_, laserCloudTransformed);
-
-  ///*
-  std::shared_ptr<drivers::PointCloud> map_ = std::make_shared<drivers::PointCloud>();
-  globalOccPc(map_);
-  map_writer_->Write(map_);
-  //*/
-}
-
-void MincoShenlanComponent::globalOccPc(const std::shared_ptr<drivers::PointCloud> &msg)
-{
-    // for (int x = 0; x < RFSM.mapping_ptr_->global_map_size_[0]; ++x)
-    // {
-    //     for (int y = 0; y < RFSM.mapping_ptr_->global_map_size_[1]; ++y)
-    //     {
-    //         if (RFSM.mapping_ptr_->occupancy_buffer_2d_.at(y * RFSM.mapping_ptr_->global_map_size_[0] + x) > 0.5)
-    //         {
-    //             Eigen::Vector2i idx(x, y);
-    //             Eigen::Vector2d pos;
-    //             RFSM.mapping_ptr_->indexToPos2d(idx, pos);
-    //             apollo::drivers::PointXYZIT *point = msg->add_point();
-    //             point->set_x(pos[0]);
-    //             point->set_y(pos[1]);
-    //             point->set_z(0);
-    //         }
-    //     }
-    // }
-
-    for (int x = 0; x < RFSM.mapping_ptr_->global_map_size_[0]; ++x)
-      for (int y = 0; y < RFSM.mapping_ptr_->global_map_size_[1]; ++y)
-          for (int z = 0; z < RFSM.mapping_ptr_->global_map_size_[2]; ++z)
-          {
-              if (RFSM.mapping_ptr_->occupancy_buffer_[x * RFSM.mapping_ptr_->grid_size_y_multiply_z_ + y * RFSM.mapping_ptr_->global_map_size_(2) + z] > RFSM.mapping_ptr_->min_occupancy_log_)
-              {
-                  Eigen::Vector3i idx(x, y, z);
-                  Eigen::Vector3d pos;
-                  RFSM.mapping_ptr_->indexToPos(idx, pos);
-                  apollo::drivers::PointXYZIT *point = msg->add_point();
-                  point->set_x(pos[0]);
-                  point->set_y(pos[1]);
-                  point->set_z(pos[2]);
-              }
-          }
-
-    auto timestamp = apollo::cyber::Time::Now().ToSecond();
-    msg->set_height(1);
-    msg->set_width(msg->point_size() / msg->height());
-    msg->set_is_dense(false);
-    msg->mutable_header()->set_sequence_num(seq_num_map);
-    msg->mutable_header()->set_frame_id("map_shenlan");
-    msg->mutable_header()->set_timestamp_sec(timestamp);
-    msg->mutable_header()->set_lidar_timestamp(timestamp * 1e9);
-    msg->set_measurement_time(timestamp);
-    seq_num_map += 1;
+    return true;
 }
 
 void MincoShenlanComponent::checkCollisionCallback(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
@@ -285,66 +140,12 @@ void MincoShenlanComponent::execFSMCallback()
     //exec_timer_->Stop();
     int ret = RFSM.execFSM();
     if (ret == 1) {
-      auto traj_msg = std::make_shared<apollo::shenlan::mpc::Trajectory>();
-      calcTraj2Controller(traj_msg);
-      traj_writer_->Write(traj_msg);
-
       auto adc_msg = std::make_shared<apollo::planning::ADCTrajectory>();
       calcMinco2ADC(adc_msg);
       adc_writer_->Write(adc_msg);
     }
     //exec_timer_->Start();
 }
-
-void MincoShenlanComponent::calcTraj2Controller(const std::shared_ptr<apollo::shenlan::mpc::Trajectory> &traj_msg)
-{
-    double t0 = RFSM.planner_ptr_->start_time_;
-    apollo::shenlan::mpc::MincoTraj minco;
-    for(int i = 0; i < (int)RFSM.planner_ptr_->kino_trajs_.size(); i++)
-    {
-        auto sm = minco.add_trajs();
-        Eigen::MatrixXd poses = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getPositions();
-        Eigen::VectorXd ts = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getDurations();
-        //int direction = traj_container_.singul_traj[i].traj.getDirection();
-        // Eigen::MatrixXd init = iniState_container[i];
-        Eigen::MatrixXd init = RFSM.planner_ptr_->kino_trajs_.at(i).start_state;
-        // Eigen::MatrixXd fina = finState_container[i];
-        Eigen::MatrixXd fina = RFSM.planner_ptr_->kino_trajs_.at(i).final_state;
-        sm->mutable_head_x()->set_x(init.row(0)[0]);
-        sm->mutable_head_x()->set_y(init.row(0)[1]);
-        sm->mutable_head_x()->set_z(init.row(0)[2]);
-        sm->mutable_head_y()->set_x(init.row(1)[0]);
-        sm->mutable_head_y()->set_y(init.row(1)[1]);
-        sm->mutable_head_y()->set_z(init.row(1)[2]);
-
-        sm->mutable_tail_x()->set_x(fina.row(0)[0]);
-        sm->mutable_tail_x()->set_y(fina.row(0)[1]);
-        sm->mutable_tail_x()->set_z(fina.row(0)[2]);
-        sm->mutable_tail_y()->set_x(fina.row(1)[0]);
-        sm->mutable_tail_y()->set_y(fina.row(1)[1]);
-        sm->mutable_tail_y()->set_z(fina.row(1)[2]);
-
-        sm->set_reverse(RFSM.planner_ptr_->kino_trajs_.at(i).singul == 1?false:true);
-        sm->set_start_time(t0);
-        //t0 = t0 + apollo::cyber::Duration().fromSec(ts.sum()); //ros::Duration().fromSec(ts.sum()); 
-        t0 = t0 + ts.sum();
-        for (int i=0; i<poses.cols(); i++)
-        {
-            auto temp = sm->add_pos_pts();
-            //geometry_msgs::Point temp;
-            temp->set_x(poses(0, i));
-            temp->set_y(poses(1, i));
-            temp->set_z(0);
-        }
-        for (int i=0; i<ts.size(); i++)
-        {
-            sm->add_t_pts(ts(i));
-        }
-    }
-    traj_msg->mutable_minco_path()->CopyFrom(minco);
-    traj_msg->set_traj_type(1);
-}
-
 
 void MincoShenlanComponent::calcMinco2ADC(const std::shared_ptr<apollo::planning::ADCTrajectory> &traj_msg)
 {

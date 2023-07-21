@@ -27,16 +27,10 @@ namespace path_searching
     // kino_bicycle_model_.setParam(vp_);
   }
 
-  void KinoAstar::setMap(std::shared_ptr<apollo::shenlan::MappingProcess> & ptr)
-  {
-    map_ptr_ = ptr;
-  }
   //void KinoAstar::init(ros::NodeHandle& nh)
   void KinoAstar::init(apollo::shenlan::ShenlanConf &shenlan_conf)
   {
       //std::cout << "KinoAstar init" << std::endl;
-      //nh_ = nh;
-      //apollo::shenlan::KinoAstarConf kinoastar_conf;
       horizon_= shenlan_conf.kinoastar_conf().horizon();//50;
       yaw_resolution_= shenlan_conf.kinoastar_conf().yaw_resolution();//0.3;
       lambda_heu_ = shenlan_conf.kinoastar_conf().lambda_heu();//5.0;
@@ -51,7 +45,6 @@ namespace path_searching
       step_arc = shenlan_conf.kinoastar_conf().step_arc();//0.9;
       checkl = shenlan_conf.kinoastar_conf().checkl();//0.9;
 
-      //apollo::shenlan::VehicleConf vehicle_conf;
       cars_num_ = shenlan_conf.vehicle_conf().cars_num();//1;
       car_id_ = shenlan_conf.vehicle_conf().car_id();//0;
       car_width_ = shenlan_conf.vehicle_conf().car_width();//2.1;
@@ -101,7 +94,6 @@ namespace path_searching
       // origin_(1) = -0.5*map_size_3d_(1);
       yaw_origin_ = -M_PI;
       
-      //apollo::shenlan::TrajPlannerConf trajplanner_conf;
       max_vel_ = shenlan_conf.trajplanner_conf().max_vel();//6.0;
       max_acc_ = shenlan_conf.trajplanner_conf().max_acc();//3.0;
       max_cur_ = shenlan_conf.trajplanner_conf().max_cur();//0.3;

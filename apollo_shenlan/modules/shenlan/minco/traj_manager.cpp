@@ -59,7 +59,6 @@ void TrajPlanner::init(apollo::shenlan::ShenlanConf &shenlan_conf)
 
   /*  kino a* intial  */
   kino_path_finder_ = std::make_unique<path_searching::KinoAstar>();
-  kino_path_finder_->setMap(map_ptr_);
   kino_path_finder_->init(shenlan_conf);
 
   ploy_traj_opt_ = std::make_unique<plan_manage::PolyTrajOptimizer>();
@@ -89,11 +88,6 @@ void TrajPlanner::init(apollo::shenlan::ShenlanConf &shenlan_conf)
   // DebugCorridorPub = nh_.advertise<visualization_msgs::Marker>("/debug/corridor", 1);
   // DebugtrajPub =   nh_.advertise<visualization_msgs::Marker>("/debug/traj", 1);
 
-}
-
-void TrajPlanner::setMap(std::shared_ptr<apollo::shenlan::MappingProcess>& ptr)
-{
-  map_ptr_ = ptr;
 }
 
 // use kinodynamic a* to generate a path

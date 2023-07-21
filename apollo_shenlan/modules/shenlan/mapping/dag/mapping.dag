@@ -6,7 +6,7 @@ module_config {
             name: "shenlan_mapping"
             config_file_path: "/apollo/modules/shenlan/conf/shenlan_conf.pb.txt"
             readers {
-              channel: "/apollo/localization/pose",
+              channel: "/apollo/localization/pose"
             }
             readers {
               channel: "/apollo/sensor/velodyne128/compensator/PointCloud2"

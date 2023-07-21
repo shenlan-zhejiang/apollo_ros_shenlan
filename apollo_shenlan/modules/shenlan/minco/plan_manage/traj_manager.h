@@ -44,13 +44,9 @@ public:
     ~TrajPlanner(){}
     typedef std::shared_ptr<TrajPlanner> Ptr;
 
-    //ros::NodeHandle nh_;
-    std::shared_ptr<apollo::shenlan::MappingProcess> map_ptr_;
-
     // void init(const std::string config_path, const int car_id);
     //void init(const ros::NodeHandle& nh);
     void init(apollo::shenlan::ShenlanConf &shenlan_conf);
-    void setMap(std::shared_ptr<apollo::shenlan::MappingProcess>& ptr);
     void RunOnceParking();
     bool RunMINCOParking();
     void broadcastTraj2SwarmBridge();
