@@ -30,6 +30,9 @@ using namespace chrono;
 // void TrajPlanner::Init(const std::string config_path, const int car_id) 
 void TrajPlanner::init(apollo::shenlan::ShenlanConf &shenlan_conf)
 {
+
+  resolution_ = shenlan_conf.mapping_conf().resolution();
+
   //apollo::shenlan::TrajPlannerConf trajplanner_conf;
   traj_piece_duration_ = shenlan_conf.trajplanner_conf().traj_piece_duration();//1.0; //duration of per trajectory piece
   traj_res_ = shenlan_conf.trajplanner_conf().traj_res();//8;
@@ -56,7 +59,6 @@ void TrajPlanner::init(apollo::shenlan::ShenlanConf &shenlan_conf)
 
   /*  kino a* intial  */
   kino_path_finder_ = std::make_unique<path_searching::KinoAstar>();
-  kino_path_finder_->setMap(map_ptr_);
   kino_path_finder_->init(shenlan_conf);
 
   ploy_traj_opt_ = std::make_unique<plan_manage::PolyTrajOptimizer>();
@@ -86,13 +88,6 @@ void TrajPlanner::init(apollo::shenlan::ShenlanConf &shenlan_conf)
   // DebugCorridorPub = nh_.advertise<visualization_msgs::Marker>("/debug/corridor", 1);
   // DebugtrajPub =   nh_.advertise<visualization_msgs::Marker>("/debug/traj", 1);
 
-}
-
-void TrajPlanner::setMap(std::shared_ptr<apollo::shenlan::MappingProcess>& ptr)
-{
-  //std::cout << "setmap" << std::endl;
-  map_ptr_ = ptr;
-  //std::cout << "setmap" << std::endl;
 }
 
 // use kinodynamic a* to generate a path
@@ -418,7 +413,7 @@ void TrajPlanner::displayMincoTraj(std::shared_ptr<plan_utils::SingulTrajData> d
 
 }
 
-bool TrajPlanner::checkCollisionWithObs(const double& t_now)
+bool TrajPlanner::checkCollisionWithObs(const double& t_now, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
 {
     //std::cout << "*********checkCollisionWithObs**********" << std::endl;
 
@@ -442,7 +437,7 @@ bool TrajPlanner::checkCollisionWithObs(const double& t_now)
             Eigen::Vector2d vel = traj_container_.singul_traj[segmentId].traj.getdSigma(t - segment_i_start_time);
             double yaw = atan2(segment_i_singul * vel(1), segment_i_singul * vel(0));
             Eigen::Vector3d state; state << pos, yaw;
-            kino_path_finder_->checkCollisionUsingPosAndYaw(state, collision);
+            kino_path_finder_->checkCollisionUsingPosAndYaw(state, collision, buf_msg);
             if(collision)
             {
                 return collision;
@@ -453,7 +448,7 @@ bool TrajPlanner::checkCollisionWithObs(const double& t_now)
     return collision;
 }
 
-bool TrajPlanner::checkCollisionWithOtherCars(const double& t_now)
+bool TrajPlanner::checkCollisionWithOtherCars(const double& t_now, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
 {
     bool collision = false;
     int num_have_received_trajs = 0;
@@ -660,7 +655,7 @@ void TrajPlanner::broadcastTraj2SwarmBridge()
 void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist)
 {
     hPolys_.clear();
-    double resolution = map_ptr_->getResolution();
+    double resolution = resolution_;
     double step = resolution * 1.0;
     double limitBound = 10.0;
 

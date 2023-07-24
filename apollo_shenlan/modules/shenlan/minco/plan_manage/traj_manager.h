@@ -44,13 +44,9 @@ public:
     ~TrajPlanner(){}
     typedef std::shared_ptr<TrajPlanner> Ptr;
 
-    //ros::NodeHandle nh_;
-    std::shared_ptr<apollo::shenlan::MappingProcess> map_ptr_;
-
     // void init(const std::string config_path, const int car_id);
     //void init(const ros::NodeHandle& nh);
     void init(apollo::shenlan::ShenlanConf &shenlan_conf);
-    void setMap(std::shared_ptr<apollo::shenlan::MappingProcess>& ptr);
     void RunOnceParking();
     bool RunMINCOParking();
     void broadcastTraj2SwarmBridge();
@@ -105,8 +101,8 @@ public:
     double traj_piece_duration_;
     int traj_res_, dense_traj_res_;
 
-    bool checkCollisionWithObs(const double& t_now);
-    bool checkCollisionWithOtherCars(const double& t_now);
+    bool checkCollisionWithObs(const double& t_now, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg = nullptr);
+    bool checkCollisionWithOtherCars(const double& t_now, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg = nullptr);
 
     bool getKinoPath(Eigen::Vector4d &end_state, bool first_search);
     void displayKinoPath(std::shared_ptr<plan_utils::KinoTrajData> kino_trajs);
@@ -157,6 +153,7 @@ private:
     bool is_init;
     int cars_num_;
     double car_d_cr_, car_length_, car_width_, car_wheelbase_;
+    double resolution_;
 
     //_____________
     /* Map related */

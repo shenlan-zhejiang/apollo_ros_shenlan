@@ -21,13 +21,14 @@ bool MappingShenlanComponent::Init()
 
   pc_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/pc_transformed");
   map_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/gird_map");
+  buf_writer_ = node_->CreateWriter<apollo::shenlan::OccupancyBuffer>("/apollo/shenlan/mapping/occupancy");
   
   last_seq = -1;
 
   return true;
 }
 
-bool MappingShenlanComponent::Proc( const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<drivers::PointCloud> &pcl_msg) 
+bool MappingShenlanComponent::Proc( const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<drivers::PointCloud> &pcl_msg )  
 {
   if (last_seq == (int)(pcl_msg->header().sequence_num())) {
     return true;
@@ -135,7 +136,22 @@ bool MappingShenlanComponent::Proc( const std::shared_ptr<localization::Localiza
   globalOccPc(map_);
   map_writer_->Write(map_);
 
+  std::shared_ptr<apollo::shenlan::OccupancyBuffer> buf_msg_ = std::make_shared<apollo::shenlan::OccupancyBuffer>();
+  globalOccArr(buf_msg_);
+  buf_writer_->Write(buf_msg_);
+
   return true;
+}
+
+void MappingShenlanComponent::globalOccArr(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &msg)
+{
+    for (int x = 0; x < mp_.global_map_size_[0]; ++x)
+    {
+        for (int y = 0; y < mp_.global_map_size_[1]; ++y)
+        {
+          msg->add_occupancy_buffer_2d(mp_.occupancy_buffer_2d_.at(y * mp_.global_map_size_[0] + x));
+        }
+    }
 }
  
 void MappingShenlanComponent::globalOccPc(const std::shared_ptr<drivers::PointCloud> &msg)

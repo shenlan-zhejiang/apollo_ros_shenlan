@@ -210,7 +210,7 @@ void *parse_data(void *para_)
 
   for (auto iter : obj2.point()) {
     geometry_msgs::Point32 pt;
-    pt.x = iter.x() - 587061;;
+    pt.x = iter.x() - 587061;
     pt.y = iter.y() - 4141628;
     pt.z = iter.z();
     point_cloud_.points.emplace_back(pt);

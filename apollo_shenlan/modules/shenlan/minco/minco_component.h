@@ -28,13 +28,13 @@
 namespace apollo{
 namespace shenlan{
 
-class MincoShenlanComponent final : public cyber::Component<localization::LocalizationEstimate, drivers::PointCloud> 
+class MincoShenlanComponent final : public cyber::Component<localization::LocalizationEstimate, apollo::shenlan::OccupancyBuffer> 
 {
     public:
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     public:
         bool Init() override;
-        bool Proc( const std::shared_ptr<localization::LocalizationEstimate> &odm_, const std::shared_ptr<drivers::PointCloud> &pc_) override;
+        bool Proc( const std::shared_ptr<localization::LocalizationEstimate> &odm_, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_) override;
 
         std::string Name() const {return "minco_shenlan";}
     private:
@@ -43,22 +43,17 @@ class MincoShenlanComponent final : public cyber::Component<localization::Locali
           
         std::shared_ptr<cyber::Timer> exec_timer_, safety_timer_;
 
-        void CreateMapCallback( const std::shared_ptr<localization::LocalizationEstimate> &odm_, const std::shared_ptr<drivers::PointCloud> &pc_);
         void ParkingCallback(const std::shared_ptr<apollo::localization::Pose> &msg);
         void OdomCallback(const std::shared_ptr<apollo::localization::LocalizationEstimate> &msg);
         //void OdomCallback(const nav_msgs::Odometry& msg);
         //void SwarmTrajCallback(const swarm_bridge::Trajectory& traj_msg);
         void execFSMCallback();
-        void checkCollisionCallback();
+        void checkCollisionCallback(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &msg);
 
-        std::shared_ptr<cyber::Writer<drivers::PointCloud>> pc_writer_;
-        std::shared_ptr<cyber::Writer<drivers::PointCloud>> map_writer_;
         std::shared_ptr<cyber::Writer<apollo::shenlan::mpc::Trajectory>> traj_writer_;
         std::shared_ptr<cyber::Writer<apollo::planning::ADCTrajectory>> adc_writer_;
 
-        int seq_num_map = 0;
-        void globalOccPc(const std::shared_ptr<drivers::PointCloud> &msg);
-        void calcTraj2Controller(const std::shared_ptr<apollo::shenlan::mpc::Trajectory> &msg);
+        //void calcTraj2Controller(const std::shared_ptr<apollo::shenlan::mpc::Trajectory> &msg);
 
         int seq_num_adc = 0;
         void calcMinco2ADC(const std::shared_ptr<apollo::planning::ADCTrajectory> &traj_msg);

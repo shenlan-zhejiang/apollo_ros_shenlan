@@ -283,7 +283,10 @@ public:
     /* map */
     double resolution_, inv_resolution_, yaw_resolution_, inv_yaw_resolution_;
     Eigen::Vector2d origin_, map_size_3d_;
+    Eigen::Vector3d map_size_;
     double yaw_origin_ = -M_PI;
+    Eigen::Vector3i global_map_size_;
+
     /*shot hzc*/
     std::vector<double>  shot_timeList;
     std::vector<double>  shot_lengthList;
@@ -351,7 +354,6 @@ public:
     KinoAstar(){};
     ~KinoAstar();
     //ros::NodeHandle nh_;
-    std::shared_ptr<apollo::shenlan::MappingProcess> map_ptr_ = nullptr;
     std::vector<Eigen::Vector2d> car_vertex_small_, car_vertex_, car_vertex_big_;
 
     enum { REACH_HORIZON = 1, REACH_END = 2,  NO_PATH = 3, REACH_END_BUT_SHOT_FAILS = 4};
@@ -367,22 +369,21 @@ public:
     void reset();
     void findNearestNode(Eigen::Vector2d& start_pos, bool first_search);
     int search(Eigen::Vector4d start_state, Eigen::Vector2d init_ctrl,
-              Eigen::Vector4d end_state, bool use3d = false);
+              Eigen::Vector4d end_state, bool use3d = false, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg = nullptr);
     bool searchTime(plan_utils::KinoTrajData &flat_trajs, double &start_world_time);
     void getTruncatedposLists();
     void getSingulNodes();
     Eigen::Vector3d CalculateInitPos(double& t, int& singul);
     // inital semantic map
     // void intialMap(map_utils::TrajPlannerMapItf *map_itf);
-    void setMap(std::shared_ptr<apollo::shenlan::MappingProcess>& ptr);
     void setFreeSpaces(std::vector<Eigen::Vector2d>& pos_vec, std::vector<double>& yaw_vec);
     void setAllCarsTrajs(plan_utils::TrajContainer& trajectory, int& car_id);
     void setAllCarsLastTrajs(plan_utils::TrajContainer& trajectory, int& car_id);
     // get kino traj for optimization  
     void getKinoNode(plan_utils::KinoTrajData &flat_trajs);
     void NodeVis(Eigen::Vector3d state);
-    void checkCollisionUsingPosAndYaw(const Eigen::Vector3d &state, bool& res);
-    void checkCollisionUsingLine(const Eigen::Vector2d &start_pt, const Eigen::Vector2d &end_pt, bool &res);    
+    void checkCollisionUsingPosAndYaw(const Eigen::Vector3d &state, bool& res, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg = nullptr);
+    void checkCollisionUsingLine(const Eigen::Vector2d &start_pt, const Eigen::Vector2d &end_pt, bool &res, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg = nullptr);    
 
     /*hzchzc*/
     Eigen::Vector3d evaluatePos(double t);
