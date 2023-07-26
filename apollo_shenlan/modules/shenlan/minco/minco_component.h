@@ -64,6 +64,7 @@ class MincoShenlanComponent final : public cyber::Component<localization::Locali
         uint32_t current_seq = 0;
         int __count__simon = 0;
         FILE *fp;
+        double current_data[360000];
 
         //std::shared_ptr<localization::LocalizationEstimate> odom_msg;
         

@@ -305,9 +305,16 @@ namespace path_searching
       Eigen::Vector2i id;
 
       posToIndex2d_self(pos, id, origin_, inv_resolution_);
-      //std::cout << "id: " << id << std::endl;
-      //std::cout << "buf_id: " << id(1) * global_map_size_(0) + id(0) << std::endl;
-      //std::cout << "buf_msg: " << buf_msg->occupancy_buffer_2d(id(1) * global_map_size_(0) + id(0)) << std::endl;
+
+      // std::cout << "++++++++++++++++++" << std::endl;
+      // std::cout << "pos(0): " << pos(0) << std::endl;
+      // std::cout << "pos(1): " << pos(1) << std::endl;
+      // std::cout << "pos(0) - origin_(0): " << pos(0) - 587052 << std::endl;
+      // std::cout << "pos(1) - origin_(1): " << pos(1) - 4141619 << std::endl;
+      // std::cout << "id(0): " << id(0) << std::endl;
+      // std::cout << "id(1): " << id(1) << std::endl;
+      // std::cout << "array: " << id(1) * global_map_size_(0) + id(0) << std::endl;
+      // std::cout << "buf_msg: " <<buf_msg->occupancy_buffer_2d(id(1) * global_map_size_(0) + id(0)) << std::endl;
       
       if(id(0) < 0 || id(0) >= global_map_size_(0) || id(1) < 0 || id(1) >= global_map_size_(1)) {
           return -1;
@@ -398,9 +405,11 @@ namespace path_searching
           //if(map_ptr_->getVoxelState2d(tmp) == 1)
           if(getVoxelState2d_self(tmp, origin_, inv_resolution_, global_map_size_, buf_msg) == 1)
           {
-              std::cout << "Collision!2" << std::endl;
+              //std::cout << "Collision!2" << std::endl;
               res = true;
+              //exit(0);
               return;
+              
           }
       }
   }

@@ -25,6 +25,10 @@ bool MappingShenlanComponent::Init()
   
   last_seq = -1;
 
+  fp = fopen("test00033444.txt", "rb");
+  fread(&current_seq, sizeof(uint32_t), 1, fp);
+  fread(current_data, sizeof(double), 360000, fp);
+
   return true;
 }
 
@@ -143,51 +147,40 @@ bool MappingShenlanComponent::Proc( const std::shared_ptr<localization::Localiza
   return true;
 }
 
-void MappingShenlanComponent::globalOccArr(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &msg)
+void MappingShenlanComponent::globalOccPc(const std::shared_ptr<drivers::PointCloud> &msg)
 {
     for (int x = 0; x < mp_.global_map_size_[0]; ++x)
     {
         for (int y = 0; y < mp_.global_map_size_[1]; ++y)
         {
-          msg->add_occupancy_buffer_2d(mp_.occupancy_buffer_2d_.at(y * mp_.global_map_size_[0] + x));
+            if (mp_.occupancy_buffer_2d_.at(y * mp_.global_map_size_[0] + x) > 0.5)
+            {
+                Eigen::Vector2i idx(x, y);
+                Eigen::Vector2d pos;
+                mp_.indexToPos2d(idx, pos);
+                PointXYZIT *point = msg->add_point();
+                point->set_x(pos[0]);
+                point->set_y(pos[1]);
+                point->set_z(0);
+            }
         }
     }
-}
- 
-void MappingShenlanComponent::globalOccPc(const std::shared_ptr<drivers::PointCloud> &msg)
-{
-    // for (int x = 0; x < mp_.global_map_size_[0]; ++x)
-    // {
-    //     for (int y = 0; y < mp_.global_map_size_[1]; ++y)
-    //     {
-    //         if (mp_.occupancy_buffer_2d_.at(y * mp_.global_map_size_[0] + x) > 0.5)
-    //         {
-    //             Eigen::Vector2i idx(x, y);
-    //             Eigen::Vector2d pos;
-    //             mp_.indexToPos2d(idx, pos);
-    //             PointXYZIT *point = msg->add_point();
-    //             point->set_x(pos[0]);
-    //             point->set_y(pos[1]);
-    //             point->set_z(0);
-    //         }
-    //     }
-    // }
 
-    for (int x = 0; x < mp_.global_map_size_[0]; ++x)
-      for (int y = 0; y < mp_.global_map_size_[1]; ++y)
-          for (int z = 0; z < mp_.global_map_size_[2]; ++z)
-          {
-              if (mp_.occupancy_buffer_[x * mp_.grid_size_y_multiply_z_ + y * mp_.global_map_size_(2) + z] > mp_.min_occupancy_log_)
-              {
-                  Eigen::Vector3i idx(x, y, z);
-                  Eigen::Vector3d pos;
-                  mp_.indexToPos(idx, pos);
-                  PointXYZIT *point = msg->add_point();
-                  point->set_x(pos[0]);
-                  point->set_y(pos[1]);
-                  point->set_z(pos[2]);
-              }
-          }
+    // for (int x = 0; x < mp_.global_map_size_[0]; ++x)
+    //   for (int y = 0; y < mp_.global_map_size_[1]; ++y)
+    //       for (int z = 0; z < mp_.global_map_size_[2]; ++z)
+    //       {
+    //           if (mp_.occupancy_buffer_[x * mp_.grid_size_y_multiply_z_ + y * mp_.global_map_size_(2) + z] > mp_.min_occupancy_log_)
+    //           {
+    //               Eigen::Vector3i idx(x, y, z);
+    //               Eigen::Vector3d pos;
+    //               mp_.indexToPos(idx, pos);
+    //               PointXYZIT *point = msg->add_point();
+    //               point->set_x(pos[0]);
+    //               point->set_y(pos[1]);
+    //               point->set_z(pos[2]);
+    //           }
+    //       }
 
     auto timestamp = Clock::NowInSeconds();
     msg->set_height(1);
@@ -200,6 +193,37 @@ void MappingShenlanComponent::globalOccPc(const std::shared_ptr<drivers::PointCl
     msg->set_measurement_time(timestamp);
     seq_num_map += 1;
 }
- 
+
+void MappingShenlanComponent::globalOccArr(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &msg)
+{
+
+  uint32_t size = mp_.occupancy_buffer_2d_.size();
+  msg->mutable_occupancy_buffer_2d()->Resize(size, 0.0);
+  //memcpy(msg->mutable_occupancy_buffer_2d()->mutable_data(), current_data, sizeof(double) * size);
+  memcpy(msg->mutable_occupancy_buffer_2d()->mutable_data(), mp_.occupancy_buffer_2d_.data(), sizeof(double) * size);
+  
+    // for (int x = 0; x < mp_.global_map_size_[0]; ++x)
+    // {
+    //     for (int y = 0; y < mp_.global_map_size_[1]; ++y)
+    //     {
+
+    /*
+    for (int x = 0; x < mp_.global_map_size_[0]; ++x)
+    {
+        for (int y = 0; y < mp_.global_map_size_[1]; ++y)
+        {
+          // std::cout << "-------------------" << std::endl;
+          // std::cout << "id(0): " << x << std::endl;
+          // std::cout << "id(1): " << y << std::endl;
+          // std::cout << "array_x: " << y * mp_.global_map_size_[0] + x << std::endl;
+          // std::cout << "array_y: " << y + x * mp_.global_map_size_[0] << std::endl;
+          // std::cout << "buf_msg: " << mp_.occupancy_buffer_2d_.at(y * mp_.global_map_size_[0] + x) << std::endl;
+
+          msg->add_occupancy_buffer_2d(mp_.occupancy_buffer_2d_.at(y * mp_.global_map_size_[0] + x));
+        }
+    }
+    */
+} 
+
 }
 }

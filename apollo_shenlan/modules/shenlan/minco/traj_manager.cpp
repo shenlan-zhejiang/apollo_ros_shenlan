@@ -663,9 +663,11 @@ void TrajPlanner::broadcastTraj2SwarmBridge()
     //TrajPathPub_.publish(traj_msg);
 }
 */
+#include <stdio.h>
 
 void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
 {
+
     hPolys_.clear();
     double resolution = resolution_;
     double step = resolution * 1.0;
@@ -686,11 +688,11 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
 
         Eigen::MatrixXd hPoly;
         hPoly.resize(4, 4);
+        int count__ = 0;
         while(have_stopped_expanding.norm() != 0)
         {
             for(int i = 0; i < 4; i++)
             {
-            
                 Eigen::Vector2d point1, point2, newpoint1, newpoint2; 
                 bool isocc = false;               
                 switch(i)
@@ -702,6 +704,7 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
                     newpoint2 = pos + ego_R * Eigen::Vector2d(distance2center(1), distance2center(0) + step);
 
                     kino_path_finder_->checkCollisionUsingLine(point1, newpoint1, isocc, buf_msg);
+                    // std::cout << "c0:1" << point1 - newpoint1 << "---" << isocc << std::endl;
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -709,6 +712,7 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
                     }
 
                     kino_path_finder_->checkCollisionUsingLine(newpoint1, newpoint2, isocc, buf_msg);
+                    // std::cout << "c0:2" << newpoint1 - newpoint2 << "---" << isocc << std::endl;
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -716,6 +720,7 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
                     }
 
                     kino_path_finder_->checkCollisionUsingLine(newpoint2, point2, isocc, buf_msg);
+                    // std::cout << "c0:3" << newpoint2 - point2 << "---" << isocc << std::endl;
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -737,6 +742,7 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
                     newpoint2 = pos + ego_R * Eigen::Vector2d(distance2center(1) + step, -distance2center(2));
 
                     kino_path_finder_->checkCollisionUsingLine(point1, newpoint1, isocc, buf_msg);
+                    // std::cout << "c1:1" << point1 - newpoint1 << "---" << isocc << std::endl;
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -744,6 +750,7 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
                     }
 
                     kino_path_finder_->checkCollisionUsingLine(newpoint1, newpoint2, isocc, buf_msg);
+                    // std::cout << "c1:2" << newpoint1 - newpoint2 << "---" << isocc << std::endl;
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -751,6 +758,7 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
                     }
 
                     kino_path_finder_->checkCollisionUsingLine(newpoint2, point2, isocc, buf_msg);
+                    // std::cout << "c1:3" << newpoint2 - point2 << "---" << isocc << std::endl;
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -772,13 +780,15 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
                     newpoint2 = pos + ego_R * Eigen::Vector2d(-distance2center(3), -distance2center(2) - step);
 
                     kino_path_finder_->checkCollisionUsingLine(point1, newpoint1, isocc, buf_msg);
+                    // std::cout << "c2:1" << point1 - newpoint1 << "---" << isocc << std::endl;
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
                         break;
                     }
-
+                    //// std::cout << "c2:2" << newpoint1 - newpoint2 << "---" << isocc << std::endl;
                     kino_path_finder_->checkCollisionUsingLine(newpoint1, newpoint2, isocc, buf_msg);
+                    // std::cout << "c2:2" << newpoint1 - newpoint2 << "---" << isocc << std::endl;
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -786,6 +796,7 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
                     }
 
                     kino_path_finder_->checkCollisionUsingLine(newpoint2, point2, isocc, buf_msg);
+                    // std::cout << "c2:3" << newpoint2 - point2 << "---" << isocc << std::endl;
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -807,6 +818,7 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
                     newpoint2 = pos + ego_R * Eigen::Vector2d(-distance2center(3) - step, distance2center(0));
 
                     kino_path_finder_->checkCollisionUsingLine(point1, newpoint1, isocc, buf_msg);
+                    // std::cout << "c3:1" << point1 - newpoint1 << "---" << isocc << std::endl;
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -814,6 +826,7 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
                     }
 
                     kino_path_finder_->checkCollisionUsingLine(newpoint1, newpoint2, isocc, buf_msg);
+                    // std::cout << "c3:2" << newpoint1 - newpoint2 << "---" << isocc << std::endl;
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -821,6 +834,7 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
                     }
 
                     kino_path_finder_->checkCollisionUsingLine(newpoint2, point2, isocc, buf_msg);
+                    // std::cout << "c3:3" << newpoint2 - point2 << "---" << isocc << std::endl;
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -837,6 +851,9 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
 
                 }
             }
+            count__ ++;
+            // std::cout << "!!!!!!!!!!!!!!count!!!!!!!!!!!" << count__ << std::endl;
+            //exit(0);
         }
         Eigen::Vector2d point1, norm1;
         point1 = pos + ego_R * Eigen::Vector2d(distance2center(1), distance2center(0));

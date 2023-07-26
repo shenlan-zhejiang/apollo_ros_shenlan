@@ -37,13 +37,58 @@ bool MincoShenlanComponent::Init()
 
     fp = fopen("test00033444.txt", "rb");
     fread(&current_seq, sizeof(uint32_t), 1, fp);
+    //fread(current_data, sizeof(double), 360000, fp);
 
     return true;
 }
 
+bool diff(char *a, char *b, int size)
+{
+    for (int idx = 0; idx < size; idx++) {
+        if (a[idx] != b[idx]) { return true;}
+    }
+    return false;
+}
+
+bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg) 
+{
+  //int size__ = buf_msg->occupancy_buffer_2d_size();
+  
+  // uint32_t seq = odom_msg->header().sequence_num();
+  //std::cout << seq << " ==== " << size__ << " diff:" << diff((char*)current_data, (char*)buf_msg->mutable_occupancy_buffer_2d()->mutable_data(), sizeof(double) * size__) << std::endl;
+  //return true;
+  //std::cout << "occupancy_buffer_2d_size:" << buf_msg->occupancy_buffer_2d_size() << std::endl;
+  //std::cout << "+++++++++" << seq << "   " << current_seq << std::endl;
+  // if (current_seq != seq) return true;
+  // std::cout << "=========" << seq << "   " << current_seq << std::endl;
+  //std::cout << "0000" << std::endl;
+  //CreateMapCallback(odom_msg, buf_msg);
+  //std::cout << "1111" << std::endl;
+  OdomCallback(odom_msg);
+  //std::cout << "2222" << std::endl;
+  int size = buf_msg->occupancy_buffer_2d_size();
+
+  //int size = buf_msg->occupancy_buffer_2d().size();
+  auto buf_msg_ = std::make_shared<apollo::shenlan::OccupancyBuffer>();
+  buf_msg_->mutable_occupancy_buffer_2d()->Resize(size, 0.0);
+
+  fread(buf_msg_->mutable_occupancy_buffer_2d()->mutable_data(), sizeof(double), size, fp);
+  fread(&current_seq, sizeof(uint32_t), 1, fp);
+  execFSMCallback(buf_msg);
+  //std::cout << "3333" << std::endl;
+  checkCollisionCallback(buf_msg);
+  //std::cout << "4444" << std::endl;
+  //RFSM.print();
+
+  return true;
+}
+
+
+/*
 bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg) 
 {
   uint32_t seq = odom_msg->header().sequence_num();
+  //std::cout << "occupancy_buffer_2d_size:" << buf_msg->occupancy_buffer_2d_size() << std::endl;
   //std::cout << "+++++++++" << seq << "   " << current_seq << std::endl;
   if (current_seq != seq) return true;
   std::cout << "=========" << seq << "   " << current_seq << std::endl;
@@ -53,16 +98,16 @@ bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::Localizatio
   OdomCallback(odom_msg);
   //std::cout << "2222" << std::endl;
   int size = buf_msg->occupancy_buffer_2d_size();
-  /*
-  int size = buf_msg->occupancy_buffer_2d().size();
+
+  //int size = buf_msg->occupancy_buffer_2d().size();
   auto buf_msg_ = std::make_shared<apollo::shenlan::OccupancyBuffer>();
   buf_msg_->mutable_occupancy_buffer_2d()->Resize(size, 0.0);
-  */
-  fread(buf_msg->mutable_occupancy_buffer_2d(), sizeof(double), size, fp);
+
+  fread(buf_msg_->mutable_occupancy_buffer_2d()->mutable_data(), sizeof(double), size, fp);
   fread(&current_seq, sizeof(uint32_t), 1, fp);
-  execFSMCallback(buf_msg);
+  execFSMCallback(buf_msg_);
   //std::cout << "3333" << std::endl;
-  checkCollisionCallback(buf_msg);
+  checkCollisionCallback(buf_msg_);
   //std::cout << "4444" << std::endl;
   //RFSM.print();
   if (__count__simon == 5) {
@@ -74,6 +119,7 @@ bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::Localizatio
   }
   return true;
 }
+*/
 
 /*
 bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg) 

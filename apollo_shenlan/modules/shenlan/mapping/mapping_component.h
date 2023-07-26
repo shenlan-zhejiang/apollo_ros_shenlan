@@ -21,6 +21,8 @@
 
 #include "modules/shenlan/mapping/mapping.h"
 #include<vector>
+#include <stdio.h>
+
 namespace apollo {
 namespace shenlan {
 
@@ -51,6 +53,11 @@ public:
   void globalOccArr(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &msg);
 
   int last_seq;
+  uint32_t current_seq = 0;
+  int __count__simon = 0;
+  double current_data[360000];
+  FILE *fp;
+
 };
 
 CYBER_REGISTER_COMPONENT(MappingShenlanComponent);
