@@ -313,7 +313,7 @@ public:
     void getFlatState(Eigen::Vector4d state, Eigen::Vector2d control_input,
                       Eigen::MatrixXd &flat_state, int singul);
 
-    bool is_shot_sucess(Eigen::Vector3d state1,Eigen::Vector3d state2);
+    bool is_shot_sucess(Eigen::Vector3d state1, Eigen::Vector3d state2, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg);
     double computeShotTraj(Eigen::Vector3d &state1, Eigen::Vector3d &state2,
                           std::vector<Eigen::Vector3d> &path_list,
                           double& len); 
@@ -368,8 +368,7 @@ public:
 
     void reset();
     void findNearestNode(Eigen::Vector2d& start_pos, bool first_search);
-    int search(Eigen::Vector4d start_state, Eigen::Vector2d init_ctrl,
-              Eigen::Vector4d end_state, bool use3d = false, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg = nullptr);
+    int search(Eigen::Vector4d start_state, Eigen::Vector2d init_ctrl, Eigen::Vector4d end_state, bool use3d = false, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg = nullptr);
     bool searchTime(plan_utils::KinoTrajData &flat_trajs, double &start_world_time);
     void getTruncatedposLists();
     void getSingulNodes();
@@ -382,8 +381,8 @@ public:
     // get kino traj for optimization  
     void getKinoNode(plan_utils::KinoTrajData &flat_trajs);
     void NodeVis(Eigen::Vector3d state);
-    void checkCollisionUsingPosAndYaw(const Eigen::Vector3d &state, bool& res, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg = nullptr);
-    void checkCollisionUsingLine(const Eigen::Vector2d &start_pt, const Eigen::Vector2d &end_pt, bool &res, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg = nullptr);    
+    void checkCollisionUsingPosAndYaw(const Eigen::Vector3d &state, bool& res, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg);
+    void checkCollisionUsingLine(const Eigen::Vector2d &start_pt, const Eigen::Vector2d &end_pt, bool &res, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg);    
 
     /*hzchzc*/
     Eigen::Vector3d evaluatePos(double t);

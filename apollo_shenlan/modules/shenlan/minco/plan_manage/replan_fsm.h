@@ -64,7 +64,7 @@ public:
     FSM_EXEC_STATE exec_state_;
 
     void changeFSMExecState(FSM_EXEC_STATE new_state, string pos_call);
-    int execFSM();
+    int execFSM(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg);
 
 public:
     ReplanFSM()

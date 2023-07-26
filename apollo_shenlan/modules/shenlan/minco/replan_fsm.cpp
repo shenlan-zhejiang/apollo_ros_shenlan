@@ -36,7 +36,7 @@ void ReplanFSM::changeFSMExecState(FSM_EXEC_STATE new_state, string pos_call)
     std::cout << "[" + pos_call + "]: from " + state_str[pre_s] + " to " + state_str[int(new_state)] << std::endl;    
 }
 
-int ReplanFSM::execFSM() {
+int ReplanFSM::execFSM(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg) {
     static int fsm_num = 0;
     fsm_num++;
     if (fsm_num == 50)
@@ -100,12 +100,12 @@ int ReplanFSM::execFSM() {
 
             planner_ptr_->setParkingEnd(end_pt_);
 
-            planner_ptr_->getKinoPath(end_pt_, true);
+            planner_ptr_->getKinoPath(end_pt_, true, buf_msg);
 
             // planner_ptr_->displayPolyH(planner_ptr_->display_hPolys());
             planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
 
-            planner_ptr_->RunMINCOParking();
+            planner_ptr_->RunMINCOParking(buf_msg);
 
             planner_ptr_->broadcastTraj2SwarmBridge();
 
@@ -152,7 +152,7 @@ int ReplanFSM::execFSM() {
             init_state_ = replan_init_state;
 
             planner_ptr_->setParkingEnd(end_pt_);
-            if(!planner_ptr_->getKinoPath(end_pt_, false))
+            if(!planner_ptr_->getKinoPath(end_pt_, false, buf_msg))
             {
                 while(true)
                 {
@@ -170,7 +170,7 @@ int ReplanFSM::execFSM() {
                 break;
             }
             planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
-            if(!planner_ptr_->RunMINCOParking())
+            if(!planner_ptr_->RunMINCOParking(buf_msg))
             {
                 while(true)
                 {

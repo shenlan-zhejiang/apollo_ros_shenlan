@@ -45,50 +45,11 @@ bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::Localizatio
 
     OdomCallback(odom_msg);
 
-    execFSMCallback();
+    execFSMCallback(buf_msg);
 
     checkCollisionCallback(buf_msg);
 
     return true;
-}
-
-void MincoShenlanComponent::checkCollisionCallback(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
-{
-    //std::cout << "checkcolli:" << apollo::cyber::Time::Now().ToNanosecond() << std::endl;
-    //std::cout << "checkcolli:" << last_seq << std::endl;
-    //double time_now = ros::Time::now().toSec();
-    double time_now = apollo::cyber::Time::Now().ToSecond();
-    // set other cars' position of map is free
-    RFSM.planner_ptr_->setMapFree(time_now);
-
-    // check collision with static obstacles
-    if(RFSM.exec_state_ == RFSM.EXEC_TRAJ)
-        RFSM.collision_with_obs_ = RFSM.planner_ptr_->checkCollisionWithObs(time_now, buf_msg);
-
-    // check collision with surround cars
-    if(RFSM.exec_state_ == RFSM.EXEC_TRAJ)
-        RFSM.collision_with_othercars_ = RFSM.planner_ptr_->checkCollisionWithOtherCars(time_now, buf_msg);
-}
-
-void MincoShenlanComponent::ParkingCallback(const std::shared_ptr<apollo::localization::Pose> &msg)
-{
-    return;
-    std::cout << "Triggered parking mode!" << std::endl;
-    // end_pt_ << msg.pose.position.x, msg.pose.position.y, 
-    //            tf::getYaw(msg.pose.orientation), 1.0e-2;
-    RFSM.end_pt_ << RFSM.target_x_, RFSM.target_y_, 
-               RFSM.target_yaw_, 1.0e-2;
-    std::cout << "end_pt: " << RFSM.end_pt_.transpose() << std::endl;
-    
-    RFSM.have_target_ = true;
-    // Eigen::Vector4d init_state;  init_state << cur_pos_, cur_yaw_, cur_vel_;
-    // planner_ptr_->setInitState(init_state);
-    // planner_ptr_->setParkingEnd(end_pt_);
-    // planner_ptr_->getKinoPath(end_pt_);
-    // planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
-    // planner_ptr_->RunMINCOParking();
-    // planner_ptr_->displayPolyH(planner_ptr_->display_hPolys());
-    // planner_ptr_->displayMincoTraj(planner_ptr_->trajectory());
 }
 
 void MincoShenlanComponent::OdomCallback(const std::shared_ptr<apollo::localization::LocalizationEstimate> &msg)
@@ -105,8 +66,8 @@ void MincoShenlanComponent::OdomCallback(const std::shared_ptr<apollo::localizat
                                   msg->pose().orientation().qy(), msg->pose().orientation().qz());
 
     Eigen::Quaterniond quaternion_(0.7071, 0, 0, 0.7071);
-
     Eigen::Matrix3d R = quaternion.toRotationMatrix() * quaternion_.toRotationMatrix();
+
     Eigen::Vector3d pos = center_pos + R * pos2center;
     
     RFSM.cur_pos_ = pos.head(2);
@@ -121,24 +82,13 @@ void MincoShenlanComponent::OdomCallback(const std::shared_ptr<apollo::localizat
     //Eigen::Vector3d eulerAngle = quaternion.matrix().eulerAngles(0,1,2);
     RFSM.cur_yaw_ = msg->pose().heading();//eulerAngle(2);
     //std::cout << "RFSM.cur_yaw_: " << RFSM.cur_yaw_ << std::endl;
-
-
-/*
-    static tf::TransformBroadcaster br;
-    tf::Transform transform;
-    transform.setOrigin(tf::Vector3(cur_pos_(0), cur_pos_(1), 0.0));
-    tf::Quaternion q;
-    q.setRPY(0, 0, cur_yaw_);
-    transform.setRotation(q);
-    br.sendTransform(tf::StampedTransform(transform, msg.header.stamp, "map", "car_"+to_string(car_id_)+"_pos"));
-*/
 }
 
-void MincoShenlanComponent::execFSMCallback()
+void MincoShenlanComponent::execFSMCallback(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
 {
     //std::cout << "execFSM:" << apollo::cyber::Time::Now().ToNanosecond() << std::endl;
     //exec_timer_->Stop();
-    int ret = RFSM.execFSM();
+    int ret = RFSM.execFSM(buf_msg);
     if (ret == 1) {
       auto adc_msg = std::make_shared<apollo::planning::ADCTrajectory>();
       calcMinco2ADC(adc_msg);
@@ -225,24 +175,24 @@ void MincoShenlanComponent::calcMinco2ADC(const std::shared_ptr<apollo::planning
         //curv_ = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getCurv(t0);
         break; // there is only one traj in ADCtrajectory.
     }
+}
 
-    //this snippet comes from displayMincoTraj in traj_manager.h
-    /*
-    auto minco_traj = RFSM.planner_ptr_->trajectory();
-    for (unsigned int i = 0; i < minco_traj->size(); ++i)
-    {
-        double total_duration = minco_traj->at(i).duration;
-        for (double t = 0; t <= total_duration; t += 0.01)
-        {
-            Eigen::Vector2d pt = minco_traj->at(i).traj.getPos(t);
-            apollo::common::PathPoint *point = traj_msg->add_path_point();
-            point->set_x(pt[0]);
-            point->set_y(pt[1]);
-            point->set_z(0.2);
-        }
-        break; // there is only one path_point in ADCtrajectory.
-    }
-    */
+void MincoShenlanComponent::checkCollisionCallback(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
+{
+    //std::cout << "checkcolli:" << apollo::cyber::Time::Now().ToNanosecond() << std::endl;
+    //std::cout << "checkcolli:" << last_seq << std::endl;
+    //double time_now = ros::Time::now().toSec();
+    double time_now = apollo::cyber::Time::Now().ToSecond();
+    // set other cars' position of map is free
+    RFSM.planner_ptr_->setMapFree(time_now);
+
+    // check collision with static obstacles
+    if(RFSM.exec_state_ == RFSM.EXEC_TRAJ)
+        RFSM.collision_with_obs_ = RFSM.planner_ptr_->checkCollisionWithObs(time_now, buf_msg);
+
+    // check collision with surround cars
+    if(RFSM.exec_state_ == RFSM.EXEC_TRAJ)
+        RFSM.collision_with_othercars_ = RFSM.planner_ptr_->checkCollisionWithOtherCars(time_now, buf_msg);
 }
 
 }  // namespace shenlan
