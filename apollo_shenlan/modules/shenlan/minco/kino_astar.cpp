@@ -31,6 +31,20 @@ namespace path_searching
   void KinoAstar::init(apollo::shenlan::ShenlanConf &shenlan_conf)
   {
       //std::cout << "KinoAstar init" << std::endl;
+
+      resolution_ = shenlan_conf.mapping_conf().resolution();
+
+      origin_(0) = shenlan_conf.mapping_conf().origin_x() + shenlan_conf.mapping_conf().map_origin_x();//587061-100;
+      origin_(1) = shenlan_conf.mapping_conf().origin_y() + shenlan_conf.mapping_conf().map_origin_y();//4141628-100;
+
+      map_size_(0) = shenlan_conf.mapping_conf().map_size_x();
+      map_size_(1) = shenlan_conf.mapping_conf().map_size_y();
+      map_size_(2) = shenlan_conf.mapping_conf().map_size_z();
+
+      global_map_size_(0) = ceil(map_size_(0) / resolution_);
+      global_map_size_(1) = ceil(map_size_(1) / resolution_);
+      global_map_size_(2) = ceil(map_size_(2) / resolution_);
+
       horizon_= shenlan_conf.kinoastar_conf().horizon();//50;
       yaw_resolution_= shenlan_conf.kinoastar_conf().yaw_resolution();//0.3;
       lambda_heu_ = shenlan_conf.kinoastar_conf().lambda_heu();//5.0;
@@ -76,22 +90,6 @@ namespace path_searching
       fill(have_received_trajs_.begin(), have_received_trajs_.end(), false);
       ifdynamic_ = false;
 
-      // map_size_3d_(0) = cfg_.map_cfg().map_size_x();
-      // map_size_3d_(1) = cfg_.map_cfg().map_size_y();
-
-      // resolution_ = cfg_.map_cfg().map_resl();
-      // nh_.param("mapping/resolution", resolution_, 0.2);
-      //resolution_ = map_ptr_->getResolution();
-      resolution_ = shenlan_conf.mapping_conf().resolution();
-      map_size_(0) = shenlan_conf.mapping_conf().map_size_x();
-      map_size_(1) = shenlan_conf.mapping_conf().map_size_y();
-      map_size_(2) = shenlan_conf.mapping_conf().map_size_z();
-      global_map_size_(0) = ceil(map_size_(0) / resolution_);
-      global_map_size_(1) = ceil(map_size_(1) / resolution_);
-      global_map_size_(2) = ceil(map_size_(2) / resolution_);
-
-      // origin_(0) = -0.5*map_size_3d_(0);
-      // origin_(1) = -0.5*map_size_3d_(1);
       yaw_origin_ = -M_PI;
       
       max_vel_ = shenlan_conf.trajplanner_conf().max_vel();//6.0;
@@ -295,6 +293,11 @@ namespace path_searching
   {
       for(int i = 0; i < 2; i++)
           id(i) = floor((pos(i) - origin_(i)) * inv_resolution_);
+      // std::cout << "id(1): " << id(1) << std::endl;
+      // std::cout << "pos(1): " << pos(1) << std::endl;
+      // std::cout << "origin_: " << origin_ << std::endl;
+      // if ((pos(0) - 587061) * (pos(0) - 587061) < 1)
+      //     std::cout << "id(1): " << id(1) << std::endl;
   }
   
   int getVoxelState2d_self(const Eigen::Vector2d &pos, Eigen::Vector2d& origin_, double inv_resolution_, Eigen::Vector3i& global_map_size_, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
@@ -302,6 +305,9 @@ namespace path_searching
       Eigen::Vector2i id;
 
       posToIndex2d_self(pos, id, origin_, inv_resolution_);
+      //std::cout << "id: " << id << std::endl;
+      //std::cout << "buf_id: " << id(1) * global_map_size_(0) + id(0) << std::endl;
+      //std::cout << "buf_msg: " << buf_msg->occupancy_buffer_2d(id(1) * global_map_size_(0) + id(0)) << std::endl;
       
       if(id(0) < 0 || id(0) >= global_map_size_(0) || id(1) < 0 || id(1) >= global_map_size_(1)) {
           return -1;
@@ -316,6 +322,9 @@ namespace path_searching
   {
       Eigen::Vector2i idx;
       posToIndex2d_self(pos, idx, origin_, inv_resolution_);
+      // std::cout << "idx(0): " << idx(0) << std::endl;
+      // std::cout << "idx(1): " << idx(1) << std::endl;
+
       if(idx(0) < 0 || idx(0) >= global_map_size_(0) || idx(1) < 0 || idx(1) >= global_map_size_(1))
           return false;
       else
@@ -347,7 +356,7 @@ namespace path_searching
               //if(map_ptr_->getVoxelState2d(tmp) == 1)
               if(getVoxelState2d_self(tmp, origin_, inv_resolution_, global_map_size_, buf_msg) == 1)
               {
-                  std::cout << "Collision!" << std::endl;
+                  std::cout << "Collision!1" << std::endl;
                   res = true;
                   return;
                   // break;
@@ -389,7 +398,7 @@ namespace path_searching
           //if(map_ptr_->getVoxelState2d(tmp) == 1)
           if(getVoxelState2d_self(tmp, origin_, inv_resolution_, global_map_size_, buf_msg) == 1)
           {
-              std::cout << "Collision!" << std::endl;
+              std::cout << "Collision!2" << std::endl;
               res = true;
               return;
           }
@@ -425,8 +434,7 @@ namespace path_searching
       //map_ptr_->setFreeSpacesForMapping(vec_normalVecs_and_points);
   }
 
-  int KinoAstar::search(Eigen::Vector4d start_state, Eigen::Vector2d init_ctrl,
-                               Eigen::Vector4d end_state, bool use3d, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
+  int KinoAstar::search(Eigen::Vector4d start_state, Eigen::Vector2d init_ctrl, Eigen::Vector4d end_state, bool use3d, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
   {
     //std::cout << "1111111111KinoAstar::search1111111111" << std::endl;
     bool isocc = false;  bool initsearch = false;
@@ -442,7 +450,7 @@ namespace path_searching
     //   return NO_PATH;
     // }
     // frontend_map_itf_->CheckIfCollisionUsingPosAndYaw(vp_,end_state.head(3),&isocc);
-    checkCollisionUsingPosAndYaw(end_state.head(3), isocc);
+    checkCollisionUsingPosAndYaw(end_state.head(3), isocc, buf_msg);
     if(isocc){
       std::cout<<"KinoAstar: end is not free!"<<endl;
       return NO_PATH;
@@ -492,7 +500,7 @@ namespace path_searching
       // double t1 = ros::Time::now().toSec();
       if((cur_node->state.head(2) - end_state_.head(2)).norm()<15.0&& initsearch){
     
-        is_shot_sucess(cur_node->state,end_state_.head(3));
+        is_shot_sucess(cur_node->state,end_state_.head(3), buf_msg);
       }
       // double t2 = ros::Time::now().toSec();
       // std::cout<<"one-shot time: "<<(t2-t1)*1000<<" ms"<<std::endl;
@@ -592,8 +600,10 @@ namespace path_searching
         // }
         Eigen::Vector2d pro_pos = pro_state.head(2);
         //if( !map_ptr_->isInMap2d(pro_pos) )
-        if( isInMap2d_self(pro_pos, origin_, inv_resolution_, global_map_size_))
+        if( isInMap2d_self(pro_pos, origin_, inv_resolution_, global_map_size_) == false)
         {
+            //std::cout << "605global_map_size_: " << global_map_size_ << endl;
+
             std::cout << "[Kino Astar]: out of map range" << endl;
             continue;
         }
@@ -630,7 +640,7 @@ namespace path_searching
           double tmparc = input[1] * double(k) / double(check_num_);
           Eigen::Vector2d tmpctrl; tmpctrl << input[0],tmparc;
           stateTransit(cur_state, xt, tmpctrl);
-          checkCollisionUsingPosAndYaw(xt, is_occ);
+          checkCollisionUsingPosAndYaw(xt, is_occ, buf_msg);
           if (is_occ)
           {
             // std::cout<<"occ!\n";
@@ -664,7 +674,7 @@ namespace path_searching
           {
             Eigen::Vector2d last_nearest_pos = last_path_pos_[nearest_idx_ + cur_node->number];
             bool collision_between_two_nodes;
-            checkCollisionUsingLine(pro_pos, last_nearest_pos, collision_between_two_nodes);   
+            checkCollisionUsingLine(pro_pos, last_nearest_pos, collision_between_two_nodes, buf_msg);   
             //if(collision_between_two_nodes && map_ptr_->getVoxelState2d(last_nearest_pos) != 1)
             if(collision_between_two_nodes && getVoxelState2d_self(last_nearest_pos, origin_, inv_resolution_, global_map_size_, buf_msg) != 1)
             {
@@ -736,7 +746,7 @@ namespace path_searching
   }
 
 
-  bool KinoAstar::is_shot_sucess(Eigen::Vector3d state1,Eigen::Vector3d state2){
+  bool KinoAstar::is_shot_sucess(Eigen::Vector3d state1, Eigen::Vector3d state2, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg){
     
     std::vector<Eigen::Vector3d> path_list;
     double len,st;
@@ -747,7 +757,7 @@ namespace path_searching
     // double t1 = ros::Time::now().toSec();
     for(unsigned int i = 0; i < path_list.size(); ++i){
         // frontend_map_itf_->CheckIfCollisionUsingPosAndYaw(vp_, path_list[i], &is_occ);
-        checkCollisionUsingPosAndYaw(path_list[i], is_occ);
+        checkCollisionUsingPosAndYaw(path_list[i], is_occ, buf_msg);
         if(is_occ) return false;
     }
     // double t2 = ros::Time::now().toSec();

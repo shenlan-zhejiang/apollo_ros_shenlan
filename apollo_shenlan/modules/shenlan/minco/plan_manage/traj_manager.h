@@ -48,7 +48,7 @@ public:
     //void init(const ros::NodeHandle& nh);
     void init(apollo::shenlan::ShenlanConf &shenlan_conf);
     void RunOnceParking();
-    bool RunMINCOParking();
+    bool RunMINCOParking(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg);
     void broadcastTraj2SwarmBridge();
 
     // void set_map_interface(map_utils::TrajPlannerMapItf* map_itf);
@@ -101,10 +101,10 @@ public:
     double traj_piece_duration_;
     int traj_res_, dense_traj_res_;
 
-    bool checkCollisionWithObs(const double& t_now, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg = nullptr);
-    bool checkCollisionWithOtherCars(const double& t_now, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg = nullptr);
+    bool checkCollisionWithObs(const double& t_now, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg);
+    bool checkCollisionWithOtherCars(const double& t_now, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg);
 
-    bool getKinoPath(Eigen::Vector4d &end_state, bool first_search);
+    bool getKinoPath(Eigen::Vector4d &end_state, bool first_search, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg);
     void displayKinoPath(std::shared_ptr<plan_utils::KinoTrajData> kino_trajs);
     void displayPolyH(const std::vector<Eigen::MatrixXd> hPolys);
     void displayMincoTraj(std::shared_ptr<plan_utils::SingulTrajData> display_traj);
@@ -204,7 +204,7 @@ private:
     //                          Eigen::MatrixXd &innerPs,  
     //                          Eigen::VectorXd &piece_dur_vec); 
     //using rectangles to represent corridor
-    void getRectangleConst(std::vector<Eigen::Vector3d> statelist);
+    void getRectangleConst(std::vector<Eigen::Vector3d> statelist, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg);
 
     // bool checkShapeInside(Eigen::MatrixXd &hPoly, std::vector<Eigen::Vector2d> vertices);
     // bool checkPosInside(Eigen::MatrixXd &hPoly,Eigen::Vector2d pos);

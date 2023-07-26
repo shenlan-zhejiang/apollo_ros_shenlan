@@ -91,7 +91,7 @@ void TrajPlanner::init(apollo::shenlan::ShenlanConf &shenlan_conf)
 }
 
 // use kinodynamic a* to generate a path
-bool TrajPlanner::getKinoPath(Eigen::Vector4d &end_state, bool first_search)
+bool TrajPlanner::getKinoPath(Eigen::Vector4d &end_state, bool first_search, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
 {
   //std::cout << "+++++++++++++getKinoPath++++++++++++++" << std::endl;  
 
@@ -114,7 +114,7 @@ bool TrajPlanner::getKinoPath(Eigen::Vector4d &end_state, bool first_search)
   // ros::Time searcht1 = ros::Time::now();
   auto searcht1 = high_resolution_clock::now();
   //std::cout << "aaaaaaaaaaa1" << std::endl;
-  int status = kino_path_finder_->search(start_state, init_ctrl, end_state, true);
+  int status = kino_path_finder_->search(start_state, init_ctrl, end_state, true, buf_msg);
   //std::cout << "aaaaaaaaaaa2" << std::endl;
   // ros::Time searcht2 = ros::Time::now();
   auto searcht2 = high_resolution_clock::now();
@@ -128,7 +128,7 @@ bool TrajPlanner::getKinoPath(Eigen::Vector4d &end_state, bool first_search)
 
     // retry searching with discontinuous initial state
     kino_path_finder_->reset();
-    status = kino_path_finder_->search(start_state, init_ctrl, end_state, false);
+    status = kino_path_finder_->search(start_state, init_ctrl, end_state, false, buf_msg);
     if (status == path_searching::KinoAstar::NO_PATH)
     {
       std::cout << "[kino replan]: Can't find path." << std::endl;
@@ -160,7 +160,7 @@ bool TrajPlanner::getKinoPath(Eigen::Vector4d &end_state, bool first_search)
 
 void TrajPlanner::setInitStateAndInput(const Eigen::Vector4d& state, const double& start_time)
 { 
-  //std::cout << "1111111111setState1111111111" << std::endl;
+  std::cout << "1111111111setState1111111111" << std::endl;
   //std::cout << "state: " << std::endl << state << std::endl;
   //std::cout << "start_time: " << std::endl << start_time << std::endl;
 
@@ -178,7 +178,7 @@ void TrajPlanner::setInitStateAndInput(const Eigen::Vector4d& state, const doubl
 
 void TrajPlanner::setInitStateAndInput(const double& t, Eigen::Vector4d& replan_init_state)
 {
-  // std::cout << "2222222222setState2222222222" << std::endl;
+  std::cout << "2222222222setState2222222222" << std::endl;
 
   has_init_state_ = true;
   start_time_  = t;
@@ -276,6 +276,14 @@ void TrajPlanner::displayKinoPath(std::shared_ptr<plan_utils::KinoTrajData> kino
   // path_pub.publish(carMarkers);
 }
 */
+
+void TrajPlanner::displayMincoTraj(std::shared_ptr<plan_utils::SingulTrajData> display_traj)
+{
+    return;
+}
+
+
+/*
 void TrajPlanner::displayMincoTraj(std::shared_ptr<plan_utils::SingulTrajData> display_traj)
 {
     auto path_msg = make_shared<apollo::shenlan::mpc::Nav_path>();
@@ -328,6 +336,8 @@ void TrajPlanner::displayMincoTraj(std::shared_ptr<plan_utils::SingulTrajData> d
     }
 
   }
+  */
+
   /*
   visualization_msgs::Marker carMarkers;
   carMarkers.header.frame_id = "map";
@@ -345,7 +355,8 @@ void TrajPlanner::displayMincoTraj(std::shared_ptr<plan_utils::SingulTrajData> d
   carMarkers.color.a = 1.00;
   carMarkers.scale.x = 0.05;
   */
- /*
+
+  /*
   geometry_msgs::Point pt;
 
   for (unsigned int i = 0; i < display_traj->size(); ++i){
@@ -405,13 +416,13 @@ void TrajPlanner::displayMincoTraj(std::shared_ptr<plan_utils::SingulTrajData> d
 
     }
 
-  }*/
+  }
+  */
 
   //wholebody_traj_pub_.publish(carMarkers);
 
+//}
 
-
-}
 
 bool TrajPlanner::checkCollisionWithObs(const double& t_now, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
 {
@@ -476,7 +487,7 @@ bool TrajPlanner::checkCollisionWithOtherCars(const double& t_now, const std::sh
     return collision;
 }
 
-bool TrajPlanner::RunMINCOParking()
+bool TrajPlanner::RunMINCOParking(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
 {
 
   // traj_container_.clearSingul();
@@ -552,7 +563,7 @@ bool TrajPlanner::RunMINCOParking()
     
     //double tm1 = apollo::cyber::Time::Now().ToNanosecond() / 1.0e9;;
     auto corridor_t1 = std::chrono::high_resolution_clock::now();
-    getRectangleConst(statelist);
+    getRectangleConst(statelist, buf_msg);
     sfc_container.push_back(hPolys_);
     display_hPolys_.insert(display_hPolys_.end(),hPolys_.begin(),hPolys_.end());
     auto corridor_t2 = std::chrono::high_resolution_clock::now();
@@ -652,7 +663,8 @@ void TrajPlanner::broadcastTraj2SwarmBridge()
     //TrajPathPub_.publish(traj_msg);
 }
 */
-void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist)
+
+void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
 {
     hPolys_.clear();
     double resolution = resolution_;
@@ -689,21 +701,21 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist)
                     newpoint1 = pos + ego_R * Eigen::Vector2d(-distance2center(3), distance2center(0) + step);
                     newpoint2 = pos + ego_R * Eigen::Vector2d(distance2center(1), distance2center(0) + step);
 
-                    kino_path_finder_->checkCollisionUsingLine(point1, newpoint1, isocc);
+                    kino_path_finder_->checkCollisionUsingLine(point1, newpoint1, isocc, buf_msg);
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
                         break;
                     }
 
-                    kino_path_finder_->checkCollisionUsingLine(newpoint1, newpoint2, isocc);
+                    kino_path_finder_->checkCollisionUsingLine(newpoint1, newpoint2, isocc, buf_msg);
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
                         break;
                     }
 
-                    kino_path_finder_->checkCollisionUsingLine(newpoint2, point2, isocc);
+                    kino_path_finder_->checkCollisionUsingLine(newpoint2, point2, isocc, buf_msg);
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -724,21 +736,21 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist)
                     newpoint1 = pos + ego_R * Eigen::Vector2d(distance2center(1) + step, distance2center(0));
                     newpoint2 = pos + ego_R * Eigen::Vector2d(distance2center(1) + step, -distance2center(2));
 
-                    kino_path_finder_->checkCollisionUsingLine(point1, newpoint1, isocc);
+                    kino_path_finder_->checkCollisionUsingLine(point1, newpoint1, isocc, buf_msg);
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
                         break;
                     }
 
-                    kino_path_finder_->checkCollisionUsingLine(newpoint1, newpoint2, isocc);
+                    kino_path_finder_->checkCollisionUsingLine(newpoint1, newpoint2, isocc, buf_msg);
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
                         break;
                     }
 
-                    kino_path_finder_->checkCollisionUsingLine(newpoint2, point2, isocc);
+                    kino_path_finder_->checkCollisionUsingLine(newpoint2, point2, isocc, buf_msg);
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -759,21 +771,21 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist)
                     newpoint1 = pos + ego_R * Eigen::Vector2d(distance2center(1), -distance2center(2) - step);
                     newpoint2 = pos + ego_R * Eigen::Vector2d(-distance2center(3), -distance2center(2) - step);
 
-                    kino_path_finder_->checkCollisionUsingLine(point1, newpoint1, isocc);
+                    kino_path_finder_->checkCollisionUsingLine(point1, newpoint1, isocc, buf_msg);
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
                         break;
                     }
 
-                    kino_path_finder_->checkCollisionUsingLine(newpoint1, newpoint2, isocc);
+                    kino_path_finder_->checkCollisionUsingLine(newpoint1, newpoint2, isocc, buf_msg);
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
                         break;
                     }
 
-                    kino_path_finder_->checkCollisionUsingLine(newpoint2, point2, isocc);
+                    kino_path_finder_->checkCollisionUsingLine(newpoint2, point2, isocc, buf_msg);
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -794,21 +806,21 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist)
                     newpoint1 = pos + ego_R * Eigen::Vector2d(-distance2center(3) - step, -distance2center(2));
                     newpoint2 = pos + ego_R * Eigen::Vector2d(-distance2center(3) - step, distance2center(0));
 
-                    kino_path_finder_->checkCollisionUsingLine(point1, newpoint1, isocc);
+                    kino_path_finder_->checkCollisionUsingLine(point1, newpoint1, isocc, buf_msg);
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
                         break;
                     }
 
-                    kino_path_finder_->checkCollisionUsingLine(newpoint1, newpoint2, isocc);
+                    kino_path_finder_->checkCollisionUsingLine(newpoint1, newpoint2, isocc, buf_msg);
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
                         break;
                     }
 
-                    kino_path_finder_->checkCollisionUsingLine(newpoint2, point2, isocc);
+                    kino_path_finder_->checkCollisionUsingLine(newpoint2, point2, isocc, buf_msg);
                     if(isocc)
                     {
                         have_stopped_expanding(i) = 0.0;
@@ -855,98 +867,6 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist)
     }
 }
 
-/*
-void TrajPlanner::displayPolyH(const std::vector<Eigen::MatrixXd> hPolys)
-{
-    vec_E<Polyhedron2D> polyhedra;
-    polyhedra.reserve(hPolys.size());
-    for (const auto &ele : hPolys)
-    {
-      Polyhedron2D hPoly;
-      for (int i = 0; i < ele.cols(); i++)
-      {
-        hPoly.add(Hyperplane2D(ele.col(i).tail<2>(), ele.col(i).head<2>()));
-      }
-      polyhedra.push_back(hPoly);
-    }
-
-    decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(polyhedra);
-    poly_msg.header.frame_id = "map";
-    poly_msg.header.stamp = apollo::cyber::Time::Now().ToNanosecond() / 1.0e9;
-    //Rectangle_poly_pub_.publish(poly_msg);    
-}
-
-*/
-/*
-void TrajPlanner::setSwarmTrajs(const swarm_bridge::Trajectory &traj_msg)
-{
-    plan_utils::MinJerkOpt jerk_opter;
-    // std::vector<plan_utils::LocalTrajData> minco_traj;
-    plan_utils::TrajContainer surround_traj;
-    std::vector<bool> reverse;
-    int car_id = traj_msg.car_id;
-    double total_time = 0.0;
-    for(int i = 0; i < traj_msg.minco_path.trajs.size(); i++)
-    {
-        double start_time = traj_msg.minco_path.trajs.at(i).start_time.toSec();
-        swarm_bridge::SingleMinco sm = traj_msg.minco_path.trajs[i];
-        Eigen::MatrixXd posP(2, sm.pos_pts.size() - 2);
-        Eigen::VectorXd T(sm.t_pts.size());
-        Eigen::MatrixXd head(2, 3), tail(2, 3);
-        const int N = sm.t_pts.size();
-        reverse.push_back(sm.reverse);
-        int direction = sm.reverse?-1:1;
-
-        for(int j = 1; j < (int)sm.pos_pts.size() - 1; j++)
-        {
-            posP(0, j - 1) = sm.pos_pts[j].x;
-            posP(1, j - 1) = sm.pos_pts[j].y;
-        }
-        for(int j = 0; j < (int)sm.t_pts.size(); j++)
-        {
-            T(j) = sm.t_pts[j];
-        }
-        head.row(0) = Eigen::Vector3d(sm.head_x.x, sm.head_x.y, sm.head_x.z);
-        head.row(1) = Eigen::Vector3d(sm.head_y.x, sm.head_y.y, sm.head_y.z);
-        tail.row(0) = Eigen::Vector3d(sm.tail_x.x, sm.tail_x.y, sm.tail_x.z);
-        tail.row(1) = Eigen::Vector3d(sm.tail_y.x, sm.tail_y.y, sm.tail_y.z);
-
-        jerk_opter.reset(head, tail, N);
-        jerk_opter.generate(posP, T);
-        plan_utils::Trajectory traj = jerk_opter.getTraj(direction);
-
-        surround_traj.addSingulTraj(traj, start_time, car_id);
-        // plan_utils::LocalTrajData sur_traj;
-        // sur_traj.drone_id = car_id;
-        // sur_traj.traj = traj;
-        // sur_traj.duration = traj.getTotalDuration();
-        // sur_traj.start_pos = traj.getJuncPos(0);
-        // sur_traj.start_time = start_time;
-        // sur_traj.end_time = start_time + sur_traj.duration;
-        // sur_traj.init_angle = 0.0;
-
-        total_time += traj.getTotalDuration();
-        // minco_traj.push_back(sur_traj);
-    }
-
-    if(!have_received_trajs_[car_id])
-    {
-        swarm_last_traj_container_[car_id] = surround_traj;
-    }
-    else
-    {
-        swarm_last_traj_container_[car_id] = swarm_traj_container_[car_id];
-    }
-
-    
-    swarm_traj_container_[car_id] = surround_traj;
-    have_received_trajs_[car_id] = true;
-    kino_path_finder_->setAllCarsTrajs(surround_traj, car_id);
-    kino_path_finder_->setAllCarsLastTrajs(swarm_last_traj_container_[car_id], car_id);
-    ploy_traj_opt_->setAllCarsTrajs(surround_traj, car_id);
-    ploy_traj_opt_->setAllCarsLastTrajs(swarm_last_traj_container_[car_id], car_id);
-}
-*/
 void TrajPlanner::setMapFree(double& time_now)
 {
     int num_have_received_trajs = 0;
