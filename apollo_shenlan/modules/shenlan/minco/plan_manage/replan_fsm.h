@@ -48,6 +48,7 @@ public:
         REFERENCE_PATH = 3
     };
 
+   // std::shared_ptr<apollo::shenlan::MappingProcess> mapping_ptr_;
     std::shared_ptr<TrajPlanner> planner_ptr_;
     //TrajPlanner::Ptr planner_ptr_;
      

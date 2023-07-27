@@ -284,9 +284,9 @@ public:
     double resolution_, inv_resolution_, yaw_resolution_, inv_yaw_resolution_;
     Eigen::Vector2d origin_, map_size_3d_;
     Eigen::Vector3d map_size_;
-    double yaw_origin_ = -M_PI;
     Eigen::Vector3i global_map_size_;
-
+    double yaw_origin_ = -M_PI;
+    
     /*shot hzc*/
     std::vector<double>  shot_timeList;
     std::vector<double>  shot_lengthList;
@@ -354,6 +354,7 @@ public:
     KinoAstar(){};
     ~KinoAstar();
     //ros::NodeHandle nh_;
+    //std::shared_ptr<apollo::shenlan::MappingProcess> map_ptr_ = nullptr;
     std::vector<Eigen::Vector2d> car_vertex_small_, car_vertex_, car_vertex_big_;
 
     enum { REACH_HORIZON = 1, REACH_END = 2,  NO_PATH = 3, REACH_END_BUT_SHOT_FAILS = 4};
@@ -375,6 +376,7 @@ public:
     Eigen::Vector3d CalculateInitPos(double& t, int& singul);
     // inital semantic map
     // void intialMap(map_utils::TrajPlannerMapItf *map_itf);
+    //void setMap(std::shared_ptr<apollo::shenlan::MappingProcess>& ptr);    
     void setFreeSpaces(std::vector<Eigen::Vector2d>& pos_vec, std::vector<double>& yaw_vec);
     void setAllCarsTrajs(plan_utils::TrajContainer& trajectory, int& car_id);
     void setAllCarsLastTrajs(plan_utils::TrajContainer& trajectory, int& car_id);

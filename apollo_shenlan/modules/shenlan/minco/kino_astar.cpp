@@ -27,6 +27,10 @@ namespace path_searching
     // kino_bicycle_model_.setParam(vp_);
   }
 
+  // void KinoAstar::setMap(std::shared_ptr<apollo::shenlan::MappingProcess> & ptr)
+  // {
+  //   map_ptr_ = ptr;
+  // }
   //void KinoAstar::init(ros::NodeHandle& nh)
   void KinoAstar::init(apollo::shenlan::ShenlanConf &shenlan_conf)
   {
@@ -442,7 +446,7 @@ namespace path_searching
           vec_normalVecs_and_points.push_back(normal_vector_and_point);
       }
 
-      //map_ptr_->setFreeSpacesForMapping(vec_normalVecs_and_points);
+      // map_ptr_->setFreeSpacesForMapping(vec_normalVecs_and_points);
   }
 
   int KinoAstar::search(Eigen::Vector4d start_state, Eigen::Vector2d init_ctrl, Eigen::Vector4d end_state, bool use3d, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
@@ -611,10 +615,8 @@ namespace path_searching
         // }
         Eigen::Vector2d pro_pos = pro_state.head(2);
         //if( !map_ptr_->isInMap2d(pro_pos) )
-        if( isInMap2d_self(pro_pos, origin_, inv_resolution_, global_map_size_) == false)
+        if(isInMap2d_self(pro_pos, origin_, inv_resolution_, global_map_size_) == false)
         {
-            //std::cout << "605global_map_size_: " << global_map_size_ << endl;
-
             std::cout << "[Kino Astar]: out of map range" << endl;
             continue;
         }

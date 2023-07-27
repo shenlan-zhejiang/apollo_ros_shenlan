@@ -21,6 +21,7 @@
 
 #include "modules/shenlan/mapping/mapping.h"
 #include<vector>
+
 namespace apollo {
 namespace shenlan {
 
