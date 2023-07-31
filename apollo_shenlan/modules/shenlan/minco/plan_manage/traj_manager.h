@@ -11,7 +11,7 @@
 #include "modules/shenlan/mapping/mapping.h"
 // #include "mpc/Trajectory.h"
 // #include "swarm_bridge/Trajectory.h"
-#include "modules/shenlan//proto/shenlan_conf.pb.h"
+#include "modules/shenlan/proto/shenlan_pb.pb.h"
 
 #include "modules/shenlan/minco/plan_manage/traj_optimizer.h"
 

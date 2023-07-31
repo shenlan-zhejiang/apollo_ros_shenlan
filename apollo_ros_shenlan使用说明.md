@@ -9,7 +9,7 @@
 ### 1.1添加OMPL库
 
 ```bash
-# 复制apollo_ros_shenlan/apollo_shenlan/文件夹下的内容到apollo/目录下
+# 复制apollo_ros_shenlan/apollo_shenlan/文件夹下的内容到apollo/目录下(tools/workspace.bzl需注意替换的内容)
 
 # 在docker内编译OMPL库
 cd /apollo/third_party_shenlan/repo/ompl/build/

@@ -15,16 +15,16 @@ cc_library(
     "*.h"]),
     deps=[
         "//cyber",
-        "//modules/drivers/lidar/lidar_robosense/proto:suteng_proto",
+        "//modules/drivers/lidar/proto:velodyne_cc_proto",
         "//modules/drivers/proto:pointcloud_cc_proto",
         "//modules/planning/proto:planning_cc_proto",
         "//modules/transform/proto:transform_cc_proto",
         "//modules/shenlan/mapping",
-        "//modules/shenlan/mpc/proto:EgoVehicleControl_cc_proto",
-        "//modules/shenlan/mpc/proto:EgoVehicleInfo_cc_proto",
-        "//modules/shenlan/mpc/proto:EgoVehicleStatus_cc_proto",
-        "//modules/shenlan/mpc/proto:Trajectory_cc_proto",
-        "//modules/shenlan/proto:shenlan_conf_cc_proto",
+        # "//modules/shenlan/mpc/proto:EgoVehicleControl_cc_proto",
+        # "//modules/shenlan/mpc/proto:EgoVehicleInfo_cc_proto",
+        # "//modules/shenlan/mpc/proto:EgoVehicleStatus_cc_proto",
+        # "//modules/shenlan/mpc/proto:Trajectory_cc_proto",
+        "//modules/shenlan/proto:shenlan_pb_cc_proto",
         "@eigen",
         "@boost",
         "@local_config_pcl//:pcl",
@@ -44,6 +44,3 @@ cc_binary(
 )
 
 cpplint()
-
-
-

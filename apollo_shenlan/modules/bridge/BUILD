@@ -56,6 +56,7 @@ cc_library(
         "//modules/shenlan/mpc/proto:nav_path_cc_proto",
         "//modules/shenlan/mpc/proto:EgoVehicleStatus_cc_proto",
         "//modules/shenlan/mpc/proto:EgoVehicleControl_cc_proto",
+        "//modules/shenlan/proto:shenlan_pb_cc_proto",
         "@local_config_pcl//:pcl",
         "@eigen",
         "@com_github_jbeder_yaml_cpp//:yaml-cpp",

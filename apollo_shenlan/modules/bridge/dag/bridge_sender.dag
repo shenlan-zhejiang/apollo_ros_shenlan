@@ -5,7 +5,7 @@ module_config {
         class_name: "UDPBridgeSenderComponent<planning::ADCTrajectory>"
         config {
             name: "bridge_sender_ADCTrajectory"
-            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_adctrajectory.pb.txt"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_8900_adctrajectory.pb.txt"
             readers {
               channel: "/apollo/planning"
             }
@@ -17,7 +17,7 @@ module_config {
         class_name: "UDPBridgeSenderComponent<localization::LocalizationEstimate>"
         config {
             name: "bridge_sender_LocalizationEstimate"
-            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_localization.pb.txt"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_8901_localization.pb.txt"
             readers {
               channel: "/apollo/localization/pose"
             }
@@ -29,9 +29,21 @@ module_config {
         class_name: "UDPBridgeSenderComponent<canbus::Chassis>"
         config {
             name: "bridge_sender_Chassis"
-            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_chassis.pb.txt"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_8902_chassis.pb.txt"
             readers {
               channel: "/apollo/canbus/chassis"
+            }
+      }
+    }
+
+    components {
+
+        class_name: "UDPBridgeSenderComponent<transform::TransformStampeds>"
+        config {
+            name: "bridge_sender_Transform"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_8903_tf.pb.txt"
+            readers {
+              channel: "/tf"
             }
       }
     }
@@ -41,7 +53,7 @@ module_config {
         class_name: "UDPBridgeSenderComponent<drivers::PointCloud>"
         config {
             name: "bridge_sender_Lidar"
-            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_lidar.pb.txt"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_8904_lidar.pb.txt"
             readers {
               channel: "/apollo/sensor/velodyne128/compensator/PointCloud2"
               # channel: "/apollo/sensor/lidar/compensator/PointCloud2"
@@ -55,10 +67,10 @@ module_config {
 
         class_name: "UDPBridgeSenderComponent<drivers::PointCloud>"
         config {
-            name: "bridge_sender_LidarTransformed"
-            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_lidartransformed.pb.txt"
+            name: "bridge_sender_PointCloud"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_8905_pointcloud.pb.txt"
             readers {
-              channel: "/apollo/shenlan/mapping/pc_transformed"
+              channel: "/apollo/shenlan/mapping/pointcloud"
             }
       }
     }
@@ -67,8 +79,8 @@ module_config {
 
         class_name: "UDPBridgeSenderComponent<drivers::PointCloud>"
         config {
-            name: "bridge_sender_LidarMap"
-            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_lidarmap.pb.txt"
+            name: "bridge_sender_GridMap"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_8906_gridmap.pb.txt"
             readers {
               channel: "/apollo/shenlan/mapping/gird_map"
             }
@@ -77,24 +89,24 @@ module_config {
 
     components {
 
-        class_name: "UDPBridgeSenderComponent<transform::TransformStampeds>"
+        class_name: "UDPBridgeSenderComponent<shenlan::NavPath>"
         config {
-            name: "bridge_sender_Transform"
-            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_tf.pb.txt"
+            name: "bridge_sender_KinoTraj"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_8907_kino.pb.txt"
             readers {
-              channel: "/tf"
+              channel: "/apollo/shenlan/minco/kino_traj"
             }
       }
     }
 
     components {
 
-        class_name: "UDPBridgeSenderComponent<transform::TransformStampeds>"
+        class_name: "UDPBridgeSenderComponent<shenlan::NavPath>"
         config {
-            name: "bridge_sender_TransformStatic"
-            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_tfstatic.pb.txt"
+            name: "bridge_sender_MincoTraj"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_8908_minco.pb.txt"
             readers {
-              channel: "/tf"
+              channel: "/apollo/shenlan/minco/minco_traj"
             }
       }
     }

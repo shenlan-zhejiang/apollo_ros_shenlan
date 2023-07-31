@@ -6,7 +6,7 @@ module_config {
         class_name: "UDPBridgeReceiverComponent<shenlan::mpc::Trajectory>"
         config {
             name: "bridge_receiver_trajectory"
-            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_receiver_trajectory.pb.txt"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_receiver_8903_trajectory.pb.txt"
       }
    }
 }

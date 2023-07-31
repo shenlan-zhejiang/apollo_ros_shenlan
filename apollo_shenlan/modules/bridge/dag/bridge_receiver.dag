@@ -6,7 +6,7 @@ module_config {
         class_name: "UDPBridgeReceiverComponent<planning::ADCTrajectory>"
         config {
             name: "bridge_receiver_ADCTrajectory"
-            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_receiver_adctrajectory.pb.txt"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_receiver_8904_adctrajectory.pb.txt"
       }
    }
 }

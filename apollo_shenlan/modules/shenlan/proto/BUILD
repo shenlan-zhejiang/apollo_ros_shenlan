@@ -5,20 +5,18 @@ load("//tools:python_rules.bzl", "py_proto_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_proto_library(
-    name = "shenlan_conf_cc_proto",
+    name = "shenlan_pb_cc_proto",
     deps = [
-        ":shenlan_conf_proto",
+        ":shenlan_pb_proto",
     ],
 )
 
 proto_library(
-    name = "shenlan_conf_proto",
-    srcs = ["shenlan_conf.proto"],
-)
-
-py_proto_library(
-    name = "shenlan_conf_py_pb2",
+    name = "shenlan_pb_proto",
+    srcs = ["shenlan_pb.proto"],
     deps = [
-        ":shenlan_conf_proto",
+        "//modules/common/proto:geometry_proto",
+        "//modules/common/proto:header_proto",
+        "//modules/localization/proto:pose_proto",
     ],
 )

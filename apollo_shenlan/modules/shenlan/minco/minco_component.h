@@ -12,6 +12,7 @@
 #include "modules/planning/proto/planning.pb.h"
 #include "modules/canbus/proto/chassis.pb.h"
 #include "modules/common/proto/drive_state.pb.h"
+#include "modules/shenlan/proto/shenlan_pb.pb.h"
 
 #include "cyber/class_loader/class_loader.h"
 #include "cyber/component/component.h"
@@ -23,7 +24,7 @@
 #include "cyber/scheduler/scheduler_factory.h"
 
 #include "modules/shenlan/minco/plan_manage/replan_fsm.h"
-#include "modules/shenlan/mpc/proto/Trajectory.pb.h"
+// #include "modules/shenlan/mpc/proto/Trajectory.pb.h"
 
 namespace apollo{
 namespace shenlan{
@@ -50,13 +51,18 @@ class MincoShenlanComponent final : public cyber::Component<localization::Locali
         void execFSMCallback(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &msg);
         void checkCollisionCallback(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &msg);
 
-        std::shared_ptr<cyber::Writer<apollo::shenlan::mpc::Trajectory>> traj_writer_;
         std::shared_ptr<cyber::Writer<apollo::planning::ADCTrajectory>> adc_writer_;
-
-        //void calcTraj2Controller(const std::shared_ptr<apollo::shenlan::mpc::Trajectory> &msg);
+        std::shared_ptr<cyber::Writer<apollo::shenlan::NavPath>> kino_writer_;
+        std::shared_ptr<cyber::Writer<apollo::shenlan::NavPath>> minco_writer_;
 
         int seq_num_adc = 0;
         void calcMinco2ADC(const std::shared_ptr<apollo::planning::ADCTrajectory> &traj_msg);
+
+        int seq_num_kino = 0;
+        void displayKinoPath(const std::shared_ptr<apollo::shenlan::NavPath> &kino_msg);
+        
+        int seq_num_minco = 0;
+        void displayMincoTraj(const std::shared_ptr<apollo::shenlan::NavPath> &minco_msg);
 
         int last_seq;
         

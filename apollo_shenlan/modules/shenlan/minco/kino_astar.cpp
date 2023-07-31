@@ -7,7 +7,6 @@
 //#include "cyber/cyber.h"
 #include "modules/shenlan/minco/plan_utils/traj_container.hpp"
 #include "modules/shenlan/minco/plan_utils/poly_traj_utils.hpp"
-#include "modules/shenlan/proto/shenlan_conf.pb.h"
 
 // #include <visualization_msgs/Marker.h>
 // #include <visualization_msgs/MarkerArray.h>

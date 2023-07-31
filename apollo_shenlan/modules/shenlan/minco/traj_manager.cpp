@@ -12,11 +12,10 @@
 
 
 #include "modules/localization/proto/localization.pb.h"
-#include "modules/shenlan/mpc/proto/EgoVehicleInfo.pb.h"
-#include "modules/shenlan/mpc/proto/EgoVehicleControl.pb.h"
-#include "modules/shenlan/mpc/proto/EgoVehicleStatus.pb.h"
-#include "modules/shenlan/mpc/proto/Trajectory.pb.h"
-#include "modules/shenlan/proto/shenlan_conf.pb.h"
+// #include "modules/shenlan/mpc/proto/EgoVehicleInfo.pb.h"
+// #include "modules/shenlan/mpc/proto/EgoVehicleControl.pb.h"
+// #include "modules/shenlan/mpc/proto/EgoVehicleStatus.pb.h"
+// #include "modules/shenlan/mpc/proto/Trajectory.pb.h"
 
 #include <glog/logging.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
@@ -226,12 +225,10 @@ void TrajPlanner::setInitStateAndInput(const double& t, Eigen::Vector4d& replan_
   start_ctrl_  = init_input; 
 }
 
-void TrajPlanner::displayKinoPath(std::shared_ptr<plan_utils::KinoTrajData> kino_trajs){
-    return;
-}
 /*
 void TrajPlanner::displayKinoPath(std::shared_ptr<plan_utils::KinoTrajData> kino_trajs)
 {
+  
   visualization_msgs::Marker sphere, line_strip, carMarkers;
   sphere.header.frame_id = line_strip.header.frame_id = carMarkers.header.frame_id = "map";
   sphere.header.stamp = line_strip.header.stamp = carMarkers.header.stamp = apollo::cyber::Time::Now().ToNanosecond() / 1.0e9;
@@ -282,26 +279,56 @@ void TrajPlanner::displayKinoPath(std::shared_ptr<plan_utils::KinoTrajData> kino
   KinopathPub_.publish(sphere);
   KinopathPub_.publish(line_strip);
   // path_pub.publish(carMarkers);
+  
 }
 */
-void TrajPlanner::displayMincoTraj(std::shared_ptr<plan_utils::SingulTrajData> display_traj)
+
+void TrajPlanner::displayKinoPath(std::shared_ptr<plan_utils::KinoTrajData> kino_trajs)
 {
-    auto path_msg = make_shared<apollo::shenlan::mpc::Nav_path>();
+    auto path_msg = make_shared<apollo::shenlan::NavPath>();
     apollo::common::Quaternion quaternion;
     quaternion.set_qw(1.0);
     quaternion.set_qx(0.0);
     quaternion.set_qy(0.0);
     quaternion.set_qz(0.0);
     apollo::common::PointENU position;
+    //std::cout << "+++++++++++kino_traj->size(): " << kino_trajs->size() << std::endl;
+    for (unsigned int i = 0; i < kino_trajs->size(); ++i)
+    {
+        //std::cout << "+++++++++++traj_pts.size(): " << kino_trajs->at(i).traj_pts.size() << std::endl;
+        for (size_t k = 0; k < kino_trajs->at(i).traj_pts.size(); k++)
+        {
+        Eigen::Vector3d pt = kino_trajs->at(i).traj_pts[k];
+        //std::cout << "+++++++++++pt: " << pt << std::endl;
+        position.set_x(pt(0));
+        position.set_y(pt(0));
+        position.set_z(0.2);
+        auto pose = path_msg->add_pose();
+        pose->mutable_position()->CopyFrom(position);
+        pose->mutable_orientation()->CopyFrom(quaternion); 
+        }
+    }
+    path_msg->mutable_header()->set_frame_id("map");
+}
+
+void TrajPlanner::displayMincoTraj(std::shared_ptr<plan_utils::SingulTrajData> display_traj)
+{
+    auto path_msg = make_shared<apollo::shenlan::NavPath>();
+    apollo::common::Quaternion quaternion;
+    quaternion.set_qw(1.0);
+    quaternion.set_qx(0.0);
+    quaternion.set_qy(0.0);
+    quaternion.set_qz(0.0);
+    apollo::common::PointENU position;
+    //std::cout << "---------------display_traj->size(): " << display_traj->size() << std::endl;
     for (unsigned int i = 0; i < display_traj->size(); ++i)
     {
         double total_duration = display_traj->at(i).duration;
+        //std::cout << "---------------total_duration: " << total_duration << std::endl;
         for (double t = 0; t <= total_duration; t += 0.01)
         {
             Eigen::Vector2d pt = display_traj->at(i).traj.getPos(t);
-            //pose.pose().position().x() = pt(0);
-            //pose.pose().position().y() = pt(1);
-            //pose.pose().position().z()= 0.2;
+            //std::cout << "---------------pt: " << pt << std::endl;
             position.set_x(pt(0));
             position.set_y(pt(0));
             position.set_z(0.2);
@@ -312,6 +339,7 @@ void TrajPlanner::displayMincoTraj(std::shared_ptr<plan_utils::SingulTrajData> d
     }
     path_msg->mutable_header()->set_frame_id("map");
 
+  /*
   double last_debugyaw =  display_traj->at(0).traj.getAngle(0.0);
 
   for (unsigned int i = 0; i < display_traj->size(); ++i){
@@ -336,7 +364,7 @@ void TrajPlanner::displayMincoTraj(std::shared_ptr<plan_utils::SingulTrajData> d
     }
 
   }
-  /*
+  
   visualization_msgs::Marker carMarkers;
   carMarkers.header.frame_id = "map";
   carMarkers.header.stamp = ros::Time::now();
@@ -416,9 +444,6 @@ void TrajPlanner::displayMincoTraj(std::shared_ptr<plan_utils::SingulTrajData> d
   }*/
 
   //wholebody_traj_pub_.publish(carMarkers);
-
-
-
 }
 
 bool TrajPlanner::checkCollisionWithObs(const double& t_now, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)

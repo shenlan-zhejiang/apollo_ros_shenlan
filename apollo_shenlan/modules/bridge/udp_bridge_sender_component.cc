@@ -30,7 +30,7 @@ using apollo::cyber::io::Session;
 using apollo::localization::LocalizationEstimate;
 using apollo::drivers::PointCloud;
 using apollo::transform::TransformStampeds;
-// using apollo::static_transform::ExtrinsicFile;
+using apollo::shenlan::NavPath;
 
 template <typename T>
 bool UDPBridgeSenderComponent<T>::Init() {
@@ -93,7 +93,7 @@ BRIDGE_IMPL(planning::ADCTrajectory);
 BRIDGE_IMPL(canbus::Chassis);
 BRIDGE_IMPL(drivers::PointCloud);
 BRIDGE_IMPL(transform::TransformStampeds);
-// BRIDGE_IMPL(static_transform::ExtrinsicFile);
+BRIDGE_IMPL(shenlan::NavPath);
 
 }  // namespace bridge
 }  // namespace apollo

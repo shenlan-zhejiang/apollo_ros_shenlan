@@ -31,13 +31,14 @@ bool MincoShenlanComponent::Init()
     // safety_timer_->Start();
     // std::cout << "2222" << std::endl;
 
+    kino_writer_ = node_->CreateWriter<apollo::shenlan::NavPath>("/apollo/shenlan/minco/kino_traj");
+    minco_writer_ = node_->CreateWriter<apollo::shenlan::NavPath>("/apollo/shenlan/minco/minco_traj");
     adc_writer_ = node_->CreateWriter<apollo::planning::ADCTrajectory>("/apollo/planning");
-    
+
     last_seq = -1;
 
     return true;
 }
-
 
 bool MincoShenlanComponent::Proc(const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg) 
 {
@@ -90,11 +91,81 @@ void MincoShenlanComponent::execFSMCallback(const std::shared_ptr<apollo::shenla
     //exec_timer_->Stop();
     int ret = RFSM.execFSM(buf_msg);
     if (ret == 1) {
+      auto kino_msg = std::make_shared<apollo::shenlan::NavPath>();
+      displayKinoPath(kino_msg);
+      kino_writer_->Write(kino_msg);
+
+      auto minco_msg = std::make_shared<apollo::shenlan::NavPath>();
+      displayMincoTraj(minco_msg);
+      minco_writer_->Write(minco_msg);
+      
       auto adc_msg = std::make_shared<apollo::planning::ADCTrajectory>();
       calcMinco2ADC(adc_msg);
       adc_writer_->Write(adc_msg);
     }
     //exec_timer_->Start();
+}
+
+void MincoShenlanComponent::displayKinoPath(const std::shared_ptr<apollo::shenlan::NavPath> &kino_msg)
+{
+    apollo::common::Quaternion quaternion;
+    quaternion.set_qw(1.0);
+    quaternion.set_qx(0.0);
+    quaternion.set_qy(0.0);
+    quaternion.set_qz(0.0);
+    apollo::common::PointENU position;
+    std::cout << "111111111111kino_size: " << RFSM.planner_ptr_->kino_trajs_.size() << std::endl;
+    for (unsigned int i = 0; i < RFSM.planner_ptr_->kino_trajs_.size(); ++i)
+    {
+        std::cout << "111111111111kino_pts_size: " <<  RFSM.planner_ptr_->kino_trajs_.at(i).traj_pts.size() << std::endl;
+        for (size_t k = 0; k <  RFSM.planner_ptr_->kino_trajs_.at(i).traj_pts.size(); k++)
+        {
+            Eigen::Vector3d pt =  RFSM.planner_ptr_->kino_trajs_.at(i).traj_pts[k];
+            //std::cout << "111111111111kino_pt: " << pt << std::endl;
+            position.set_x(pt(0));
+            position.set_y(pt(1));
+            position.set_z(0.1);
+            auto pose = kino_msg->add_pose();
+            pose->mutable_position()->CopyFrom(position);
+            pose->mutable_orientation()->CopyFrom(quaternion); 
+        }
+    }
+    auto timestamp = apollo::cyber::Time::Now().ToSecond();
+    kino_msg->mutable_header()->set_timestamp_sec(timestamp);
+    kino_msg->mutable_header()->set_frame_id("map");
+    kino_msg->mutable_header()->set_sequence_num(seq_num_adc);
+    seq_num_kino += 1;
+}
+
+void MincoShenlanComponent::displayMincoTraj(const std::shared_ptr<apollo::shenlan::NavPath> &minco_msg)
+{
+    apollo::common::Quaternion quaternion;
+    quaternion.set_qw(1.0);
+    quaternion.set_qx(0.0);
+    quaternion.set_qy(0.0);
+    quaternion.set_qz(0.0);
+    apollo::common::PointENU position;
+    std::cout << "222222222222minco_size: " << RFSM.planner_ptr_->traj_container_.singul_traj.size() << std::endl;
+    for (unsigned int i = 0; i < RFSM.planner_ptr_->traj_container_.singul_traj.size(); ++i)
+    {
+        std::cout << "222222222222minco_duration: " << RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration << std::endl;
+        for (double t = 0; t <= RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration; t++)
+        {
+            Eigen::Vector2d pt = RFSM.planner_ptr_->traj_container_.singul_traj.at(i).traj.getPos(t);
+            //std::cout << "222222222222minco_pt: " << pt << std::endl;
+            position.set_x(pt(0));
+            position.set_y(pt(1));
+            position.set_z(0.1);
+            auto pose = minco_msg->add_pose();
+            pose->mutable_position()->CopyFrom(position);
+            pose->mutable_orientation()->CopyFrom(quaternion); 
+        }
+    }
+    auto timestamp = apollo::cyber::Time::Now().ToSecond();
+    minco_msg->mutable_header()->set_timestamp_sec(timestamp);
+    minco_msg->mutable_header()->set_frame_id("map");
+    minco_msg->mutable_header()->set_sequence_num(seq_num_adc);
+    seq_num_minco += 1;
 }
 
 void MincoShenlanComponent::calcMinco2ADC(const std::shared_ptr<apollo::planning::ADCTrajectory> &traj_msg)
@@ -168,6 +239,7 @@ void MincoShenlanComponent::calcMinco2ADC(const std::shared_ptr<apollo::planning
 
             traj_point->set_v(vel);
             traj_point->set_a(acc); //linear_acceleration_vrf = Linear acceleration of the VRP in the vehicle reference frame. Right/forward/up in meters per square second.
+            
             //traj_point->set_relative_time(durations.sum()); //relative_time = data['time'][i] - data['time'][closestpoint] - now + starttime
             //if (i < ts.size())
             //    rt += ts(i); 

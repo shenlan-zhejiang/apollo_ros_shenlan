@@ -1,7 +1,6 @@
 #include "modules/shenlan/minco/plan_manage/replan_fsm.h"
 #include <chrono>
 #include "Eigen/Eigen"
-#include "modules/shenlan/proto/shenlan_conf.pb.h"
 
 namespace apollo {
 namespace shenlan {
@@ -103,11 +102,11 @@ int ReplanFSM::execFSM(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &
             planner_ptr_->getKinoPath(end_pt_, true, buf_msg);
 
             // planner_ptr_->displayPolyH(planner_ptr_->display_hPolys());
-            planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
+            // planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
 
             planner_ptr_->RunMINCOParking(buf_msg);
 
-            planner_ptr_->broadcastTraj2SwarmBridge();
+            // planner_ptr_->broadcastTraj2SwarmBridge();
 
             //ros::Time t2 = ros::Time::now();
             auto t2 = apollo::cyber::Time::Now().ToSecond();
@@ -124,9 +123,10 @@ int ReplanFSM::execFSM(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &
                 std::cout << "Out of time budget!" << std::endl;;
             }
             //planner_ptr_->publishTraj2Controller();
-            ret = 1;
             
-            planner_ptr_->displayMincoTraj(planner_ptr_->trajectory());
+            // planner_ptr_->displayMincoTraj(planner_ptr_->trajectory());
+            
+            ret = 1;
 
             changeFSMExecState(EXEC_TRAJ, "FSM");
 
@@ -152,6 +152,7 @@ int ReplanFSM::execFSM(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &
             init_state_ = replan_init_state;
 
             planner_ptr_->setParkingEnd(end_pt_);
+            
             if(!planner_ptr_->getKinoPath(end_pt_, false, buf_msg))
             {
                 while(true)
@@ -169,7 +170,9 @@ int ReplanFSM::execFSM(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &
                 // ros::Duration(0.5).sleep();
                 break;
             }
-            planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
+
+            // planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
+            
             if(!planner_ptr_->RunMINCOParking(buf_msg))
             {
                 while(true)
@@ -186,7 +189,8 @@ int ReplanFSM::execFSM(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &
                 }
                 break;
             }
-            planner_ptr_->broadcastTraj2SwarmBridge();
+            //planner_ptr_->broadcastTraj2SwarmBridge();
+            
             auto t2 = apollo::cyber::Time::Now().ToSecond();
             double time_spent_in_planning = (t2 - t1);
             if(TIME_BUDGET > time_spent_in_planning)
@@ -214,7 +218,8 @@ int ReplanFSM::execFSM(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &
             
             // planner_ptr_->displayPolyH(planner_ptr_->display_hPolys());
             
-            planner_ptr_->displayMincoTraj(planner_ptr_->trajectory());
+            //planner_ptr_->displayMincoTraj(planner_ptr_->trajectory());
+            
             changeFSMExecState(EXEC_TRAJ, "FSM");
 
             break;

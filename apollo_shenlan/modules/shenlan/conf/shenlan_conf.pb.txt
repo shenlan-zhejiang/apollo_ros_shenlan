@@ -1,24 +1,24 @@
 # MKZ
-# vehicle_conf {
-#     cars_num: 1
-#     car_id: 0
-#     car_width: 2.11
-#     car_length: 4.933
-#     car_wheelbase: 2.8448
-#     car_max_steering_angle: 20.0
-#     car_d_cr: 1.3864
-# }
-
-# PIX HOOKE
 vehicle_conf {
     cars_num: 1
     car_id: 0
-    car_width: 1.7
-    car_length: 3.0
-    car_wheelbase: 1.9
-    car_max_steering_angle: 20.0
-    car_d_cr: 0.92
+    car_width: 3.0
+    car_length: 5.5
+    car_wheelbase: 2.8448
+    car_max_steering_angle: 40.0
+    car_d_cr: 1.3864
 }
+
+# PIX HOOKE
+# vehicle_conf {
+#     cars_num: 1
+#     car_id: 0
+#     car_width: 1.7
+#     car_length: 3.0
+#     car_wheelbase: 1.9
+#     car_max_steering_angle: 20.0
+#     car_d_cr: 0.92
+# }
 
 # RUIMOVE
 # vehicle_conf {
@@ -34,19 +34,19 @@ vehicle_conf {
 mapping_conf {
     # "origin_x/y/z"(m) is map center
     # svl map center
-    # origin_x: 587061.0
-    # origin_y: 4141628.0
-    # origin_z: 0
+    origin_x: 587061.0
+    origin_y: 4141628.0
+    origin_z: 0
 
     # huzhou map center
-    origin_x: 218381.0
-    origin_y: 3418222.0
-    origin_z: 0
+    # origin_x: 218381.0
+    # origin_y: 3418222.0
+    # origin_z: 0
 
     # "map_origin_x/y/z"(m) + "origin_x/y/z"(m) is map "origin_"(m)
     map_origin_x: -150
     map_origin_y: -150
-    map_origin_z: 0
+    map_origin_z: -5
 
     # "map_size_x/y/z"(m) is map length/width/height
     map_size_x: 300
@@ -66,20 +66,20 @@ mapping_conf {
     min_occupancy_log: 1.39
 
     # "lidar_height"(m) is lidar to imu, lidar to ground is 1.7m
-    lidar_height: 0.7
+    lidar_height: 2.3
     
     # "obs_low/hight"(m) + "lidar_height"(m) is lazer scan
-    obs_low: -1.3
+    obs_low: -1.8
     obs_high: 5.0
-    obs_circle: 9.0
+    obs_circle: 25.0
 }
 
 replanfsm_conf {
-    # "target_x/Y"(m) is target to map center
-    target_x: -10.0
-    target_y: 3.0
+    # "target_x/y"(m) is target to map center
+    target_x: 36
+    target_y: -54
 
-    target_yaw: 2.9
+    target_yaw: -0.3
     target_vel: 0.0
 }
 
@@ -90,11 +90,13 @@ kinoastar_conf {
     allocate_num: 100000
     check_num: 5
     max_seach_time: 1000.1
+
     traj_forward_penalty: 1.0
     traj_back_penalty: 2.5
     traj_gear_switch_penalty: 15.0
     traj_steer_penalty: 0.5
     traj_steer_change_penalty: 0.0
+
     step_arc: 0.9
     checkl: 0.9
     time_resolution: 0.1
@@ -102,22 +104,41 @@ kinoastar_conf {
     velocity_resolution: 1.0
 }
 
+
 trajplanner_conf {
-    traj_resolution: 8
-    destraj_resolution: 20
-    wei_obs: 7000.0
-    wei_surround: 7000.0
-    wei_feas: 1000.0
-    wei_sqrvar: 1000.0
-    wei_time: 500.0
-    surround_clearance: 1.0
-    max_vel: 3.0
-    min_vel: -3.0
-    max_acc: 1.0
-    min_acc: -1.0
-    max_cur: 0.3
+    # "traj_piece_duration" is time per piece
     traj_piece_duration: 1
+    # "traj_res" is number of distinctive constrain points each piece for searching
     traj_res: 8
+    # "dense_traj_res" is number of distinctive constrain points of the first and last piece for searching
     dense_traj_res: 20
+
+    # "traj_resolution" is number of distinctive constrain points each piece for optimize
+    traj_resolution: 8
+    # "destraj_resolution" is number of distinctive constrain points of the first and last piece for optimize
+    destraj_resolution: 20
+
+    # "wei_obs“ is obstacle weight
+    wei_obs: 7000.0
+    # "wei_surround" is surround weight
+    wei_surround: 7000.0
+    # "wei_feas" is feasibility weight
+    wei_feas: 1000.0
+    # "wei_sqrvar" is squared variance weight
+    wei_sqrvar: 1000.0
+    # "wei_time" is time  weight
+    wei_time: 500.0
+
+    # "surround_clearance" is safe distance
+    surround_clearance: 1.0
+
+    # dynamic limits
+    max_vel: 3.0
+    min_vel: 0
+    max_acc: 1.5
+    min_acc: 0
+    max_cur: 0.3
+
+    # "half_margin" is safe margin
     half_margin: 0.25
 }

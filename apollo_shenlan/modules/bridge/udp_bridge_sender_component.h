@@ -29,7 +29,7 @@
 #include "modules/planning/proto/planning.pb.h"
 #include "modules/drivers/proto/pointcloud.pb.h"
 #include "modules/transform/proto/transform.pb.h"
-// #include "modules/transform/proto/static_transform_conf.pb.h"
+#include "modules/shenlan/proto/shenlan_pb.pb.h"
 
 #include "cyber/class_loader/class_loader.h"
 #include "cyber/component/component.h"
@@ -72,7 +72,7 @@ BRIDGE_COMPONENT_REGISTER(localization::LocalizationEstimate)
 BRIDGE_COMPONENT_REGISTER(canbus::Chassis)
 BRIDGE_COMPONENT_REGISTER(drivers::PointCloud)
 BRIDGE_COMPONENT_REGISTER(transform::TransformStampeds)
-// BRIDGE_COMPONENT_REGISTER(static_transform::ExtrinsicFile)
+BRIDGE_COMPONENT_REGISTER(shenlan::NavPath)
 
 }  // namespace bridge
 }  // namespace apollo

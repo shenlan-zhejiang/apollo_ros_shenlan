@@ -15,7 +15,7 @@
 // #include <pcl_conversions/pcl_conversions.h>
 // #include "map_utils/map_adapter.h"
 #include "modules/shenlan/mapping/mapping.h"
-#include "modules/shenlan//proto/shenlan_conf.pb.h"
+#include "modules/shenlan/proto/shenlan_pb.pb.h"
 
 #include "modules/shenlan/minco/path_searching/raycast.h"
 #include "modules/shenlan/minco/plan_utils/traj_container.hpp"

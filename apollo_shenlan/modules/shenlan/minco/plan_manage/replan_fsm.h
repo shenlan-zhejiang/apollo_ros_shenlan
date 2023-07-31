@@ -9,7 +9,8 @@
 
 #include "modules/shenlan/mapping/mapping.h"
 #include "modules/shenlan/minco/plan_manage/traj_manager.h"
-#include "modules/shenlan//proto/shenlan_conf.pb.h"
+#include "modules/shenlan/proto/shenlan_pb.pb.h"
+
 // #include "swarm_bridge/Trajectory.h" //????
 // #include <plan_env/grid_map.h>
 // #include <traj_utils/Bspline.h>

@@ -26,10 +26,10 @@ cc_library(
         "//modules/common/monitor_log",
         "//modules/common/util",
         "//modules/planning/proto:planning_cc_proto",
-        "//modules/drivers/lidar/lidar_robosense/proto:suteng_proto",
+        "//modules/drivers/lidar/proto:velodyne_cc_proto",
         "//modules/drivers/proto:pointcloud_cc_proto",
         "//modules/transform/proto:transform_cc_proto",
-        "//modules/shenlan/proto:shenlan_conf_cc_proto",
+        "//modules/shenlan/proto:shenlan_pb_cc_proto",
         "@eigen",
         "@com_github_jbeder_yaml_cpp//:yaml-cpp",
         "@com_github_gflags_gflags//:gflags"

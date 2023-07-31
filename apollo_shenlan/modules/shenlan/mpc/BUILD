@@ -10,7 +10,7 @@ cc_library(
     hdrs=["common/cubic_spline_planner.h","common/traj_anal.hpp", "minco_util/root_finder.hpp", "minco_util/poly_traj_utils.hpp","mpc.h", "mpc_component.h"],
     deps=[
         "//cyber",
-        "//modules/drivers/lidar/lidar_robosense/proto:suteng_proto",
+        "//modules/drivers/lidar/proto:velodyne_cc_proto",
         "//modules/planning/proto:planning_cc_proto",
         "//modules/drivers/proto:pointcloud_cc_proto",
         "//modules/shenlan/mpc/proto:EgoVehicleControl_cc_proto",

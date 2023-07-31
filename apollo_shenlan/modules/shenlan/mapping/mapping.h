@@ -9,7 +9,7 @@
 
 #include "modules/drivers/proto/pointcloud.pb.h"
 #include "modules/localization/proto/localization.pb.h"
-#include "modules/shenlan/proto/shenlan_conf.pb.h"
+#include "modules/shenlan/proto/shenlan_pb.pb.h"
 
 namespace apollo {
 namespace shenlan {
