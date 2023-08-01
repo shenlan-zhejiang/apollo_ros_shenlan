@@ -7,83 +7,158 @@ import "modules/common/proto/header.proto";
 import "modules/localization/proto/pose.proto";
 
 message VehicleConf {
-  optional int32 cars_num = 1 [default = 1];
-  optional int32 car_id = 2 [default = 0];
-  optional double car_width = 3 [default = 2.11];
-  optional double car_length = 4 [default = 4.933];
-  optional double car_wheelbase = 5 [default = 2.8448];
-  optional double car_max_steering_angle = 6 [default = 10.0];
-  optional double car_d_cr = 7 [default = 1.3864];
+  // single car
+  optional int32 cars_num = 1;
+
+  //agent_0
+  optional int32 car_id = 2;
+
+  optional double car_width = 3;
+
+  optional double car_length = 4;
+
+  optional double car_wheelbase = 5;
+
+  // (deg) max steering angle
+  optional double car_max_steering_angle = 6;
+
+  // (m) rear axis center to car center
+  optional double car_d_cr = 7; 
 }
 
 message MappingConf {
-  optional double origin_x = 1 [default = 587061];
-  optional double origin_y = 2 [default = 4141628];
-  optional double origin_z = 3 [default = -0.1];
-  optional double map_origin_x = 4 [default = -150];
-  optional double map_origin_y = 5 [default = -150];
-  optional double map_origin_z = 6 [default = 0.1];
-  optional double map_size_x = 7 [default = 300];
-  optional double map_size_y = 8 [default = 300];
-  optional double map_size_z = 9 [default = 5];
-  optional double resolution = 10 [default = 0.3];
-  optional double min_ray_length = 11 [default = 0.0];
-  optional double max_ray_length = 12 [default = 30.0];
-  optional double prob_hit_log = 13 [default = 1.2];
-  optional double prob_miss_log = 14 [default = -0.3];
-  optional double clamp_min_log = 15 [default = -2.0];
-  optional double clamp_max_log = 16 [default = 2.0];
-  optional double min_occupancy_log = 17 [default = 1.39];
-  optional double lidar_height = 18 [default = 2.0];
-  optional double obs_low = 19 [default = -3.0];
-  optional double obs_high = 20 [default = 0.0];
-  optional double obs_circle = 21 [default = 9.0];
+  // (m) map center
+  optional double origin_x = 1;
+  optional double origin_y = 2;
+  optional double origin_z = 3;
+
+  // (m) "map_origin_x/y/z" = "origin_" - "origin_x/y/z"
+  optional double map_origin_x = 4;
+  optional double map_origin_y = 5;
+  optional double map_origin_z = 6;
+
+  // (m) map length/width/height
+  optional double map_size_x = 7;
+  optional double map_size_y = 8;
+  optional double map_size_z = 9;
+
+  // (m) grid size
+  optional double resolution = 10;
+
+  optional double min_ray_length = 11;
+  optional double max_ray_length = 12;
+
+  optional double prob_hit_log = 13;
+  optional double prob_miss_log = 14;
+  optional double clamp_min_log = 15;
+  optional double clamp_max_log = 16;
+  optional double min_occupancy_log = 17;
+
+  // (m) lidar to imu, lidar to ground is 1.7m
+  optional double lidar_height = 18;
+
+  // "obs_low/hight"(m) + "lidar_height"(m) is lazer scan
+  optional double obs_low = 19;
+  optional double obs_high = 20;
+
+  optional double obs_circle = 21;
 }
 
 message ReplanFSMConf {
-  optional double target_x = 1 [default = -15];
-  optional double target_y = 2 [default = -60];
-  optional double target_yaw = 3 [default = -0.24];
-  optional double target_vel = 4 [default = 0.0];
+  // (m) target to map center 
+  optional double target_x = 1;
+  optional double target_y = 2;
+
+  optional double target_yaw = 3;
+  optional double target_vel = 4;
 }
 
 message KinoAstarConf {
-  optional double horizon = 1 [default = 50];
-  optional double yaw_resolution = 2 [default = 0.3]; 
-  optional double lambda_heu = 3 [default = 5.0];
-  optional int32 allocate_num = 4 [default = 100000];
-  optional int32 check_num = 5 [default = 5];
-  optional double max_seach_time = 6 [default = 1000.1];
-  optional double traj_forward_penalty = 7 [default = 1.0];
-  optional double traj_back_penalty = 8 [default = 2.5];
-  optional double traj_gear_switch_penalty = 9 [default = 15.0];
-  optional double traj_steer_penalty = 10 [default = 0.5];
-  optional double traj_steer_change_penalty = 11 [default = 0.0];
-  optional double step_arc = 12 [default = 0.9];
-  optional double checkl = 13 [default = 0.9];
-  optional double time_resolution = 14 [default = 0.1];
-  optional double distance_resolution = 15 [default = 0.5];
-  optional double velocity_resolution = 16 [default = 1.0];
+  // euclidean distance
+  optional double horizon = 1;
+
+  // yaw size, 0.3rad = 0.3 * 57.2958de = 17.4de
+  optional double yaw_resolution = 2; 
+
+  // f = g + lambda_heu * h
+  optional double lambda_heu = 3;
+
+  // store memory for node
+  optional int32 allocate_num = 4;
+
+  // collision check times
+  optional int32 check_num = 5;
+
+  // (t2 - t1) * 1000 > max_seach_time
+  optional double max_seach_time = 6;
+
+  // singul > 0, g +=  arc * traj_forward_penalty
+  optional double traj_forward_penalty = 7;
+
+  // singul <= 0, g +=  arc * traj_back_penalty
+  optional double traj_back_penalty = 8;
+
+  optional double traj_gear_switch_penalty = 9;
+  optional double traj_steer_penalty = 10;
+  optional double traj_steer_change_penalty = 11;
+
+  // arc length, double arc = -step_arc; arc <= step_arc + 1e-3; arc += 0.5*step_arc
+  optional double step_arc = 12;
+
+  // length between discrete points
+  optional double checkl = 13;
+
+  // build s-t graph to check collision 
+  optional double time_resolution = 14;
+  optional double distance_resolution = 15;
+  optional double velocity_resolution = 16;
 }
 
 message TrajPlannerConf {
-  optional int32 traj_resolution = 1 [default = 8];
-  optional int32 destraj_resolution = 2 [default = 20];
-  optional double wei_obs = 3 [default = 7000.0];
-  optional double wei_surround = 4 [default = 7000.0];
-  optional double wei_feas = 5 [default = 1000.0];
-  optional double wei_sqrvar = 6 [default = 1000.0];
-  optional double wei_time = 7 [default = 500.0];
-  optional double surround_clearance = 8 [default = 1.0];
-  optional double max_vel = 9 [default = 5.0];
-  optional double min_vel = 10 [default = -5.0];
-  optional double max_acc = 11 [default = 2.0];
-  optional double min_acc = 12 [default = -2.0];
-  optional double max_cur = 13 [default = 0.3];
-  optional double traj_piece_duration = 14 [default = 1];
-  optional double traj_res = 15 [default = 8];
-  optional double dense_traj_res = 16 [default = 20];  
-  optional double half_margin = 17 [default = 0.25];
+  // time per piece
+  optional double traj_piece_duration = 1;
+
+  // number of distinctive constrain points each piece for searching
+  optional double traj_res = 2;
+
+  // number of distinctive constrain points of the first and last piece for searching
+  optional double dense_traj_res = 3;
+
+  // number of distinctive constrain points each piece for optimize
+  optional int32 traj_resolution = 4;
+
+  // number of distinctive constrain points of the first and last piece for optimize
+  optional int32 destraj_resolution = 5;
+
+  // obstacle weight
+  optional double wei_obs = 6;
+
+  // surround weight
+  optional double wei_surround = 7;
+
+  // feasibility weight
+  optional double wei_feas = 8;
+
+  // squared variance weight
+  optional double wei_sqrvar = 9;
+
+  // time weight
+  optional double wei_time = 10;
+
+  // safe distance for other cars
+  optional double surround_clearance = 11;
+
+  // dynamic limits
+  optional double max_vel = 12;
+  optional double min_vel = 13;
+  optional double max_acc = 14;
+  optional double min_acc = 15;
+
+  // max curvature, curvature = theta * r
+  optional double max_cur = 16;
+
+  // safe margin, car_width/length += 2 * half_margin
+  optional double half_margin = 17;
 }
 
 message ShenlanConf {

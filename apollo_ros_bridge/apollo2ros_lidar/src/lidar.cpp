@@ -96,7 +96,7 @@ void *handle_message(void *para_) {
   
   double end_time = ros::Time::now().toSec();
   
-  // std::cout << "length:"  <<  bytes << " time:" << end_time << "error:" << errno << std::endl;
+  //std::cout << "length:"  <<  bytes << " time:" << end_time << "error:" << errno << std::endl;
 
   if (bytes <= 0 || bytes > total_recv) {
     return nullptr; 
@@ -207,7 +207,6 @@ void *parse_data(void *para_)
   point_cloud_.channels[0].name = "intensities";
 
   // std::cout << Clock::NowInSeconds() << std::endl;
-
   for (auto iter : obj2.point()) {
     geometry_msgs::Point32 pt;
     pt.x = iter.x();
@@ -351,7 +350,7 @@ int main(int argc, char *argv[]) {
   para.pub = n.advertise<sensor_msgs::PointCloud2>("/apollo/agent_0/lidar", 1000);
   //para.relation_pub = n.advertise<std_msgs::String>("/apollo/agent_0/relation_lidar", 1000);
   para.counter_pub = 0;
-  para.port = 8903;
+  para.port = 8904;
   para.pfd = -1;
   para.index = -1;
   pthread_mutex_init(&para.mutex, NULL);

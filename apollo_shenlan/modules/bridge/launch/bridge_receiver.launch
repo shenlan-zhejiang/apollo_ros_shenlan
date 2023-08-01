@@ -1,7 +1,32 @@
 <cyber>
     <module>
-        <name>bridge_receiver</name>
-        <dag_conf>/apollo/modules/bridge/dag/bridge_receiver.dag</dag_conf>
-        <process_name>udp_bridge_receiver</process_name>
+        <name>bridge_receiver_chassis</name>
+        <dag_conf>/apollo/modules/bridge/dag/bridge_receiver_8900_chassis.dag</dag_conf>
+        <process_name>udp_bridge_receiver_chassis</process_name>
     </module>
+
+    <module>
+        <name>bridge_receiver_localization</name>
+        <dag_conf>/apollo/modules/bridge/dag/bridge_receiver_8901_localization.dag</dag_conf>
+        <process_name>udp_bridge_receiver_localization</process_name>
+    </module>
+
+    <module>
+        <name>bridge_receiver_status</name>
+        <dag_conf>/apollo/modules/bridge/dag/bridge_receiver_8902_status.dag</dag_conf>
+        <process_name>udp_bridge_receiver_status</process_name>
+    </module>
+
+    <module>
+        <name>bridge_receiver_trajectory</name>
+        <dag_conf>/apollo/modules/bridge/dag/bridge_receiver_8903_trajectory.dag</dag_conf>
+        <process_name>udp_bridge_receiver_trajectory</process_name>
+    </module>
+
+    <module>
+        <name>bridge_receiver_adctrajectory</name>
+        <dag_conf>/apollo/modules/bridge/dag/bridge_receiver_8904_adctrajectory.dag</dag_conf>
+        <process_name>udp_bridge_receiver_adctrajectory</process_name>
+    </module>
+
 </cyber>

@@ -79,6 +79,7 @@ bool UDPBridgeSenderComponent<T>::Proc(const std::shared_ptr<T> &pb_msg) {
   for (size_t j = 0; j < proto_buf.GetSerializedBufCount(); j++) {
     ssize_t nbytes = send(sock_fd, proto_buf.GetSerializedBuf(j), proto_buf.GetSerializedBufSize(j), 0);
     usleep(1);
+    //std::cout << "send before:" << j << "count:" << proto_buf.GetSerializedBufCount() << "nb:" << nbytes << std::endl;
     if (nbytes != static_cast<ssize_t>(proto_buf.GetSerializedBufSize(j))) {
       std::cout << "write: " << nbytes << " error:" << errno << std::endl;
       break;

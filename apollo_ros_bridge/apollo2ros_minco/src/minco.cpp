@@ -120,35 +120,53 @@ void *pthread_handle_message(void *para_) {
   path_msg_.header.stamp = ros::Time::now();
   path_msg_.header.frame_id = "map";
 
-  auto it = obj2.pose().begin();
-  auto end = obj2.pose().end();
-  while (it != end) {
-      if (std::next(it) == end) {
-          break;
-      }
+  // auto it = obj2.pose().begin();
+  // auto end = obj2.pose().end();
+  // while (it != end) {
+  //     if (std::next(it) == end) {
+  //         break;
+  //     }
       
-      auto iter = *it;
+  //     auto iter = *it;
+  //     geometry_msgs::PoseStamped pose;
+  //     pose.pose.position.x = iter.position().x() - 587061;
+  //     //std::cout << "pose.pose.position.x: " << pose.pose.position.x << std::endl;
+      
+  //     pose.pose.position.y = iter.position().y() - 4141628;
+  //     pose.pose.position.z = 0.1;
+
+  //     pose.pose.orientation.x = 0;
+  //     pose.pose.orientation.y = 0;
+  //     pose.pose.orientation.z = 0;
+  //     pose.pose.orientation.w = 1;
+
+  //     path_msg_.poses.emplace_back(pose);
+      
+  //     ++it;
+  // }
+
+
+  
+  for (auto iter : obj2.pose()) {
       geometry_msgs::PoseStamped pose;
-      pose.pose.position.x = iter.position().x() - 587061;
-      //std::cout << "pose.pose.position.x: " << pose.pose.position.x << std::endl;
-      
+      pose.pose.position.x = iter.position().x() - 587061;      
       pose.pose.position.y = iter.position().y() - 4141628;
-      pose.pose.position.z = 0.1;
+      pose.pose.position.z = 0;
 
       pose.pose.orientation.x = 0;
       pose.pose.orientation.y = 0;
       pose.pose.orientation.z = 0;
       pose.pose.orientation.w = 1;
 
+      //std::cout << "position: " << pose.pose.position << std::endl;
       path_msg_.poses.emplace_back(pose);
-      
-      ++it;
   }
 
   para->pub.publish(path_msg_);
 
   std::cout << "header: " << path_msg_.header << std::endl;
-
+  std::cout << "pose size: " << obj2.pose_size() << std::endl;
+  
   para->counter_pub++;
   pthread_exit(nullptr);
 }

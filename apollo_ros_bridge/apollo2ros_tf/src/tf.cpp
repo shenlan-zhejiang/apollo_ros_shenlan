@@ -199,7 +199,7 @@ if (1) {
     tfs_.child_frame_id = "agent_0";
     tfs_.transform.translation.x = it.transform().translation().x() - 587061;//+ 67814;beijing//- 103962;nanjing//- 587061;svl//- 218385;huzhou
     tfs_.transform.translation.y = it.transform().translation().y() - 4141628;//- 4457770;beijing//- 3534899;nanjing//- 4141628;svl//- 3418220;huzhou
-    tfs_.transform.translation.z = it.transform().translation().z() + 1;//- 33;beijing//- 10;nanjing//+ 1;svl//- 12;huzhou
+    tfs_.transform.translation.z = it.transform().translation().z();//- 33;beijing//- 10;nanjing//+ 1;svl//- 12;huzhou
     tfs_.transform.rotation.x = it.transform().rotation().qx();
     tfs_.transform.rotation.y = it.transform().rotation().qy();
     tfs_.transform.rotation.z = it.transform().rotation().qz();
@@ -338,7 +338,7 @@ int main(int argc, char *argv[]) {
   }
   para.cap = 0;
   para.pub = n.advertise<tf2_msgs::TFMessage>("/tf", 1000);
-  para.port = 8904;
+  para.port = 8903;
   para.pfd = -1;
   para.index = -1;
   pthread_mutex_init(&para.mutex, NULL);

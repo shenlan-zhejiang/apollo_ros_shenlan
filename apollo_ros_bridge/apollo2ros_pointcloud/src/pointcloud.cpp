@@ -69,7 +69,7 @@ using apollo::cyber::Clock;
 
 struct para_t {
   ros::Publisher pub;
-  ros::Publisher relation_pub;
+  //ros::Publisher relation_pub;
   int counter_pub;
   int pfd;
   int index;
@@ -230,7 +230,7 @@ void *parse_data(void *para_)
   std::stringstream ss;//创建一个stringstream对象
   ss << std::fixed << std::setprecision(9) << para->counter_pub << " " << point_cloud2_.header.stamp << " " << obj2.header().sequence_num() << " " << obj2.header().timestamp_sec();//字符串拼接，把拼接后的数值取出来赋值给我们的msg
   msg.data = ss.str();//可以把string流里面的数据提取为字符串
-  para->relation_pub.publish(msg);//发布msg
+  //para->relation_pub.publish(msg);//发布msg
 
   // std::cout << "after==point_cloud_.header.seq : " << obj2.header().sequence_num() << "====" << point_cloud2_.header.seq << std::endl;
   // std::cout << "+++++++++" << para->counter_pub << "==========" << point_cloud_.header.seq << std::endl;
@@ -349,9 +349,9 @@ int main(int argc, char *argv[]) {
   }
   para.cap = 0;
   para.pub = n.advertise<sensor_msgs::PointCloud2>("/apollo/agent_0/pointcloud", 1000);
-  para.relation_pub = n.advertise<std_msgs::String>("/apollo/agent_0/relation_pointcloud", 1000);
+  //para.relation_pub = n.advertise<std_msgs::String>("/apollo/agent_0/relation_pointcloud", 1000);
   para.counter_pub = 0;
-  para.port = 8906;
+  para.port = 8905;
   para.pfd = -1;
   para.index = -1;
   pthread_mutex_init(&para.mutex, NULL);

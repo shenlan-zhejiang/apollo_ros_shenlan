@@ -4,11 +4,10 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Global Options1
-        - /target1/Line Style1
-        - /kino1
-        - /minco1
-      Splitter Ratio: 0.5
+        - /conf_mapsize1/Line Style1
+        - /conf_target1/Line Style1
+        - /apollo2ros_minco1
+      Splitter Ratio: 0.47948718070983887
     Tree Height: 536
   - Class: rviz/Selection
     Name: Selection
@@ -27,7 +26,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: gridmap
+    SyncSource: ""
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -41,31 +40,31 @@ Visualization Manager:
       Color: 0; 0; 0
       Enabled: true
       Line Style:
-        Line Width: 0.029999999329447746
+        Line Width: 1
         Value: Lines
-      Name: map
+      Name: conf_mapsize
       Normal Cell Count: 0
       Offset:
         X: 0
         Y: 0
         Z: 0
       Plane: XY
-      Plane Cell Count: 300
+      Plane Cell Count: 360
       Reference Frame: map
       Value: true
     - Alpha: 1
-      Cell Size: 3
+      Cell Size: 2
       Class: rviz/Grid
-      Color: 164; 0; 0
+      Color: 239; 41; 41
       Enabled: true
       Line Style:
         Line Width: 0.30000001192092896
         Value: Billboards
-      Name: target
+      Name: conf_target
       Normal Cell Count: 1
       Offset:
-        X: 5
-        Y: -95
+        X: -1
+        Y: -170
         Z: 0
       Plane: XY
       Plane Cell Count: 1
@@ -75,7 +74,7 @@ Visualization Manager:
       Class: rviz/Axes
       Enabled: true
       Length: 1
-      Name: origin
+      Name: conf_origin
       Radius: 0.10000000149011612
       Reference Frame: map
       Show Trail: false
@@ -87,26 +86,48 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        agent_0:
-          Value: true
-        map:
-          Value: true
       Marker Alpha: 1
-      Marker Scale: 15
-      Name: odometry
+      Marker Scale: 10
+      Name: apollo2ros_tf
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          agent_0:
-            {}
+        {}
       Update Interval: 0
+      Value: true
+    - Alpha: 0.5
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 9.781411170959473
+        Min Value: -3.690448045730591
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 0; 0; 0
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: apollo2ros_lidar
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.30000001192092896
+      Style: Flat Squares
+      Topic: /apollo/agent_0/lidar
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 5.949999809265137
+        Max Value: 5.650000095367432
         Min Value: -0.949999988079071
         Value: true
       Axis: Z
@@ -119,14 +140,14 @@ Visualization Manager:
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: gridmap
+      Name: apollo2ros_gridmap
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
       Size (m): 0.30000001192092896
       Style: Flat Squares
-      Topic: /apollo/agent_0/mapping
+      Topic: /apollo/agent_0/grid_map
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
@@ -134,20 +155,20 @@ Visualization Manager:
     - Alpha: 0.5
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
+        Max Value: 6.18057918548584
+        Min Value: -0.5409631133079529
         Value: true
       Axis: Z
       Channel Name: intensity
       Class: rviz/PointCloud2
       Color: 0; 0; 0
-      Color Transformer: FlatColor
+      Color Transformer: AxisColor
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: pointcloud
+      Name: apollo2ros_pointcloud
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
@@ -159,17 +180,17 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
-    - Alpha: 0.20000000298023224
+    - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
-      Color: 204; 0; 0
+      Color: 239; 41; 41
       Enabled: true
       Head Diameter: 0.30000001192092896
       Head Length: 0.20000000298023224
       Length: 0.30000001192092896
       Line Style: Billboards
-      Line Width: 2
-      Name: kino
+      Line Width: 0.25
+      Name: apollo2ros_kino
       Offset:
         X: 0
         Y: 0
@@ -183,7 +204,7 @@ Visualization Manager:
       Topic: /apollo/agent_0/kino_traj
       Unreliable: false
       Value: true
-    - Alpha: 0.30000001192092896
+    - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
       Color: 32; 74; 135
@@ -192,8 +213,8 @@ Visualization Manager:
       Head Length: 0.20000000298023224
       Length: 0.30000001192092896
       Line Style: Billboards
-      Line Width: 3
-      Name: minco
+      Line Width: 0.5
+      Name: apollo2ros_minco
       Offset:
         X: 0
         Y: 0
@@ -234,8 +255,8 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Class: rviz/Orbit
-      Distance: 131.03085327148438
+      Class: rviz/XYOrbit
+      Distance: 24.5850887298584
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -243,17 +264,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -12.051589965820312
-        Y: -40.73563003540039
-        Z: -20.70117950439453
+        X: -1.1599360704421997
+        Y: 0.26318883895874023
+        Z: 6.036095874151215e-05
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.0847967863082886
-      Target Frame: map
-      Yaw: 1.2750072479248047
+      Pitch: 0.25979673862457275
+      Target Frame: agent_0
+      Yaw: 1.3604023456573486
     Saved: ~
 Window Geometry:
   Displays:
@@ -261,7 +282,7 @@ Window Geometry:
   Height: 833
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd000000040000000000000156000002a3fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed0000046000000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d000002a3000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f000002a3fc0200000003fb0000000a00560069006500770073010000003d000002a3000000a400fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b2000000000000000000000002000005a0000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000005a00000003efc0100000002fb0000000800540069006d00650100000000000005a0000003bc00fffffffb0000000800540069006d006501000000000000045000000000000000000000032f000002a300000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd000000040000000000000188000002a3fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed0000046000000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d000002a3000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f000002a3fc0200000003fb0000000a00560069006500770073010000003d000002a3000000a400fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b2000000000000000000000002000005a0000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000005a00000003efc0100000002fb0000000800540069006d00650100000000000005a0000003bc00fffffffb0000000800540069006d00650100000000000004500000000000000000000002fd000002a300000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -272,4 +293,4 @@ Window Geometry:
     collapsed: false
   Width: 1440
   X: 2560
-  Y: 1660
+  Y: 1690

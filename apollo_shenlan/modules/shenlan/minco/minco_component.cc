@@ -114,11 +114,12 @@ void MincoShenlanComponent::displayKinoPath(const std::shared_ptr<apollo::shenla
     quaternion.set_qy(0.0);
     quaternion.set_qz(0.0);
     apollo::common::PointENU position;
-    std::cout << "111111111111kino_size: " << RFSM.planner_ptr_->kino_trajs_.size() << std::endl;
-    for (unsigned int i = 0; i < RFSM.planner_ptr_->kino_trajs_.size(); ++i)
+    //std::cout << "111111111111kino_size: " << RFSM.planner_ptr_->kino_trajs_.size() << std::endl;
+    for (unsigned int i = 0; i < RFSM.planner_ptr_->kino_trajs_.size(); ++ i)
     {
-        std::cout << "111111111111kino_pts_size: " <<  RFSM.planner_ptr_->kino_trajs_.at(i).traj_pts.size() << std::endl;
-        for (size_t k = 0; k <  RFSM.planner_ptr_->kino_trajs_.at(i).traj_pts.size(); k++)
+        //std::cout << "111111111111kino_pts_size: " <<  RFSM.planner_ptr_->kino_trajs_.at(i).traj_pts.size() << std::endl;
+        //for (size_t k = 0; k <  RFSM.planner_ptr_->kino_trajs_.at(i).traj_pts.size(); k++)
+        for (size_t k = 0; k <  RFSM.planner_ptr_->kino_trajs_.at(i).traj_pts.size(); k ++)
         {
             Eigen::Vector3d pt =  RFSM.planner_ptr_->kino_trajs_.at(i).traj_pts[k];
             //std::cout << "111111111111kino_pt: " << pt << std::endl;
@@ -145,11 +146,11 @@ void MincoShenlanComponent::displayMincoTraj(const std::shared_ptr<apollo::shenl
     quaternion.set_qy(0.0);
     quaternion.set_qz(0.0);
     apollo::common::PointENU position;
-    std::cout << "222222222222minco_size: " << RFSM.planner_ptr_->traj_container_.singul_traj.size() << std::endl;
-    for (unsigned int i = 0; i < RFSM.planner_ptr_->traj_container_.singul_traj.size(); ++i)
+    //std::cout << "222222222222minco_size: " << RFSM.planner_ptr_->traj_container_.singul_traj.size() << std::endl;
+    for (unsigned int i = 0; i < RFSM.planner_ptr_->traj_container_.singul_traj.size(); ++ i)
     {
-        std::cout << "222222222222minco_duration: " << RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration << std::endl;
-        for (double t = 0; t <= RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration; t++)
+        //std::cout << "222222222222minco_duration: " << RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration << std::endl;
+        for (double t = 0; t <= RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration; t ++)
         {
             Eigen::Vector2d pt = RFSM.planner_ptr_->traj_container_.singul_traj.at(i).traj.getPos(t);
             //std::cout << "222222222222minco_pt: " << pt << std::endl;

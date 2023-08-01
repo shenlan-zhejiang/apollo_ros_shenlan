@@ -32,9 +32,6 @@
 #include "ros/ros.h" //该头文件必须包含
 #include "std_msgs/String.h" //ros标准消息里面的字符串消息
 #include <nav_msgs/Path.h>
-#include <tf/transform_broadcaster.h>
-#include <geometry_msgs/TransformStamped.h>
-#include <tf2_ros/static_transform_broadcaster.h>
 
 //proto
 #include "proto/addressbook.pb.h"
@@ -47,12 +44,6 @@
 #include "bridge/udp_listener.h"
 #include "bridge/util.h"
 
-// #include "cyber/time/clock.h"
-
-// using apollo::cyber::Clock;
-
-// double timestamp_ = Clock::NowInSeconds() + 2.0;
-
 using apollo::bridge::BRIDGE_HEADER_FLAG;
 using apollo::bridge::BridgeHeader;
 using apollo::bridge::FRAME_SIZE;
@@ -60,12 +51,10 @@ using apollo::bridge::HEADER_FLAG_SIZE;
 using apollo::bridge::hsize;
 using apollo::bridge::MAXEPOLLSIZE;
 
-//using apollo::localization::LocalizationEstimate;
 using apollo::shenlan::NavPath;
 
 struct para_t {
   ros::Publisher pub;
-  //ros::Publisher relation_pub;
   int counter_pub;
   int pfd;
   uint16_t port;
@@ -119,37 +108,29 @@ void *pthread_handle_message(void *para_) {
   path_msg_.header.seq = obj2.header().sequence_num();
   path_msg_.header.stamp = ros::Time::now();
   path_msg_.header.frame_id = "map";
-
-  auto it = obj2.pose().begin();
-  auto end = obj2.pose().end();
-  while (it != end) {
-      if (std::next(it) == end) {
-          break;
-      }
-      
-      auto iter = *it;
+  
+  for (auto iter : obj2.pose()) {
       geometry_msgs::PoseStamped pose;
       pose.pose.position.x = iter.position().x() - 587061;
-      //std::cout << "pose.pose.position.x: " << pose.pose.position.x << std::endl;
-      
       pose.pose.position.y = iter.position().y() - 4141628;
-      pose.pose.position.z = 0.1;
+      pose.pose.position.z = 0;
 
       pose.pose.orientation.x = 0;
       pose.pose.orientation.y = 0;
       pose.pose.orientation.z = 0;
       pose.pose.orientation.w = 1;
 
+      //std::cout << "position: " << pose.pose.position << std::endl;
       path_msg_.poses.emplace_back(pose);
-      
-      ++it;
   }
 
   para->pub.publish(path_msg_);
   
   std::cout << "header: " << path_msg_.header << std::endl;
+  std::cout << "pose size: " << obj2.pose_size() << std::endl;
 
   para->counter_pub++;
+
   pthread_exit(nullptr);
 }
 
@@ -236,7 +217,6 @@ int main(int argc, char *argv[]) {
   ros::NodeHandle n;
   struct para_t para;
   para.pub = n.advertise<nav_msgs::Path>("/apollo/agent_0/kino_traj", 1000);
-  //para.relation_pub = n.advertise<std_msgs::String>("/apollo/agent_0/relation_odom", 1000);
   para.port = 8907;
   para.counter_pub = 0;
   para.pfd = -1;

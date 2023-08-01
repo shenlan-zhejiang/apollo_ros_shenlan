@@ -140,6 +140,7 @@ int ReplanFSM::execFSM() {
         case REPLAN_TRAJ:
         {
             std::cout << "case3 REPLAN_TRAJ" << std::endl;
+
             // ros::Time t_now = ros::Time::now();
             auto t_now = apollo::cyber::Time::Now().ToSecond();
             double replan_start_time = t_now + TIME_BUDGET;
@@ -151,6 +152,7 @@ int ReplanFSM::execFSM() {
             init_state_ = replan_init_state;
 
             planner_ptr_->setParkingEnd(end_pt_);
+
             if(!planner_ptr_->getKinoPath(end_pt_, false))
             {
                 while(true)
@@ -169,6 +171,7 @@ int ReplanFSM::execFSM() {
                 break;
             }
             planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
+
             if(!planner_ptr_->RunMINCOParking())
             {
                 while(true)

@@ -160,7 +160,7 @@ void *pthread_handle_message(void *para_) {
 
   odom_msg_.pose.pose.position.x  = obj2.pose().position().x() - 587061;//+ 67814;beijing//- 103962;nanjing//- 587061;svl//- 218385;huzhou
   odom_msg_.pose.pose.position.y  = obj2.pose().position().y() - 4141628;//- 4457770;beijing//- 3534899;nanjing//- 4141628;svl//- 3418220;huzhou
-  odom_msg_.pose.pose.position.z  = obj2.pose().position().z() + 1;//- 33;beijing//- 10;nanjing//+ 1;svl//- 12;huzhou
+  odom_msg_.pose.pose.position.z  = obj2.pose().position().z();//- 33;beijing//- 10;nanjing//+ 1;svl//- 12;huzhou
 
   odom_msg_.pose.pose.orientation.x = obj2.pose().orientation().qx();
   odom_msg_.pose.pose.orientation.y = obj2.pose().orientation().qy();
