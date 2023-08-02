@@ -366,7 +366,7 @@ void MincoMappingShenlanComponent::displayMincoTraj(const std::shared_ptr<apollo
     {
         // std::cout << "222222222222minco_duration: " << RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration << std::endl;
         // for (double t = 0; t <= RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration; t += 0.01)
-        for (double t = 0; t <= RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration; t ++)
+        for (double t = 0; t <= RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration; t += 0.01)
         {
             Eigen::Vector2d pt = RFSM.planner_ptr_->traj_container_.singul_traj.at(i).traj.getPos(t);
             // std::cout << "222222222222minco_pt: " << pt << std::endl;

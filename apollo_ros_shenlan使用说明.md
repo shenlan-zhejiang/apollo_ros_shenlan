@@ -202,9 +202,9 @@ roslaunch traj_planner swarm_apollo.launch
 
 ## 4.注意事项
 
-1.若cyber_launch无法通过ctrl+c关闭，则在终端中输入kill -9 xxx (xxx为 cyber_launch的进程数字)
+1.若cyber_launch无法通过ctrl+c关闭，则在终端中输入`kill -9 xxx` (xxx为 cyber_launch的进程数字)， 或输入 `ps -elf | grep mainboard`
 
-2.编译proto：protoc addressbook.proto --cpp_out=./
+2.编译proto：`protoc addressbook.proto --cpp_out=./`
 
-3.rosparam set use_sim_time false
+3.`rosparam set use_sim_time false`
 

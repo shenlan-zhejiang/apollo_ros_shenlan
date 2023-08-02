@@ -1,0 +1,92 @@
+cyber_modules {
+  key: "Transform"
+  value: {
+    dag_files: "/apollo/modules/transform/dag/static_transform.dag"
+  }
+}
+cyber_modules {
+  key: "Lidar"
+  value: {
+    dag_files: "/apollo/modules/drivers/lidar/dag/lidar.dag"
+  }
+}
+cyber_modules {
+  key: "GNSS/IMU"
+  value: {
+    dag_files: "/apollo/modules/drivers/gnss/dag/gnss.dag"
+  }
+}
+cyber_modules {
+  key: "Localization"
+  value: {
+    dag_files: "/apollo/modules/localization/dag/dag_streaming_rtk_localization.dag"
+  }
+}
+cyber_modules {
+  key: "Bridge"
+  value: {
+    dag_files: "/apollo/modules/bridge/dag/bridge_sender.dag"
+  }
+}
+cyber_modules {
+  key: "Mapping"
+  value: {
+    dag_files: "/apollo/modules/shenlan/mapping/dag/mapping.dag"
+  }
+}
+cyber_modules {
+  key: "Minco"
+  value: {
+    dag_files: "/apollo/modules/shenlan/minco/dag/minco.dag"
+  }
+}
+cyber_modules {
+  key: "Minco_Mapping"
+  value: {
+    dag_files: "/apollo/modules/shenlan/minco_mapping/dag/minco_mapping.dag"
+  }
+}
+cyber_modules {
+  key: "Control"
+  value: {
+    dag_files: "/apollo/modules/control/dag/control.dag"
+  }
+}
+cyber_modules {
+  key: "Canbus"
+  value: {
+    dag_files: "/apollo/modules/canbus/dag/canbus.dag"
+  }
+}
+monitored_components {
+  key: "Mapping"
+  value: {
+    channel {
+      name: "/apollo/shenlan/mapping/gird_map"
+    }
+  }
+}
+monitored_components {
+  key: "Localization"
+  value: {
+    channel {
+      name: "/apollo/localization/pose"
+    }
+  }
+}
+monitored_components {
+  key: "Minco"
+  value: {
+    channel {
+      name: "/apollo/planning"
+    }
+  }
+}
+monitored_components {
+  key: "Control"
+  value: {
+    channel {
+      name: "/apollo/control"
+    }
+  }
+}

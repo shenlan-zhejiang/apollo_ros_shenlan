@@ -1,14 +1,19 @@
 # MKZ
 vehicle_conf {
+    # single car
     cars_num: 1
+
+    # agent_0
     car_id: 0
 
     car_width: 3.0
     car_length: 5.5
     car_wheelbase: 2.8448
 
+    # (deg) max steering angle
     car_max_steering_angle: 30.0
 
+    # (m) rear axis center to car center
     car_d_cr: 1.3864
 }
 
@@ -35,6 +40,7 @@ vehicle_conf {
 # }
 
 mapping_conf {
+    # (m) map center
     # huzhou map center
     # origin_x: 218381.0
     # origin_y: 3418222.0
@@ -44,36 +50,47 @@ mapping_conf {
     origin_y: 4141628.0
     origin_z: 0
 
-    map_origin_x: -180
-    map_origin_y: -180
-    map_origin_z: -5
+    # (m) "map_origin_x/y/z" = "origin_" - "origin_x/y/z"
+    map_origin_x: -200
+    map_origin_y: -500
+    map_origin_z: -8
 
-    map_size_x: 360
-    map_size_y: 360
+    # (m) map length/width/height
+    map_size_x: 350
+    map_size_y: 510
     map_size_z: 20
 
+    # (m) grid size
     resolution: 0.3
 
     min_ray_length: 0.0
-    max_ray_length: 30.0
+    max_ray_length: 50.0
 
+    # log odds
     prob_hit_log: 1.2
     prob_miss_log: -0.3
     clamp_max_log: 2.0
     clamp_min_log: -2.0
     min_occupancy_log: 1.39
 
+    # (m) lidar to imu, lidar to ground is 1.7m
     lidar_height: 2.3
 
+    # (m) "obs_low/hight" + "lidar_height" is lazer scan range
     obs_low: -1.8
-    obs_high: 5.0
+    obs_high: 0
 
+    # (m^2) surround car
     obs_circle: 25.0
 }
 
 replanfsm_conf {
-    target_x: -1
-    target_y: -170
+    # (m) target to map center
+    # target_x: -8
+    # target_y: -373
+
+    target_x: 35
+    target_y: -55
 
     target_yaw: -0.3
 
@@ -81,48 +98,82 @@ replanfsm_conf {
 }
 
 kinoastar_conf {
+    # euclidean distance
     horizon: 50
+
+    # yaw size, 0.3rad = 0.3 * 57.2958de = 17.4de
     yaw_resolution: 0.3
+
+    # f = g + lambda_heu * h
     lambda_heu: 5.0
+
+    # store memory for node
     allocate_num: 100000
+
+    # collision check times
     check_num: 5
+
+    # (t2 - t1) * 1000 > max_seach_time
     max_seach_time: 1000.1
 
+    # singul > 0, g +=  arc * traj_forward_penalty
     traj_forward_penalty: 1.0
+
+    # singul <= 0, g +=  arc * traj_back_penalty
     traj_back_penalty: 2.5
     traj_gear_switch_penalty: 15.0
     traj_steer_penalty: 0.5
     traj_steer_change_penalty: 0.0
 
+    # arc length, double arc = -step_arc; arc <= step_arc + 1e-3; arc += 0.5*step_arc
     step_arc: 0.9
+
+    # length between discrete points
     checkl: 0.9
 
+    # build s-t graph to check collision 
     time_resolution: 0.1
     distance_resolution: 0.5
     velocity_resolution: 1.0
 }
 
 trajplanner_conf {
+    # time per piece
     traj_piece_duration: 1
+
+    # number of distinctive constrain points for searching
+    # each piece
     traj_res: 8
+    
+    # first and last piece
     dense_traj_res: 20
+
+    # number of distinctive constrain points for optimize
+    # each piece
     traj_resolution: 8
+
+    # first and last piece
     destraj_resolution: 20
 
+    # weight obstacle/surround/feasibility/squared variance/time
     wei_obs: 7000.0
     wei_surround: 7000.0
     wei_feas: 1000.0
     wei_sqrvar: 1000.0
     wei_time: 500.0
 
+    # safe distance for other cars
     surround_clearance: 1.0
 
-    max_vel: 3.0
+    # dynamic limits
+    max_vel: 2.0
     min_vel: 0
-    max_acc: 1.5
-    min_acc: 0
+    max_acc: 4.0
+    min_acc: -4.0
     
+    # max curvature, curvature = theta * r
     max_cur: 0.3
 
-    half_margin: 0.25
+    # safe margin, car_width/length += 2 * half_margin
+    half_margin: 2.0
 }
