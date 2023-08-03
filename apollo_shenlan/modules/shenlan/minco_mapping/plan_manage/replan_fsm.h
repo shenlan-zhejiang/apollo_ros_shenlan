@@ -62,6 +62,7 @@ public:
     double car_d_cr_;
     double start_world_time_;
     double target_x_, target_y_, target_yaw_, target_vel_;
+    double imu2car_qw_, imu2car_qx_, imu2car_qy_, imu2car_qz_;
 
     FSM_EXEC_STATE exec_state_;
 

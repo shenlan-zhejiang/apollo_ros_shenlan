@@ -23,6 +23,10 @@ void ReplanFSM::init(apollo::shenlan::ShenlanConf &shenlan_conf)
     //apollo::shenlan::VehicleConf vehicle_conf;
     car_d_cr_ = shenlan_conf.vehicle_conf().car_d_cr();//1.3864;
     car_id_ = shenlan_conf.vehicle_conf().car_id();//0;
+    imu2car_qw_ = shenlan_conf.vehicle_conf().imu2car_qw();
+    imu2car_qx_ = shenlan_conf.vehicle_conf().imu2car_qx();
+    imu2car_qy_ = shenlan_conf.vehicle_conf().imu2car_qy();
+    imu2car_qz_ = shenlan_conf.vehicle_conf().imu2car_qz();
 
     //nh_.param("mapping/odometry_topic", odom_topic_, odom_topic_);
 }

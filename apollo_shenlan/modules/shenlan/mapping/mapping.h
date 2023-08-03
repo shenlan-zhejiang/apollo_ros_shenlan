@@ -91,6 +91,7 @@ public:
     int raycast_num_;
     std::vector<Eigen::MatrixXd> vec_freespaces_;
     int car_id_, cars_num_;
+    double lidar2imu_qw_, lidar2imu_qx_, lidar2imu_qy_, lidar2imu_qz_;
 
     void raycastProcess(const Eigen::Vector3d& t_wc, const std::shared_ptr<drivers::PointCloud>& laserCloudTransformed);
     int setCacheOccupancy(const Eigen::Vector3d& pt_w, int occ);

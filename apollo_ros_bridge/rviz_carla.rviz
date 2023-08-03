@@ -4,7 +4,6 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /conf_target1
         - /conf_target1/Line Style1
       Splitter Ratio: 0.5529412031173706
     Tree Height: 536
@@ -25,7 +24,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: apollo2ros_gridmap
+    SyncSource: topic_gridmap
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -36,9 +35,9 @@ Visualization Manager:
     - Alpha: 1
       Class: rviz/Axes
       Enabled: true
-      Length: 1
+      Length: 10
       Name: conf_origin
-      Radius: 0.10000000149011612
+      Radius: 1
       Reference Frame: map
       Show Trail: false
       Value: true
@@ -51,10 +50,10 @@ Visualization Manager:
         Line Width: 0.029999999329447746
         Value: Lines
       Name: conf_map_x0y0
-      Normal Cell Count: 700
+      Normal Cell Count: 1000
       Offset:
-        X: -200
-        Y: -500
+        X: -50
+        Y: -380
         Z: 0
       Plane: YZ
       Plane Cell Count: 1
@@ -63,16 +62,16 @@ Visualization Manager:
     - Alpha: 1
       Cell Size: 1
       Class: rviz/Grid
-      Color: 252; 175; 62
+      Color: 25; 255; 0
       Enabled: true
       Line Style:
         Line Width: 0.029999999329447746
         Value: Lines
       Name: conf_map_x0y1
-      Normal Cell Count: 1020
+      Normal Cell Count: 860
       Offset:
-        X: -200
-        Y: 10
+        X: -50
+        Y: 50
         Z: 0
       Plane: XZ
       Plane Cell Count: 1
@@ -87,10 +86,10 @@ Visualization Manager:
         Line Width: 0.029999999329447746
         Value: Lines
       Name: conf_map_x1y0
-      Normal Cell Count: 1020
+      Normal Cell Count: 860
       Offset:
-        X: 150
-        Y: -500
+        X: 450
+        Y: -380
         Z: 0
       Plane: XZ
       Plane Cell Count: 1
@@ -99,16 +98,16 @@ Visualization Manager:
     - Alpha: 1
       Cell Size: 1
       Class: rviz/Grid
-      Color: 138; 226; 52
+      Color: 252; 175; 62
       Enabled: true
       Line Style:
         Line Width: 0.029999999329447746
         Value: Lines
       Name: conf_map_x1y1
-      Normal Cell Count: 700
+      Normal Cell Count: 1000
       Offset:
-        X: 150
-        Y: 10
+        X: 450
+        Y: 50
         Z: 0
       Plane: YZ
       Plane Cell Count: 1
@@ -163,7 +162,7 @@ Visualization Manager:
           Value: true
       Marker Alpha: 1
       Marker Scale: 10
-      Name: apollo2ros_tf
+      Name: topic_tf
       Show Arrows: true
       Show Axes: true
       Show Names: true
@@ -189,7 +188,7 @@ Visualization Manager:
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: apollo2ros_lidar
+      Name: topic_lidar
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
@@ -204,8 +203,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 1.4500000476837158
-        Min Value: -0.3499999940395355
+        Max Value: 2.75
+        Min Value: 0.3499999940395355
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -217,7 +216,7 @@ Visualization Manager:
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: apollo2ros_gridmap
+      Name: topic_gridmap
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
@@ -232,8 +231,8 @@ Visualization Manager:
     - Alpha: 0.5
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 6.18057918548584
-        Min Value: -0.5409631133079529
+        Max Value: 2.259653091430664
+        Min Value: 0.5019051432609558
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -241,11 +240,11 @@ Visualization Manager:
       Color: 0; 0; 0
       Color Transformer: AxisColor
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: apollo2ros_pointcloud
+      Name: topic_pointcloud
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
@@ -256,7 +255,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
@@ -267,7 +266,7 @@ Visualization Manager:
       Length: 0.30000001192092896
       Line Style: Lines
       Line Width: 0.25
-      Name: apollo2ros_kino
+      Name: topic_kino
       Offset:
         X: 0
         Y: 0
@@ -291,7 +290,7 @@ Visualization Manager:
       Length: 0.30000001192092896
       Line Style: Lines
       Line Width: 0.5
-      Name: apollo2ros_minco
+      Name: topic_minco
       Offset:
         X: 0
         Y: 0
@@ -332,20 +331,26 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: 0
-      Class: rviz/TopDownOrtho
+      Class: rviz/ThirdPersonFollower
+      Distance: 659.7791137695312
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
+      Field of View: 0.7853981852531433
+      Focal Point:
+        X: 166.42840576171875
+        Y: -296.57305908203125
+        Z: 0
+      Focal Shape Fixed Size: false
+      Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: 1.0147773027420044
-      Target Frame: agent_0
-      X: -32.03068161010742
-      Y: -247.8882598876953
+      Pitch: 1.5697963237762451
+      Target Frame: map
+      Yaw: 4.710397720336914
     Saved: ~
 Window Geometry:
   Displays:

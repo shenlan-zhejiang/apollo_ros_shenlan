@@ -13,8 +13,20 @@ vehicle_conf {
     # (deg) max steering angle
     car_max_steering_angle: 30.0
 
-    # (m) rear axis center to car center
+    # (m) rear axis center to car center, -y
     car_d_cr: 1.3864
+
+    # lidar_novatel_extrinsics
+    lidar2imu_qw: 0.7071
+    lidar2imu_qx: 0
+    lidar2imu_qy: 0
+    lidar2imu_qz: 0.7071
+
+    # vehicle_imu_extrinsics
+    imu2car_qw: 1
+    imu2car_qx: 0
+    imu2car_qy: 0
+    imu2car_qz: 0
 }
 
 # PIX HOOKE
@@ -86,9 +98,6 @@ mapping_conf {
 
 replanfsm_conf {
     # (m) target to map center
-    # target_x: -8
-    # target_y: -373
-
     target_x: 35
     target_y: -55
 

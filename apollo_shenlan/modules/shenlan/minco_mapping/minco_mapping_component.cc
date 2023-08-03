@@ -113,7 +113,7 @@ void MincoMappingShenlanComponent::CreateMapCallback(const std::shared_ptr<local
   
   // Rotation_matrix = quaternion.toRotationMatrix();
 
-  Eigen::Quaterniond quaternion_(0.7071, 0, 0, 0.7071);
+  Eigen::Quaterniond quaternion_(RFSM.mapping_ptr_->lidar2imu_qw_, RFSM.mapping_ptr_->lidar2imu_qx_, RFSM.mapping_ptr_->lidar2imu_qy_, RFSM.mapping_ptr_->lidar2imu_qz_);
   Rotation_matrix = quaternion.toRotationMatrix() * quaternion_.toRotationMatrix();
 
   RFSM.mapping_ptr_->center_position_ = Position_XYZ + Rotation_matrix * RFSM.mapping_ptr_->lidar2car_;
@@ -261,13 +261,13 @@ void MincoMappingShenlanComponent::OdomCallback(const std::shared_ptr<apollo::lo
     Eigen::Vector3d center_pos(msg->pose().position().x(), msg->pose().position().y(), msg->pose().position().z());
     //std::cout << "center_pos: " << center_pos << std::endl;
 
-    Eigen::Vector3d pos2center(-RFSM.car_d_cr_, 0, 0);
+    Eigen::Vector3d pos2center(0, -RFSM.car_d_cr_, 0);
     //std::cout << "pos2center: " << pos2center << std::endl;
 
     Eigen::Quaterniond quaternion(msg->pose().orientation().qw(), msg->pose().orientation().qx(), 
                                   msg->pose().orientation().qy(), msg->pose().orientation().qz());
 
-    Eigen::Quaterniond quaternion_(0.7071, 0, 0, 0.7071);
+    Eigen::Quaterniond quaternion_(RFSM.imu2car_qw_, RFSM.imu2car_qx_, RFSM.imu2car_qy_, RFSM.imu2car_qz_);
 
     Eigen::Matrix3d R = quaternion.toRotationMatrix() * quaternion_.toRotationMatrix();
     Eigen::Vector3d pos = center_pos + R * pos2center;
@@ -366,7 +366,7 @@ void MincoMappingShenlanComponent::displayMincoTraj(const std::shared_ptr<apollo
     {
         // std::cout << "222222222222minco_duration: " << RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration << std::endl;
         // for (double t = 0; t <= RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration; t += 0.01)
-        for (double t = 0; t <= RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration; t += 0.01)
+        for (double t = 0; t <= RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration; t += 0.2)
         {
             Eigen::Vector2d pt = RFSM.planner_ptr_->traj_container_.singul_traj.at(i).traj.getPos(t);
             // std::cout << "222222222222minco_pt: " << pt << std::endl;

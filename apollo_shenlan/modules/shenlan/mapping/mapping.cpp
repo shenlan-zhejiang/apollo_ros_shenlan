@@ -10,7 +10,11 @@ void MappingProcess::init(apollo::shenlan::ShenlanConf &shenlan_conf) //double _
     //apollo::shenlan::VehicleConf vehicle_conf;
     cars_num_ = shenlan_conf.vehicle_conf().cars_num();//1;
     car_id_ = shenlan_conf.vehicle_conf().car_id();//0;
-
+    lidar2imu_qw_ = shenlan_conf.vehicle_conf().lidar2imu_qw();
+    lidar2imu_qx_ = shenlan_conf.vehicle_conf().lidar2imu_qx();
+    lidar2imu_qy_ = shenlan_conf.vehicle_conf().lidar2imu_qy();
+    lidar2imu_qz_ = shenlan_conf.vehicle_conf().lidar2imu_qz();
+    
     //apollo::shenlan::MappingConf mapping_conf;
     origin_(0) = shenlan_conf.mapping_conf().origin_x() + shenlan_conf.mapping_conf().map_origin_x();//587061-100;
     origin_(1) = shenlan_conf.mapping_conf().origin_y() + shenlan_conf.mapping_conf().map_origin_y();//4141628-100;

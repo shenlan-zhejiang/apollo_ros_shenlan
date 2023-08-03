@@ -42,22 +42,6 @@ bool MappingShenlanComponent::Proc( const std::shared_ptr<localization::Localiza
   mp_.curr_posi_[0] = odom_msg->pose().position().x();
   mp_.curr_posi_[1] = odom_msg->pose().position().y();
   mp_.curr_posi_[2] = odom_msg->pose().position().z();
-//   //svl    
-//   mp_.curr_posi_[0] = odom_msg->pose().position().x() - 587061;
-//   mp_.curr_posi_[1] = odom_msg->pose().position().y() - 4141628;
-//   mp_.curr_posi_[2] = odom_msg->pose().position().z();
-//   //huzhou
-//   mp_.curr_posi_[0] = odom_msg->pose().position().x() - 218385;
-//   mp_.curr_posi_[1] = odom_msg->pose().position().y() - 3418220;
-//   mp_.curr_posi_[2] = odom_msg->pose().position().z() - 12;
-//   //beijing
-//   mp_.curr_posi_[0] = odom_msg->pose().position().x() + 67814;
-//   mp_.curr_posi_[1] = odom_msg->pose().position().y() - 4457770;
-//   mp_.curr_posi_[2] = odom_msg->pose().position().z() - 33;
-//   //nanjing
-//   mp_.curr_posi_[0] = odom_msg->pose().position().x() - 103962;
-//   mp_.curr_posi_[1] = odom_msg->pose().position().y() - 3534899;
-//   mp_.curr_posi_[2] = odom_msg->pose().position().z() - 10;
 
   mp_.curr_q_.w() = odom_msg->pose().orientation().qw();
   mp_.curr_q_.x() = odom_msg->pose().orientation().qx();
@@ -69,22 +53,14 @@ bool MappingShenlanComponent::Proc( const std::shared_ptr<localization::Localiza
   mp_.curr_twist_[2] = odom_msg->pose().linear_velocity().z();
 
   Eigen::Vector3d Position_XYZ(odom_msg->pose().position().x(), odom_msg->pose().position().y(), odom_msg->pose().position().z());
-  // //svl
-  // Eigen::Vector3d Position_XYZ(odom_msg->pose().position().x() - 587061, odom_msg->pose().position().y() - 4141628, odom_msg->pose().position().z());
-//   //huzhou 
-//   Eigen::Vector3d Position_XYZ(odom_msg->pose().position().x() - 218385, odom_msg->pose().position().y() - 3418220, odom_msg->pose().position().z() - 12);
-//   //beijing
-//   Eigen::Vector3d Position_XYZ(odom_msg->pose().position().x() + 67814, odom_msg->pose().position().y() - 4457770, odom_msg->pose().position().z() - 33);
-//   //nanjing
-//   Eigen::Vector3d Position_XYZ(odom_msg->pose().position().x() - 103962, odom_msg->pose().position().y() - 3534899, odom_msg->pose().position().z() - 10);
-  
+
   Eigen::Quaterniond quaternion(odom_msg->pose().orientation().qw(), odom_msg->pose().orientation().qx(), 
                                 odom_msg->pose().orientation().qy(), odom_msg->pose().orientation().qz());
   Eigen::Matrix3d Rotation_matrix;
   
   // Rotation_matrix = quaternion.toRotationMatrix();
 
-  Eigen::Quaterniond quaternion_(0.7071, 0, 0, 0.7071);
+  Eigen::Quaterniond quaternion_(mp_.lidar2imu_qw_, mp_.lidar2imu_qx_, mp_.lidar2imu_qy_, mp_.lidar2imu_qz_);
   Rotation_matrix = quaternion.toRotationMatrix() * quaternion_.toRotationMatrix();
 
   mp_.center_position_ = Position_XYZ + Rotation_matrix * mp_.lidar2car_;

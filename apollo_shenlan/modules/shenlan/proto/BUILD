@@ -15,7 +15,6 @@ proto_library(
     name = "shenlan_pb_proto",
     srcs = ["shenlan_pb.proto"],
     deps = [
-        "//modules/common/proto:geometry_proto",
         "//modules/common/proto:header_proto",
         "//modules/localization/proto:pose_proto",
     ],

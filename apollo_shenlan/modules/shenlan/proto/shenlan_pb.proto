@@ -2,7 +2,6 @@ syntax = "proto2";
 
 package apollo.shenlan;
 
-import "modules/common/proto/geometry.proto";
 import "modules/common/proto/header.proto";
 import "modules/localization/proto/pose.proto";
 
@@ -14,6 +13,14 @@ message VehicleConf {
   optional double car_wheelbase = 5 [default = 2.8448];
   optional double car_max_steering_angle = 6 [default = 10.0];
   optional double car_d_cr = 7 [default = 1.3864];
+  optional double lidar2imu_qw = 8 [default = 0.7071];
+  optional double lidar2imu_qx = 9 [default = 0];
+  optional double lidar2imu_qy = 10 [default = 0];
+  optional double lidar2imu_qz = 11 [default = 0.7071];
+  optional double imu2car_qw = 12 [default = 1];
+  optional double imu2car_qx = 13 [default = 0];
+  optional double imu2car_qy = 14 [default = 0];
+  optional double imu2car_qz = 15 [default = 0];
 }
 
 message MappingConf {
