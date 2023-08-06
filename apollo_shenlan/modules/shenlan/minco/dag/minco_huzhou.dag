@@ -1,0 +1,17 @@
+module_config {
+    module_library: "/apollo/bazel-bin/modules/shenlan/minco/libminco_component.so"
+    components {
+        class_name: "MincoShenlanComponent"
+        config {
+            name: "shenlan_minco"
+            config_file_path: "/apollo/modules/shenlan/conf/shenlan_conf_huzhou.pb.txt"
+            readers {
+              channel: "/apollo/localization/pose"
+            }
+            readers {
+              channel: "/apollo/shenlan/mapping/occupancy"
+            }
+
+        }
+    }
+}

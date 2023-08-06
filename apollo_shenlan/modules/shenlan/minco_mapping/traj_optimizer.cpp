@@ -195,7 +195,7 @@ namespace plan_manage
     else
     {
       printf("\033[31m[PolyTrajOptimizer]iter=%d,time(ms)=%5.3f, error.\n\033[0m", iter_num_, time_ms.count());
-      cout<<"Solver error. Return = %d, %s. Skip this planning."<< result<< lbfgs::lbfgs_strerror(result)<<endl;
+      std::cout << "Solver error. Return = " << result << ", " <<lbfgs::lbfgs_strerror(result) << " Skip this planning." << std::endl;
     }
 
     

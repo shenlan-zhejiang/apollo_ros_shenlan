@@ -89,7 +89,7 @@ mapping_conf {
     lidar_height: 2.3
 
     # (m) "obs_low/hight" + "lidar_height" is lazer scan range
-    obs_low: -1.8
+    obs_low: -2.0
     obs_high: 0
 
     # (m^2) surround car
@@ -98,8 +98,11 @@ mapping_conf {
 
 replanfsm_conf {
     # (m) target to map center
-    target_x: 35
-    target_y: -55
+    target_x: -1
+    target_y: -170
+
+    # target_x: 35
+    # target_y: -55
 
     target_yaw: -0.3
 

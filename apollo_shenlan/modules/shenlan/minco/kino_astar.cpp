@@ -528,7 +528,7 @@ namespace path_searching
         {
           /* one shot trajectory */
 
-          cout<<"one shot! iter num: %d"<<iter_num_<<endl;
+          cout<<"one shot! iter num: "<<iter_num_<<endl;
           return REACH_END;
         }
         else if (reach_horizon)

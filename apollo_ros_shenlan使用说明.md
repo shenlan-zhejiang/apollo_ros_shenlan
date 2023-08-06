@@ -200,7 +200,100 @@ roslaunch traj_planner swarm_apollo.launch
 # 或source planner.sh
 ```
 
-## 4.注意事项
+## 4.carla_apollo_bridge_guardstrikelab
+
+### 4.1.github
+
+```sh
+# apollo 7.0
+https://github.com/guardstrikelab/apollo.git
+# carla 9.14
+https://github.com/guardstrikelab/carla_apollo_bridge.git
+```
+
+### 4.2.run apollo
+
+```sh
+# apollo docker参数：Apollo_7.0/docker/scripts/dev_into.sh & dev_start.sh
+docker start carla_apollo_7.0_dev_shenlan
+./Apollo_7.0/docker/scripts/dev_into.sh
+bash apollo.sh build_opt
+```
+
+### 4.3.run carla simulator (server)
+
+```bash
+# 配置 carla server
+# server docker参数：carla_apollo_bridge_guardstrikelab/scripts/carla-compose.yml
+cd carla_apollo_bridge_guardstrikelab/scripts
+./docker_run_carla.sh
+docker container rename carla-simulator-1 carla_simulator_9.14
+
+# 进入 carla server
+docker start carla_simulator_9.14
+# or
+sh 9_simulator_carla.sh
+```
+
+### 4.4.run carla cyber (client)
+
+```bash
+# 配置 carla client
+# client docker参数：carla_apollo_bridge_guardstrikelab/docker/run_docker.sh & Dockerfile
+cd carla_apollo_bridge_guardstrikelab/docker
+./build_docker.sh
+./run_docker.sh
+docker exec -ti carla_cyber_9.14 bash
+./apollo.sh build_cyber opt
+
+# 进入 carla client
+docker start carla_cyber_9.14
+docker exec -ti carla_cyber_9.14 bash
+# or
+sh 14_cyber_carla.sh
+
+# 开启 carla bridge
+# 地图参数：carla_apollo_bridge_guardstrikelab/src/carla_cyber_bridge/config/settings.yaml
+cd /apollo/cyber/carla_bridge/
+python carla_cyber_bridge/bridge.py
+# or
+sh bridge.sh
+# ps -elf | grep carla_cyber_bridge/bridge.py
+
+# 开启 carla spawn
+# 车型参数：carla_apollo_bridge_guardstrikelab/src/carla_spawn_objects/config/objects.json
+cd /apollo/cyber/carla_bridge
+python carla_spawn_objects/carla_spawn_objects.py
+# or
+sh vehicle.sh
+# ps -elf | grep carla_spawn_objects/carla_spawn_objects.py
+
+# 开启 carla manual
+cd /apollo/cyber/carla_bridge/carla_python/examples/
+python manual_control.py 
+# or 
+sh manual.sh
+```
+
+### 4.5.teleop and map
+
+```sh
+# 开启 apollo teleop
+./bazel-bin/moudules/canbus/tools/teleop 
+# or 
+sh teleop.sh
+
+# 配置 apollo map
+# 将base_map.bin生成为sim_map.bin
+./bazel-bin/modules/map/tools/sim_map_generator \
+-map_dir=/apollo/modules/map/data/carla_town05/ \
+-output_dir=/apollo/modules/map/data/carla_town05
+# 将base_map.bin生成为routing_map.bin
+bash scripts/generate_routing_topo_graph.sh \
+--map_dir /apollo/modules/map/data/carla_town05
+```
+
+## 5.注意事项
 
 1.若cyber_launch无法通过ctrl+c关闭，则在终端中输入`kill -9 xxx` (xxx为 cyber_launch的进程数字)， 或输入 `ps -elf | grep mainboard`
 

@@ -261,7 +261,9 @@ void MincoMappingShenlanComponent::OdomCallback(const std::shared_ptr<apollo::lo
     Eigen::Vector3d center_pos(msg->pose().position().x(), msg->pose().position().y(), msg->pose().position().z());
     //std::cout << "center_pos: " << center_pos << std::endl;
 
+    //!!!!!REAR AXIS CENTER IN APOLLO IS Y / IN ROS IS X!!!!!
     Eigen::Vector3d pos2center(0, -RFSM.car_d_cr_, 0);
+    //Eigen::Vector3d pos2center(-RFSM.car_d_cr_, 0, 0);
     //std::cout << "pos2center: " << pos2center << std::endl;
 
     Eigen::Quaterniond quaternion(msg->pose().orientation().qw(), msg->pose().orientation().qx(), 

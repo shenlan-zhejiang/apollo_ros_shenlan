@@ -1,0 +1,16 @@
+module_config {
+    module_library: "/apollo/bazel-bin/modules/shenlan/mapping/libmapping_component.so"
+    components {
+        class_name: "MappingShenlanComponent"
+        config {
+            name: "shenlan_mapping"
+            config_file_path: "/apollo/modules/shenlan/conf/shenlan_conf_carla04.pb.txt"
+            readers {
+              channel: "/apollo/localization/pose"
+            }
+            readers {
+              channel: "/apollo/sensor/lidar128/compensator/PointCloud2"
+            }
+        }
+    }
+}
