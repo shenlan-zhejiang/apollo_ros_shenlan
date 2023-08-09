@@ -29,7 +29,7 @@ using namespace chrono;
 // void TrajPlanner::Init(const std::string config_path, const int car_id) 
 void TrajPlanner::init(apollo::shenlan::ShenlanConf &shenlan_conf)
 {
-
+  //apollo::shenlan::MappingConf mapping_conf;
   resolution_ = shenlan_conf.mapping_conf().resolution();
 
   //apollo::shenlan::TrajPlannerConf trajplanner_conf;
@@ -96,6 +96,65 @@ void TrajPlanner::init(apollo::shenlan::ShenlanConf &shenlan_conf)
 //   map_ptr_ = ptr;
 //   //std::cout << "setmap" << std::endl;
 // }
+
+
+void TrajPlanner::setInitStateAndInput(const Eigen::Vector4d& state, const double& start_time)
+{ 
+  //std::cout << "1111111111setState1111111111" << std::endl;
+  //std::cout << "state: " << std::endl << state << std::endl;
+  //std::cout << "start_time: " << std::endl << start_time << std::endl;
+
+  has_init_state_ = true;
+  //std::cout << "has_init_state_: " << std::endl << has_init_state_ << std::endl;
+  start_state_ = state;
+  //std::cout << "start_state_: " << std::endl << start_state_ << std::endl;
+  start_time_ = start_time;
+  //std::cout << "start_time_: " << std::endl << start_time_ << std::endl;
+
+  Eigen::Vector2d init_ctrl(0.0, 0.0);
+  start_ctrl_ = init_ctrl;
+  std::cout << "start_ctrl_: " << std::endl << init_ctrl << std::endl;
+}
+
+// void TrajPlanner::setInitStateAndInput(const double& t, Eigen::Vector4d& replan_init_state, Eigen::Vector2d start_pos)
+void TrajPlanner::setInitStateAndInput(const double& t, Eigen::Vector4d& replan_init_state, const double& cur_vel_, const double& cur_yaw_, const Eigen::Vector2d& start_pos, const Eigen::Vector2d& start_vel, const Eigen::Vector2d& start_acc)
+{
+  // std::cout << "2222222222setState2222222222" << std::endl;
+
+  has_init_state_ = true;
+  start_time_  = t;
+  int id = traj_container_.locateSingulId(t);
+  double t_bar = t - traj_container_.singul_traj[id].start_time;
+  if(t_bar > traj_container_.singul_traj[id].duration)
+  {
+      t_bar = traj_container_.singul_traj[id].duration;
+  }
+  int singul = traj_container_.singul_traj[id].traj.getSingul(t_bar);
+//   int singul = traj_container_.singul_traj[id].traj.getSingul(t_bar);
+//   // Eigen::Vector2d start_pos = traj_container_.singul_traj[id].traj.getPos(t_bar ); // LESS TIME POS FOR TRACKING
+//   Eigen::Vector2d start_vel = traj_container_.singul_traj[id].traj.getdSigma(t_bar);
+//   Eigen::Vector2d start_acc = traj_container_.singul_traj[id].traj.getddSigma(t_bar);
+//   double init_yaw = atan2(singul * start_vel(1), singul * start_vel(0));
+//   double init_vel = singul * start_vel.norm();
+
+  double init_vel = cur_vel_;
+  double init_yaw = cur_yaw_;
+  Eigen::Vector4d init_state;
+  init_state << start_pos, init_yaw, init_vel;
+
+  Eigen::Matrix2d B;
+  B << 0, -1,
+       1,  0;
+  double init_steer = atan(singul * (start_acc.transpose() * B * start_vel)(0, 0) * car_wheelbase_ / pow(start_vel.norm(), 3));
+  double init_acc = start_acc.norm();
+  //double init_acc = singul * (start_vel.transpose() * start_acc)(0, 0) / start_vel.norm();
+  Eigen::Vector2d init_input(init_steer, init_acc);
+  
+  replan_init_state = init_state;
+  start_state_ = init_state;
+  start_ctrl_  = init_input; 
+}
+
 
 // use kinodynamic a* to generate a path
 bool TrajPlanner::getKinoPath(Eigen::Vector4d &end_state, bool first_search, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
@@ -165,291 +224,10 @@ bool TrajPlanner::getKinoPath(Eigen::Vector4d &end_state, bool first_search, con
   return true;
 }
 
-void TrajPlanner::setInitStateAndInput(const Eigen::Vector4d& state, const double& start_time)
-{ 
-  //std::cout << "1111111111setState1111111111" << std::endl;
-  //std::cout << "state: " << std::endl << state << std::endl;
-  //std::cout << "start_time: " << std::endl << start_time << std::endl;
-
-  has_init_state_ = true;
-  //std::cout << "has_init_state_: " << std::endl << has_init_state_ << std::endl;
-  start_state_ = state;
-  //std::cout << "start_state_: " << std::endl << start_state_ << std::endl;
-  start_time_ = start_time;
-  //std::cout << "start_time_: " << std::endl << start_time_ << std::endl;
-
-  Eigen::Vector2d init_ctrl(0.0, 0.0);
-  start_ctrl_ = init_ctrl;
-  std::cout << "start_ctrl_: " << std::endl << init_ctrl << std::endl;
-}
-
-void TrajPlanner::setInitStateAndInput(const double& t, Eigen::Vector4d& replan_init_state)
-{
-  // std::cout << "2222222222setState2222222222" << std::endl;
-
-  has_init_state_ = true;
-  start_time_  = t;
-
-  int id = traj_container_.locateSingulId(t);
-  
-
-  double t_bar = t - traj_container_.singul_traj[id].start_time;
-  if(t_bar > traj_container_.singul_traj[id].duration)
-  {
-      t_bar = traj_container_.singul_traj[id].duration;
-  }
-  int singul = traj_container_.singul_traj[id].traj.getSingul(t_bar);
-  Eigen::Vector2d start_pos = traj_container_.singul_traj[id].traj.getPos(t_bar);
-  Eigen::Vector2d start_vel = traj_container_.singul_traj[id].traj.getdSigma(t_bar);
-  Eigen::Vector2d start_acc = traj_container_.singul_traj[id].traj.getddSigma(t_bar);
-  double init_yaw = atan2(singul * start_vel(1), singul * start_vel(0));
-  double init_vel = singul * start_vel.norm();
-  Eigen::Vector4d init_state;
-  //init_state << start_pos[0]-587061, start_pos[1]-4141628, init_yaw, init_vel;
-  init_state << start_pos, init_yaw, init_vel;
-  //std::cout << "init_state: " << std::endl << init_state << std::endl;
-
-  Eigen::Matrix2d B;
-  B << 0, -1,
-       1,  0;
-  double init_steer = atan(singul * (start_acc.transpose() * B * start_vel)(0, 0) * car_wheelbase_ / pow(start_vel.norm(), 3));
-  double init_acc = singul * (start_vel.transpose() * start_acc)(0, 0) / start_vel.norm();
-  Eigen::Vector2d init_input(init_steer, init_acc);
-
-  //std::cout << "init_steer" << init_steer << std::endl;
-  //std::cout << "init_acc" << init_acc << std::endl;
-  //std::cout << "init_yaw" << init_yaw << std::endl;
-
-  replan_init_state = init_state;
-  start_state_ = init_state;
-  start_ctrl_  = init_input; 
-}
-
-/*
-void TrajPlanner::displayKinoPath(std::shared_ptr<plan_utils::KinoTrajData> kino_trajs)
-{
-  
-  visualization_msgs::Marker sphere, line_strip, carMarkers;
-  sphere.header.frame_id = line_strip.header.frame_id = carMarkers.header.frame_id = "map";
-  sphere.header.stamp = line_strip.header.stamp = carMarkers.header.stamp = apollo::cyber::Time::Now().ToNanosecond() / 1.0e9;
-  sphere.type = visualization_msgs::Marker::SPHERE_LIST;
-  line_strip.type = visualization_msgs::Marker::LINE_STRIP;
-  // carMarkers.type = visualization_msgs::Marker::LINE_LIST;
-
-
-  sphere.action = visualization_msgs::Marker::DELETE;
-  line_strip.action = visualization_msgs::Marker::DELETE;
-  // carMarkers.action = visualization_msgs::Marker::DELETE;
-
-  KinopathPub_.publish(sphere);
-  KinopathPub_.publish(line_strip);
-  // path_pub.publish(carMarkers);
-
-  sphere.action = line_strip.action = carMarkers.action = visualization_msgs::Marker::ADD;
-  sphere.id = 0;
-  line_strip.id = 1000;
-
-  sphere.pose.orientation.w = line_strip.pose.orientation.w = 1.0;
-  sphere.color.a = line_strip.color.a = 0.5;
-  sphere.scale.x = 0.5;
-  sphere.scale.y = 0.5;
-  sphere.scale.z = 0.5;
-  line_strip.scale.x = 0.25;
-
-  geometry_msgs::Point pt;
-  unsigned int size = kino_trajs->size();
-  for (unsigned int i = 0; i < size; ++i){
-    sphere.color.r = line_strip.color.r = i*1.0/(size*1.0);
-    sphere.color.g = line_strip.color.g = 0.0;
-    sphere.color.b = line_strip.color.b = i*1.0/(size*1.0);
-
-    for (int k = 0; k < kino_trajs->at(i).traj_pts.size(); k++)
-    {
-      Eigen::Vector3d trajpt = kino_trajs->at(i).traj_pts[k];
-      double yaw = kino_trajs->at(i).thetas[k];
-      pt.x = trajpt(0);
-      pt.y = trajpt(1);
-      pt.z = 0.1;
-      sphere.points.push_back(pt);
-      line_strip.points.push_back(pt);
-
-    }
-  }
-
-  KinopathPub_.publish(sphere);
-  KinopathPub_.publish(line_strip);
-  // path_pub.publish(carMarkers);
-  
-}
-*/
-
-void TrajPlanner::displayKinoPath(std::shared_ptr<plan_utils::KinoTrajData> kino_trajs)
-{
-    auto path_msg = make_shared<apollo::shenlan::NavPath>();
-    apollo::common::Quaternion quaternion;
-    quaternion.set_qw(1.0);
-    quaternion.set_qx(0.0);
-    quaternion.set_qy(0.0);
-    quaternion.set_qz(0.0);
-    apollo::common::PointENU position;
-    //std::cout << "+++++++++++kino_traj->size(): " << kino_trajs->size() << std::endl;
-    for (unsigned int i = 0; i < kino_trajs->size(); ++i)
-    {
-        //std::cout << "+++++++++++traj_pts.size(): " << kino_trajs->at(i).traj_pts.size() << std::endl;
-        for (size_t k = 0; k < kino_trajs->at(i).traj_pts.size(); k++)
-        {
-        Eigen::Vector3d pt = kino_trajs->at(i).traj_pts[k];
-        //std::cout << "+++++++++++pt: " << pt << std::endl;
-        position.set_x(pt(0));
-        position.set_y(pt(0));
-        position.set_z(0.2);
-        auto pose = path_msg->add_pose();
-        pose->mutable_position()->CopyFrom(position);
-        pose->mutable_orientation()->CopyFrom(quaternion); 
-        }
-    }
-    path_msg->mutable_header()->set_frame_id("map");
-}
-
-void TrajPlanner::displayMincoTraj(std::shared_ptr<plan_utils::SingulTrajData> display_traj)
-{
-    auto path_msg = make_shared<apollo::shenlan::NavPath>();
-    apollo::common::Quaternion quaternion;
-    quaternion.set_qw(1.0);
-    quaternion.set_qx(0.0);
-    quaternion.set_qy(0.0);
-    quaternion.set_qz(0.0);
-    apollo::common::PointENU position;
-    //std::cout << "---------------display_traj->size(): " << display_traj->size() << std::endl;
-    for (unsigned int i = 0; i < display_traj->size(); ++i)
-    {
-        double total_duration = display_traj->at(i).duration;
-        //std::cout << "---------------total_duration: " << total_duration << std::endl;
-        for (double t = 0; t <= total_duration; t += 0.01)
-        {
-            Eigen::Vector2d pt = display_traj->at(i).traj.getPos(t);
-            //std::cout << "---------------pt: " << pt << std::endl;
-            position.set_x(pt(0));
-            position.set_y(pt(0));
-            position.set_z(0.2);
-            auto pose = path_msg->add_pose();
-            pose->mutable_position()->CopyFrom(position);
-            pose->mutable_orientation()->CopyFrom(quaternion); 
-        }
-    }
-    path_msg->mutable_header()->set_frame_id("map");
-
-  /*
-  double last_debugyaw =  display_traj->at(0).traj.getAngle(0.0);
-
-  for (unsigned int i = 0; i < display_traj->size(); ++i){
-    double total_duration = display_traj->at(i).duration;
-    for (double t = 0; t <= total_duration; t += 0.01){
-
-      Eigen::Vector2d pt = display_traj->at(i).traj.getPos(t);
-      position.set_x(pt(0));
-      position.set_y(pt(0));
-      position.set_z(0.4);
-
-      auto pose = path_msg->add_pose();
-      pose->mutable_position()->CopyFrom(position);
-
-      Eigen::Vector2d vel = display_traj->at(i).traj.getdSigma(t);
-      double yaw = display_traj->at(i).traj.getAngle(t);
-      // std::cout<<"pos: "<<pt.transpose()<<" vel: "<<vel.transpose()<<" yaw: "<<yaw<<std::endl;
-
-      // if(fabs(yaw-last_debugyaw)>0.2){
-      // }
-      last_debugyaw = yaw;
-    }
-
-  }
-  
-  visualization_msgs::Marker carMarkers;
-  carMarkers.header.frame_id = "map";
-  carMarkers.header.stamp = ros::Time::now();
-  carMarkers.type = visualization_msgs::Marker::LINE_LIST;
-  carMarkers.action = visualization_msgs::Marker::DELETE;
-  wholebody_traj_pub_.publish(carMarkers);
-  carMarkers.action = visualization_msgs::Marker::ADD;
-  carMarkers.id = 21;
-  carMarkers.pose.orientation.w = 1.00;
-  carMarkers.ns = "trajwholepub";
-  carMarkers.color.r = 1.00;
-  carMarkers.color.g = 0.00;
-  carMarkers.color.b = 1.00;
-  carMarkers.color.a = 1.00;
-  carMarkers.scale.x = 0.05;
-  */
- /*
-  geometry_msgs::Point pt;
-
-  for (unsigned int i = 0; i < display_traj->size(); ++i){
-    double total_duration = display_traj->at(i).duration;
-    for (double t = 0; t <= total_duration; t += 0.1){
-      Eigen::Vector2d pos = display_traj->at(i).traj.getPos(t);
-      double yaw = display_traj->at(i).traj.getAngle(t);
-      pt.x = pos(0);
-      pt.y = pos(1);
-      pt.z = 0.1;
-      geometry_msgs::Point point1;
-      geometry_msgs::Point point2;
-      geometry_msgs::Point point3;
-      geometry_msgs::Point point4;
-      Eigen::Matrix2d R;
-      R << cos(yaw),-sin(yaw),
-            sin(yaw),cos(yaw);
-      Eigen::Vector2d offset1, tmp1;
-      offset1 = R*Eigen::Vector2d(car_length_/2.0+car_d_cr_,car_width_/2.0);
-      tmp1 = pos+offset1;
-      point1.x = tmp1[0]; 
-      point1.y = tmp1[1];
-      point1.z = 0;
-
-      Eigen::Vector2d offset2, tmp2;
-      offset2 = R*Eigen::Vector2d(car_length_/2.0+car_d_cr_,-car_width_/2.0);
-      tmp2 = pos+offset2;
-      point2.x = tmp2[0]; 
-      point2.y = tmp2[1];
-      point2.z = 0;
-
-      Eigen::Vector2d offset3, tmp3;
-      offset3 = R*Eigen::Vector2d(-car_length_/2.0+car_d_cr_,-car_width_/2.0);
-      tmp3 = pos+offset3;
-      point3.x = tmp3[0]; 
-      point3.y = tmp3[1];
-      point3.z = 0;
-
-      Eigen::Vector2d offset4, tmp4;
-      offset4 = R*Eigen::Vector2d(-car_length_/2.0+car_d_cr_,car_width_/2.0);
-      tmp4 = pos+offset4;
-      point4.x = tmp4[0]; 
-      point4.y = tmp4[1];
-      point4.z = 0;
-
-      carMarkers.points.push_back(point1);
-      carMarkers.points.push_back(point2);
-
-      carMarkers.points.push_back(point2);
-      carMarkers.points.push_back(point3);
-
-      carMarkers.points.push_back(point3);
-      carMarkers.points.push_back(point4);
-
-      carMarkers.points.push_back(point4);
-      carMarkers.points.push_back(point1);
-
-    }
-
-  }*/
-
-  //wholebody_traj_pub_.publish(carMarkers);
-}
 
 bool TrajPlanner::checkCollisionWithObs(const double& t_now, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
 {
     //std::cout << "*********checkCollisionWithObs**********" << std::endl;
-
 
     bool collision = false;
 
@@ -630,61 +408,7 @@ bool TrajPlanner::RunMINCOParking(const std::shared_ptr<apollo::shenlan::Occupan
   }
 }
 
-void TrajPlanner::broadcastTraj2SwarmBridge(){
-    return;
-}
-/*
-void TrajPlanner::broadcastTraj2SwarmBridge()
-{
-    //ros::Time t0 = ros::Time().fromSec(start_time_);
-    double t0 = apollo::cyber::Time::ToSecond(start_time_);
-    //swarm_bridge::Trajectory traj_msg;
-    for(int i = 0; i < (int)kino_trajs_.size(); i++)
-    {
-        swarm_bridge::SingleMinco sm;
-        Eigen::MatrixXd poses = traj_container_.singul_traj[i].traj.getPositions();
-        Eigen::VectorXd ts = traj_container_.singul_traj[i].traj.getDurations();
-        int direction = traj_container_.singul_traj[i].traj.getDirection();
-        // Eigen::MatrixXd init = iniState_container[i];
-        Eigen::MatrixXd init = kino_trajs_.at(i).start_state;
-        // Eigen::MatrixXd fina = finState_container[i];
-        Eigen::MatrixXd fina = kino_trajs_.at(i).final_state;
-        sm.head_x.x = init.row(0)[0];
-        sm.head_x.y = init.row(0)[1];
-        sm.head_x.z = init.row(0)[2];
-        sm.head_y.x = init.row(1)[0];
-        sm.head_y.y = init.row(1)[1];
-        sm.head_y.z = init.row(1)[2];
 
-        sm.tail_x.x = fina.row(0)[0];
-        sm.tail_x.y = fina.row(0)[1];
-        sm.tail_x.z = fina.row(0)[2];
-        sm.tail_y.x = fina.row(1)[0];
-        sm.tail_y.y = fina.row(1)[1];
-        sm.tail_y.z = fina.row(1)[2]; 
-
-        sm.reverse = kino_trajs_.at(i).singul == 1?false:true;
-        sm.start_time = t0;
-        t0 = t0 + ros::Duration().fromSec(ts.sum());
-        for (int i=0; i<poses.cols(); i++)
-        {
-            geometry_msgs::Point temp;
-            temp.x = poses(0, i);
-            temp.y = poses(1, i);
-            temp.z = 0;
-            sm.pos_pts.push_back(temp);
-        }
-        for (int i=0; i<ts.size(); i++)
-        {
-            sm.t_pts.push_back(ts(i));
-        }
-        traj_msg.minco_path.trajs.push_back(sm);       
-    }
-    //traj_msg.traj_type = 1;
-    //traj_msg.car_id = car_id_;
-    //TrajPathPub_.publish(traj_msg);
-}
-*/
 void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
 {
     hPolys_.clear();
@@ -888,98 +612,6 @@ void TrajPlanner::getRectangleConst(std::vector<Eigen::Vector3d> statelist, cons
     }
 }
 
-/*
-void TrajPlanner::displayPolyH(const std::vector<Eigen::MatrixXd> hPolys)
-{
-    vec_E<Polyhedron2D> polyhedra;
-    polyhedra.reserve(hPolys.size());
-    for (const auto &ele : hPolys)
-    {
-      Polyhedron2D hPoly;
-      for (int i = 0; i < ele.cols(); i++)
-      {
-        hPoly.add(Hyperplane2D(ele.col(i).tail<2>(), ele.col(i).head<2>()));
-      }
-      polyhedra.push_back(hPoly);
-    }
-
-    decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(polyhedra);
-    poly_msg.header.frame_id = "map";
-    poly_msg.header.stamp = apollo::cyber::Time::Now().ToNanosecond() / 1.0e9;
-    //Rectangle_poly_pub_.publish(poly_msg);    
-}
-
-*/
-/*
-void TrajPlanner::setSwarmTrajs(const swarm_bridge::Trajectory &traj_msg)
-{
-    plan_utils::MinJerkOpt jerk_opter;
-    // std::vector<plan_utils::LocalTrajData> minco_traj;
-    plan_utils::TrajContainer surround_traj;
-    std::vector<bool> reverse;
-    int car_id = traj_msg.car_id;
-    double total_time = 0.0;
-    for(int i = 0; i < traj_msg.minco_path.trajs.size(); i++)
-    {
-        double start_time = traj_msg.minco_path.trajs.at(i).start_time.toSec();
-        swarm_bridge::SingleMinco sm = traj_msg.minco_path.trajs[i];
-        Eigen::MatrixXd posP(2, sm.pos_pts.size() - 2);
-        Eigen::VectorXd T(sm.t_pts.size());
-        Eigen::MatrixXd head(2, 3), tail(2, 3);
-        const int N = sm.t_pts.size();
-        reverse.push_back(sm.reverse);
-        int direction = sm.reverse?-1:1;
-
-        for(int j = 1; j < (int)sm.pos_pts.size() - 1; j++)
-        {
-            posP(0, j - 1) = sm.pos_pts[j].x;
-            posP(1, j - 1) = sm.pos_pts[j].y;
-        }
-        for(int j = 0; j < (int)sm.t_pts.size(); j++)
-        {
-            T(j) = sm.t_pts[j];
-        }
-        head.row(0) = Eigen::Vector3d(sm.head_x.x, sm.head_x.y, sm.head_x.z);
-        head.row(1) = Eigen::Vector3d(sm.head_y.x, sm.head_y.y, sm.head_y.z);
-        tail.row(0) = Eigen::Vector3d(sm.tail_x.x, sm.tail_x.y, sm.tail_x.z);
-        tail.row(1) = Eigen::Vector3d(sm.tail_y.x, sm.tail_y.y, sm.tail_y.z);
-
-        jerk_opter.reset(head, tail, N);
-        jerk_opter.generate(posP, T);
-        plan_utils::Trajectory traj = jerk_opter.getTraj(direction);
-
-        surround_traj.addSingulTraj(traj, start_time, car_id);
-        // plan_utils::LocalTrajData sur_traj;
-        // sur_traj.drone_id = car_id;
-        // sur_traj.traj = traj;
-        // sur_traj.duration = traj.getTotalDuration();
-        // sur_traj.start_pos = traj.getJuncPos(0);
-        // sur_traj.start_time = start_time;
-        // sur_traj.end_time = start_time + sur_traj.duration;
-        // sur_traj.init_angle = 0.0;
-
-        total_time += traj.getTotalDuration();
-        // minco_traj.push_back(sur_traj);
-    }
-
-    if(!have_received_trajs_[car_id])
-    {
-        swarm_last_traj_container_[car_id] = surround_traj;
-    }
-    else
-    {
-        swarm_last_traj_container_[car_id] = swarm_traj_container_[car_id];
-    }
-
-    
-    swarm_traj_container_[car_id] = surround_traj;
-    have_received_trajs_[car_id] = true;
-    kino_path_finder_->setAllCarsTrajs(surround_traj, car_id);
-    kino_path_finder_->setAllCarsLastTrajs(swarm_last_traj_container_[car_id], car_id);
-    ploy_traj_opt_->setAllCarsTrajs(surround_traj, car_id);
-    ploy_traj_opt_->setAllCarsLastTrajs(swarm_last_traj_container_[car_id], car_id);
-}
-*/
 void TrajPlanner::setMapFree(double& time_now)
 {
     int num_have_received_trajs = 0;

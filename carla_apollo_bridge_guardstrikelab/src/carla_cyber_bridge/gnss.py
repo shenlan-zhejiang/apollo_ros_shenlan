@@ -97,8 +97,6 @@ class Gnss(Sensor):
         gnss_odometry_msg = Gps()
         gnss_odometry_msg.header.CopyFrom(self.get_msg_header(timestamp=carla_gnss_measurement.timestamp))
         gnss_odometry_msg.localization.CopyFrom(self.parent.get_current_cyber_odometry())
-        # gnss_odometry_msg.localization.CopyFrom(self.parent.get_current_cyber_pose())
-        # gnss_odometry_msg.localization.CopyFrom(self.parent.get_current_cyber_twist_rotated())
         self.gnss_odometry_writer.write(gnss_odometry_msg)
 
         gnss_heading_msg = Heading()

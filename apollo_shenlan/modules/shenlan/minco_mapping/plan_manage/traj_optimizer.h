@@ -5,10 +5,10 @@
 #include <chrono>
 
 #include "modules/shenlan/minco_mapping/plan_utils/traj_container.hpp"
-#include "modules/shenlan/proto/shenlan_pb.pb.h"
 #include "cyber/time/time.h"
 #include "modules/shenlan/minco_mapping/geo_utils2d/lbfgs.hpp"
 #include "modules/shenlan/minco_mapping/geo_utils2d/geoutils2d.hpp"
+#include "modules/shenlan/proto/shenlan_pb.pb.h"
 // #include <visualization_msgs/Marker.h>
 // #include <visualization_msgs/MarkerArray.h>
 // #include <nav_msgs/Path.h>

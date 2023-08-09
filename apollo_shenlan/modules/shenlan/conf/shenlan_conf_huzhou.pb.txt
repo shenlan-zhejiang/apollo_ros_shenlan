@@ -1,15 +1,22 @@
 # PIX HOOKE
 vehicle_conf {
+    # single car
     cars_num: 1
+    
+    # agent_0
     car_id: 0
 
     car_width: 1.7
     car_length: 3.0
     car_wheelbase: 1.9
 
+    # (deg) max steering angle
     car_max_steering_angle: 20.0
 
+    # (m) rear axis center to car center, apollo (0, y), ros (x, 0)
     car_d_cr: 0.92
+    car_d_cr_x: 0
+    car_d_cr_y: 0.92
 
     # lidar_novatel_extrinsics
     lidar2imu_qw: 0.7071
@@ -33,6 +40,8 @@ vehicle_conf {
 #     car_wheelbase: 1.1
 #     car_max_steering_angle: 20.0
 #     car_d_cr: 0.55
+#     car_d_cr_x: 0
+#     car_d_cr_y: 0.55
 #     lidar2imu_qw: 0.7071
 #     lidar2imu_qx: 0
 #     lidar2imu_qy: 0
@@ -49,7 +58,7 @@ mapping_conf {
     origin_y: 3418222.0
     origin_z: 0
 
-    # (m) "map_origin_x/y/z" = "origin_" - "origin_x/y/z"
+    # (m) map_origin_x/y/z = origin_ - origin_x/y/z
     map_origin_x: -200
     map_origin_y: -200
     map_origin_z: 10
@@ -75,7 +84,7 @@ mapping_conf {
     # (m) lidar to imu, lidar to ground is 1.7m
     lidar_height: 1.7
 
-    # (m) "obs_low/hight" + "lidar_height" is lazer scan range
+    # (m) obs_low/hight + lidar_height is lazer scan range
     obs_low: -1.5
     obs_high: 0
 
@@ -91,10 +100,16 @@ replanfsm_conf {
     target_yaw: -0.3
 
     target_vel: 0.0
+
+    # EXEC_TRAJ before cur_pos_ - init_state_ > exec_positon
+    exec_positon: 10.0
+
+    # or EXEC_TRAJ before t_now - start_world_time_ > exec_time
+    exec_time: 2.0
 }
 
 kinoastar_conf {
-    # euclidean distance
+    # euclidean distance to decide the near end
     horizon: 50
 
     # yaw size, 0.3rad = 0.3 * 57.2958de = 17.4de
@@ -131,11 +146,14 @@ kinoastar_conf {
     time_resolution: 0.1
     distance_resolution: 0.5
     velocity_resolution: 1.0
+
+    # the truncated path list includes the points along the path
+    truncate_len: 30.0
 }
 
 trajplanner_conf {
-    # time per piece
-    traj_piece_duration: 1
+    # time per piece, piece_nums = kinoTotalduration / timePerPiece
+    traj_piece_duration: 0.1
 
     # number of distinctive constrain points for searching
     # each piece

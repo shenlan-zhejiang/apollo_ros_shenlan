@@ -47,7 +47,6 @@ class MincoMappingShenlanComponent final : public cyber::Component<localization:
         void CreateMapCallback( const std::shared_ptr<localization::LocalizationEstimate> &odm_, const std::shared_ptr<drivers::PointCloud> &pc_);
         void ParkingCallback(const std::shared_ptr<apollo::localization::Pose> &msg);
         void OdomCallback(const std::shared_ptr<apollo::localization::LocalizationEstimate> &msg);
-        //void OdomCallback(const nav_msgs::Odometry& msg);
         //void SwarmTrajCallback(const swarm_bridge::Trajectory& traj_msg);
         void execFSMCallback();
         void checkCollisionCallback();

@@ -58,10 +58,12 @@ public:
     Eigen::Vector4d end_pt_;
     Eigen::Vector2d cur_pos_;
     double cur_yaw_, cur_vel_;
+    Eigen::Vector2d start_pos_, start_vel_, start_acc_;
     int car_id_;
-    double car_d_cr_;
+    double car_d_cr_, car_d_cr_x_, car_d_cr_y_;
     double start_world_time_;
     double target_x_, target_y_, target_yaw_, target_vel_;
+    double exec_positon_, exec_time_;
     double imu2car_qw_, imu2car_qx_, imu2car_qy_, imu2car_qz_;
 
     FSM_EXEC_STATE exec_state_;

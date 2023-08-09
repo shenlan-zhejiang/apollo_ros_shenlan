@@ -41,7 +41,7 @@ cyber_modules {
   }
 }
 cyber_modules {
-  key: "Minco_Mapping"
+  key: "MincoMapping"
   value: {
     dag_files: "/apollo/modules/shenlan/minco_mapping/dag/minco_mapping.dag"
   }

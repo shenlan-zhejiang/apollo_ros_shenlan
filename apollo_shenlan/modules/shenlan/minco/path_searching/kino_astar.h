@@ -264,6 +264,7 @@ public:
     double traj_steer_change_penalty = 0.0;
     double horizon_;
     double lambda_heu_;
+    double truncate_len_;
 
     double time_resolution_ = 0.1;
     double distance_resolution_ = 0.5;

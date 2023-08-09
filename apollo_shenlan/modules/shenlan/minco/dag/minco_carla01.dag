@@ -11,7 +11,6 @@ module_config {
             readers {
               channel: "/apollo/shenlan/mapping/occupancy"
             }
-
         }
     }
 }

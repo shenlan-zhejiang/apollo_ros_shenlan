@@ -29,9 +29,9 @@
 //#include <pluginlib/class_loader.hpp>
 //#include <geometry_msgs/PoseArray.h>
 //#include <visualization_msgs/Marker.h>
+
 using std::vector;
 
-  
 class TrajPlanner
 {
 public:
@@ -58,7 +58,7 @@ public:
     // void set_map_interface(map_utils::TrajPlannerMapItf* map_itf);
     // void set_initial_state(const State& state);
     void setInitStateAndInput(const Eigen::Vector4d& state, const double& start_time);
-    void setInitStateAndInput(const double& t, Eigen::Vector4d& replan_init_state);
+    void setInitStateAndInput(const double& t, Eigen::Vector4d& replan_init_state, const double& cur_vel_, const double& cur_yaw_, const Eigen::Vector2d& start_pos, const Eigen::Vector2d& start_vel, const Eigen::Vector2d& start_acc);
     //void setSwarmTrajs(const apollo::shenlan::swarm_bridge::Trajectory& traj_msg);
     void setMapFree(double& time_now);
     // void release_initial_state(){has_init_state_ = false;};
@@ -93,7 +93,7 @@ public:
       end_pt = end_pt_;
       have_parking_target_ = true;
     }
-    //set moving obstalces, only used in the parking scene
+    // set moving obstalces, only used in the parking scene
     // void set_surPoints(std::vector<std::vector<common::State>> surpoints){
     //   sur_discretePoints = surpoints;
 

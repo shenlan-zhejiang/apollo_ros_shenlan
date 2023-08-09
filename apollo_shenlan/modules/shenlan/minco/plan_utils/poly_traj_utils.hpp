@@ -264,10 +264,10 @@ namespace plan_utils
             //   <<" cur: "<<(dsigma(0)*ddsigma(1)-dsigma(1)*ddsigma(0))/ sqrt(std::pow((std::pow(dsigma.norm(), 2)+1e-4),3))<<"\n";
             // std::cout<<"cur: "<<(dsigma(0)*ddsigma(1)-dsigma(1)*ddsigma(0))/ std::pow(dsigma.norm(), 3)<<"vel: "
             // <<dsigma.norm()<<" acc: "<< ddsigma.norm()<<std::endl;
-            std::cout<<"cur: "<<(dsigma(0)*ddsigma(1)-dsigma(1)*ddsigma(0))/ std::pow(dsigma.norm(), 3)
+            //std::cout<<"cur: "<<(dsigma(0)*ddsigma(1)-dsigma(1)*ddsigma(0))/ std::pow(dsigma.norm(), 3)
             // <<" numera: "<<(dsigma(0)*ddsigma(1)-dsigma(1)*ddsigma(0))<<" deno: "<<std::pow(dsigma.norm(), 3)<<
             // "vel: "<<dsigma.transpose()<<"acc: "<<ddsigma.transpose()
-            <<"\n";
+            //<<"\n";
               return singul * (dsigma(0)*ddsigma(1)-dsigma(1)*ddsigma(0))/ std::pow(dsigma.norm(), 3);
 
             }

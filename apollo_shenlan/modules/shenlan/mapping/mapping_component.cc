@@ -23,17 +23,19 @@ bool MappingShenlanComponent::Init()
   map_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/gird_map");
   buf_writer_ = node_->CreateWriter<apollo::shenlan::OccupancyBuffer>("/apollo/shenlan/mapping/occupancy");
   
-  last_seq = -1;
+  last_timestamp = -1;
 
   return true;
 }
 
 bool MappingShenlanComponent::Proc( const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<drivers::PointCloud> &pcl_msg )  
 {
-  if (last_seq == (int)(pcl_msg->header().sequence_num())) {
+  // PCL MAKE HZ AT 1/10MS
+  if (last_timestamp == (int)(pcl_msg->header().timestamp_sec())) {
     return true;
   }
-  last_seq = (int)(pcl_msg->header().sequence_num());
+  last_timestamp = (int)(pcl_msg->header().timestamp_sec());
+  
   std::cout << "handle new pcl" << std::endl;
 
   mp_.have_odom_ = true;
@@ -59,7 +61,6 @@ bool MappingShenlanComponent::Proc( const std::shared_ptr<localization::Localiza
   Eigen::Matrix3d Rotation_matrix;
   
   // Rotation_matrix = quaternion.toRotationMatrix();
-
   Eigen::Quaterniond quaternion_(mp_.lidar2imu_qw_, mp_.lidar2imu_qx_, mp_.lidar2imu_qy_, mp_.lidar2imu_qz_);
   Rotation_matrix = quaternion.toRotationMatrix() * quaternion_.toRotationMatrix();
 
@@ -122,6 +123,7 @@ bool MappingShenlanComponent::Proc( const std::shared_ptr<localization::Localiza
  
 void MappingShenlanComponent::globalOccPc(const std::shared_ptr<drivers::PointCloud> &msg)
 {
+    // // 2D GRIDMAP VISUALIZATION 
     // for (int x = 0; x < mp_.global_map_size_[0]; ++x)
     // {
     //     for (int y = 0; y < mp_.global_map_size_[1]; ++y)
@@ -139,6 +141,7 @@ void MappingShenlanComponent::globalOccPc(const std::shared_ptr<drivers::PointCl
     //     }
     // }
 
+    // 3D GRIDMAP VISUALIZATION 
     for (int x = 0; x < mp_.global_map_size_[0]; ++x)
       for (int y = 0; y < mp_.global_map_size_[1]; ++y)
           for (int z = 0; z < mp_.global_map_size_[2]; ++z)
@@ -169,6 +172,7 @@ void MappingShenlanComponent::globalOccPc(const std::shared_ptr<drivers::PointCl
 
 void MappingShenlanComponent::globalOccArr(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &msg)
 {
+    // // WRONG USAGE CAUSE REVERSE
     // for (int x = 0; x < mp_.global_map_size_[0]; ++x)
     // {
     //     for (int y = 0; y < mp_.global_map_size_[1]; ++y)

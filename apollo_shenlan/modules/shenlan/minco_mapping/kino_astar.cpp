@@ -27,16 +27,14 @@ namespace path_searching
     // kino_bicycle_model_.setParam(vp_);
   }
 
-  void KinoAstar::setMap(std::shared_ptr<apollo::shenlan::MappingProcess> & ptr)
+  void KinoAstar::setMap(std::shared_ptr<apollo::shenlan::MappingProcess> &ptr)
   {
     map_ptr_ = ptr;
   }
   //void KinoAstar::init(ros::NodeHandle& nh)
   void KinoAstar::init(apollo::shenlan::ShenlanConf &shenlan_conf)
   {
-
-    //std::cout << "KinoAstar init" << std::endl;
-    //nh_ = nh;
+      //std::cout << "KinoAstar init" << std::endl;
       //apollo::shenlan::KinoAstarConf kinoastar_conf;
       horizon_= shenlan_conf.kinoastar_conf().horizon();//50;
       yaw_resolution_= shenlan_conf.kinoastar_conf().yaw_resolution();//0.3;
@@ -51,6 +49,7 @@ namespace path_searching
       traj_steer_change_penalty = shenlan_conf.kinoastar_conf().traj_steer_change_penalty();//0.0;
       step_arc = shenlan_conf.kinoastar_conf().step_arc();//0.9;
       checkl = shenlan_conf.kinoastar_conf().checkl();//0.9;
+      truncate_len_ = shenlan_conf.kinoastar_conf().truncate_len();//30.0
 
       //apollo::shenlan::VehicleConf vehicle_conf;
       cars_num_ = shenlan_conf.vehicle_conf().cars_num();//1;
@@ -452,7 +451,7 @@ namespace path_searching
       // to decide the near end
       bool reach_horizon = (cur_node->state.head(2) - start_state_.head(2)).norm() >= horizon_;
       // double t1 = ros::Time::now().toSec();
-      if((cur_node->state.head(2) - end_state_.head(2)).norm()<15.0&& initsearch){
+      if((cur_node->state.head(2) - end_state_.head(2)).norm()<15.0 && initsearch){
     
         is_shot_sucess(cur_node->state,end_state_.head(3));
       }
@@ -1006,7 +1005,7 @@ namespace path_searching
   
       /*-----------------------------------------------------------------------------------------------*/
       
-      double truncate_len = 30;
+      double truncate_len = truncate_len_;
       bool exceed_len = false;
       // start position and end position are included in this list
       positionList_.clear();

@@ -24,7 +24,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: topic_gridmap
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -113,24 +113,6 @@ Visualization Manager:
       Plane Cell Count: 1
       Reference Frame: map
       Value: true
-    - Alpha: 0.10000000149011612
-      Cell Size: 1
-      Class: rviz/Grid
-      Color: 0; 0; 0
-      Enabled: false
-      Line Style:
-        Line Width: 1
-        Value: Lines
-      Name: conf_map
-      Normal Cell Count: 0
-      Offset:
-        X: -150
-        Y: -150
-        Z: 0
-      Plane: XY
-      Plane Cell Count: 600
-      Reference Frame: map
-      Value: false
     - Alpha: 1
       Cell Size: 2
       Class: rviz/Grid
@@ -156,6 +138,10 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        agent_0:
+          Value: true
+        map:
+          Value: true
       Marker Alpha: 1
       Marker Scale: 10
       Name: topic_tf
@@ -163,8 +149,28 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        {}
+        map:
+          agent_0:
+            {}
       Update Interval: 0
+      Value: true
+    - Alpha: 1
+      Cell Size: 2
+      Class: rviz/Grid
+      Color: 0; 0; 0
+      Enabled: true
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: topic_agent
+      Normal Cell Count: 1
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XZ
+      Plane Cell Count: 2
+      Reference Frame: agent_0
       Value: true
     - Alpha: 0.5
       Autocompute Intensity Bounds: true
@@ -198,7 +204,7 @@ Visualization Manager:
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
         Max Value: 2.450000047683716
-        Min Value: 0.05000000074505806
+        Min Value: 0.3499999940395355
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -234,7 +240,7 @@ Visualization Manager:
       Color: 0; 0; 0
       Color Transformer: AxisColor
       Decay Time: 0
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -249,7 +255,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: false
+      Value: true
     - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
@@ -335,10 +341,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: 1.377253770828247
+      Scale: 1.26459538936615
       Target Frame: map
-      X: 178.02630615234375
-      Y: -153.5474090576172
+      X: 174.31263732910156
+      Y: -179.03086853027344
     Saved: ~
 Window Geometry:
   Displays:

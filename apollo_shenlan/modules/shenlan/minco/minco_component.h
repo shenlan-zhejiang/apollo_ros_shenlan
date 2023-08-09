@@ -44,10 +44,7 @@ class MincoShenlanComponent final : public cyber::Component<localization::Locali
           
         std::shared_ptr<cyber::Timer> exec_timer_, safety_timer_;
 
-        //void ParkingCallback(const std::shared_ptr<apollo::localization::Pose> &msg);
         void OdomCallback(const std::shared_ptr<apollo::localization::LocalizationEstimate> &msg);
-        //void OdomCallback(const nav_msgs::Odometry& msg);
-        //void SwarmTrajCallback(const swarm_bridge::Trajectory& traj_msg);
         void execFSMCallback(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &msg);
         void checkCollisionCallback(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &msg);
 
@@ -65,9 +62,7 @@ class MincoShenlanComponent final : public cyber::Component<localization::Locali
         void displayMincoTraj(const std::shared_ptr<apollo::shenlan::NavPath> &minco_msg);
 
         int last_seq;
-        
-        //std::shared_ptr<localization::LocalizationEstimate> odom_msg;
-        
+                
 };
 
 CYBER_REGISTER_COMPONENT(MincoShenlanComponent);

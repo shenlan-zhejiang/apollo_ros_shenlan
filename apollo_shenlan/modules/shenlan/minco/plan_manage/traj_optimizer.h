@@ -8,12 +8,13 @@
 #include "cyber/time/time.h"
 #include "modules/shenlan/minco/geo_utils2d/lbfgs.hpp"
 #include "modules/shenlan/minco/geo_utils2d/geoutils2d.hpp"
+#include "modules/shenlan/proto/shenlan_pb.pb.h"
 // #include <visualization_msgs/Marker.h>
 // #include <visualization_msgs/MarkerArray.h>
 // #include <nav_msgs/Path.h>
 // #include "common/state/state.h"
 // #include "plan_utils/traj_visualizer.h"
-#include "modules/shenlan/proto/shenlan_pb.pb.h"
+
 
 namespace plan_manage
 {

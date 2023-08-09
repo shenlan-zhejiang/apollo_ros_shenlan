@@ -264,6 +264,7 @@ public:
     double traj_steer_change_penalty = 0.0;
     double horizon_;
     double lambda_heu_;
+    double truncate_len_;
 
     double time_resolution_ = 0.1;
     double distance_resolution_ = 0.5;
@@ -284,6 +285,7 @@ public:
     double resolution_, inv_resolution_, yaw_resolution_, inv_yaw_resolution_;
     Eigen::Vector2d origin_, map_size_3d_;
     double yaw_origin_ = -M_PI;
+
     /*shot hzc*/
     std::vector<double>  shot_timeList;
     std::vector<double>  shot_lengthList;
@@ -310,7 +312,7 @@ public:
     void getFlatState(Eigen::Vector4d state, Eigen::Vector2d control_input,
                       Eigen::MatrixXd &flat_state, int singul);
 
-    bool is_shot_sucess(Eigen::Vector3d state1,Eigen::Vector3d state2);
+    bool is_shot_sucess(Eigen::Vector3d state1, Eigen::Vector3d state2);
     double computeShotTraj(Eigen::Vector3d &state1, Eigen::Vector3d &state2,
                           std::vector<Eigen::Vector3d> &path_list,
                           double& len); 

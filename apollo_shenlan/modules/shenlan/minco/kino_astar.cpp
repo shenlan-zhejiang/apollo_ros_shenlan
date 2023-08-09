@@ -23,31 +23,23 @@ namespace path_searching
     {
       delete path_node_pool_[i];
     }
-    // kino_bicycle_model_.setParam(vp_);
   }
 
-  // void KinoAstar::setMap(std::shared_ptr<apollo::shenlan::MappingProcess> & ptr)
-  // {
-  //   map_ptr_ = ptr;
-  // }
-  //void KinoAstar::init(ros::NodeHandle& nh)
   void KinoAstar::init(apollo::shenlan::ShenlanConf &shenlan_conf)
   {
       //std::cout << "KinoAstar init" << std::endl;
-
+      //apollo::shenlan::MappingConf mapping_conf;
       resolution_ = shenlan_conf.mapping_conf().resolution();
-
       origin_(0) = shenlan_conf.mapping_conf().origin_x() + shenlan_conf.mapping_conf().map_origin_x();//587061-100;
       origin_(1) = shenlan_conf.mapping_conf().origin_y() + shenlan_conf.mapping_conf().map_origin_y();//4141628-100;
-
       map_size_(0) = shenlan_conf.mapping_conf().map_size_x();
       map_size_(1) = shenlan_conf.mapping_conf().map_size_y();
       map_size_(2) = shenlan_conf.mapping_conf().map_size_z();
-
       global_map_size_(0) = ceil(map_size_(0) / resolution_);
       global_map_size_(1) = ceil(map_size_(1) / resolution_);
       global_map_size_(2) = ceil(map_size_(2) / resolution_);
 
+      //apollo::shenlan::KinoAstarConf kinoastar_conf;
       horizon_= shenlan_conf.kinoastar_conf().horizon();//50;
       yaw_resolution_= shenlan_conf.kinoastar_conf().yaw_resolution();//0.3;
       lambda_heu_ = shenlan_conf.kinoastar_conf().lambda_heu();//5.0;
@@ -61,7 +53,9 @@ namespace path_searching
       traj_steer_change_penalty = shenlan_conf.kinoastar_conf().traj_steer_change_penalty();//0.0;
       step_arc = shenlan_conf.kinoastar_conf().step_arc();//0.9;
       checkl = shenlan_conf.kinoastar_conf().checkl();//0.9;
+      truncate_len_ = shenlan_conf.kinoastar_conf().truncate_len();//30.0
 
+      //apollo::shenlan::VehicleConf vehicle_conf;
       cars_num_ = shenlan_conf.vehicle_conf().cars_num();//1;
       car_id_ = shenlan_conf.vehicle_conf().car_id();//0;
       car_width_ = shenlan_conf.vehicle_conf().car_width();//2.1;
@@ -95,6 +89,7 @@ namespace path_searching
 
       yaw_origin_ = -M_PI;
       
+      //apollo::shenlan::TrajPlannerConf trajplanner_conf;
       max_vel_ = shenlan_conf.trajplanner_conf().max_vel();//6.0;
       max_acc_ = shenlan_conf.trajplanner_conf().max_acc();//3.0;
       max_cur_ = shenlan_conf.trajplanner_conf().max_cur();//0.3;
@@ -344,7 +339,6 @@ namespace path_searching
       else
           return true;
   }
-
 
   void KinoAstar::checkCollisionUsingPosAndYaw(const Eigen::Vector3d &state, bool &res, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
   {
@@ -1069,7 +1063,7 @@ namespace path_searching
   
       /*-----------------------------------------------------------------------------------------------*/
       
-      double truncate_len = 30;
+      double truncate_len = truncate_len_;
       bool exceed_len = false;
       // start position and end position are included in this list
       positionList_.clear();

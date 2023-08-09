@@ -22,7 +22,7 @@ bool MincoMappingShenlanComponent::Init()
 //   exec_timer_ = std::make_shared<cyber::Timer>();
 //   exec_timer_->SetTimerOption(opt1);
 //   exec_timer_->Start();
-  //std::cout << "1111" << std::endl;
+//   std::cout << "1111" << std::endl;
 
 //   cyber::TimerOption opt2;
 //   opt2.oneshot = false;
@@ -84,16 +84,17 @@ bool MincoMappingShenlanComponent::Proc(const std::shared_ptr<localization::Loca
 
 void MincoMappingShenlanComponent::CreateMapCallback(const std::shared_ptr<localization::LocalizationEstimate> &odom_msg, const std::shared_ptr<drivers::PointCloud> &pcl_msg)
 {
-
+  // planner make hz at 1/50ms
   last_seq = (int)(pcl_msg->header().sequence_num());
+  
   //std::cout << "handle new pcl" << std::endl;
   //std::cout << pcl_msg->header().sequence_num() << " odom " << odom_msg->header().sequence_num() << std::endl;
 
   RFSM.mapping_ptr_->have_odom_ = true;
   RFSM.mapping_ptr_->local_map_valid_ = true;
 
-  RFSM.mapping_ptr_->curr_posi_[0] = odom_msg->pose().position().x();// - 587061;
-  RFSM.mapping_ptr_->curr_posi_[1] = odom_msg->pose().position().y();// - 4141628;
+  RFSM.mapping_ptr_->curr_posi_[0] = odom_msg->pose().position().x();
+  RFSM.mapping_ptr_->curr_posi_[1] = odom_msg->pose().position().y();
   RFSM.mapping_ptr_->curr_posi_[2] = odom_msg->pose().position().z();
 
   RFSM.mapping_ptr_->curr_q_.w() = odom_msg->pose().orientation().qw();
@@ -161,15 +162,14 @@ void MincoMappingShenlanComponent::CreateMapCallback(const std::shared_ptr<local
   RFSM.mapping_ptr_->local_range_max_ = RFSM.mapping_ptr_->center_position_ + RFSM.mapping_ptr_->sensor_range_;
   RFSM.mapping_ptr_->raycastProcess(RFSM.mapping_ptr_->center_position_, laserCloudTransformed);
 
-  ///*
   std::shared_ptr<drivers::PointCloud> map_ = std::make_shared<drivers::PointCloud>();
   globalOccPc(map_);
   map_writer_->Write(map_);
-  //*/
 }
 
 void MincoMappingShenlanComponent::globalOccPc(const std::shared_ptr<drivers::PointCloud> &msg)
-{
+{   
+    // // 2D GRIDMAP VISUALIZATION 
     // for (int x = 0; x < RFSM.mapping_ptr_->global_map_size_[0]; ++x)
     // {
     //     for (int y = 0; y < RFSM.mapping_ptr_->global_map_size_[1]; ++y)
@@ -187,6 +187,7 @@ void MincoMappingShenlanComponent::globalOccPc(const std::shared_ptr<drivers::Po
     //     }
     // }
 
+    // 3D GRIDMAP VISUALIZATION 
     for (int x = 0; x < RFSM.mapping_ptr_->global_map_size_[0]; ++x)
       for (int y = 0; y < RFSM.mapping_ptr_->global_map_size_[1]; ++y)
           for (int z = 0; z < RFSM.mapping_ptr_->global_map_size_[2]; ++z)
@@ -215,55 +216,15 @@ void MincoMappingShenlanComponent::globalOccPc(const std::shared_ptr<drivers::Po
     seq_num_map += 1;
 }
 
-void MincoMappingShenlanComponent::checkCollisionCallback()
-{
-    //std::cout << "checkcolli:" << apollo::cyber::Time::Now().ToNanosecond() << std::endl;
-    //std::cout << "checkcolli:" << last_seq << std::endl;
-    //double time_now = ros::Time::now().toSec();
-    double time_now = apollo::cyber::Time::Now().ToSecond();
-    // set other cars' position of map is free
-    RFSM.planner_ptr_->setMapFree(time_now);
-
-    // check collision with static obstacles
-    if(RFSM.exec_state_ == RFSM.EXEC_TRAJ)
-        RFSM.collision_with_obs_ = RFSM.planner_ptr_->checkCollisionWithObs(time_now);
-
-    // check collision with surround cars
-    if(RFSM.exec_state_ == RFSM.EXEC_TRAJ)
-        RFSM.collision_with_othercars_ = RFSM.planner_ptr_->checkCollisionWithOtherCars(time_now);
-}
-
-void MincoMappingShenlanComponent::ParkingCallback(const std::shared_ptr<apollo::localization::Pose> &msg)
-{
-    return;
-    std::cout << "Triggered parking mode!" << std::endl;
-    // end_pt_ << msg.pose.position.x, msg.pose.position.y, 
-    //            tf::getYaw(msg.pose.orientation), 1.0e-2;
-    RFSM.end_pt_ << RFSM.target_x_, RFSM.target_y_, 
-               RFSM.target_yaw_, 1.0e-2;
-    std::cout << "end_pt: " << RFSM.end_pt_.transpose() << std::endl;
-    
-    RFSM.have_target_ = true;
-    // Eigen::Vector4d init_state;  init_state << cur_pos_, cur_yaw_, cur_vel_;
-    // planner_ptr_->setInitState(init_state);
-    // planner_ptr_->setParkingEnd(end_pt_);
-    // planner_ptr_->getKinoPath(end_pt_);
-    // planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
-    // planner_ptr_->RunMINCOParking();
-    // planner_ptr_->displayPolyH(planner_ptr_->display_hPolys());
-    // planner_ptr_->displayMincoTraj(planner_ptr_->trajectory());
-}
-
 void MincoMappingShenlanComponent::OdomCallback(const std::shared_ptr<apollo::localization::LocalizationEstimate> &msg)
 {
-    //std::cout << "+++++++++++++odomcb++++++++++++++++ " << std::endl;
+    // std::cout << "+++++++++++++odomcb++++++++++++++++ " << std::endl;
 
     Eigen::Vector3d center_pos(msg->pose().position().x(), msg->pose().position().y(), msg->pose().position().z());
     //std::cout << "center_pos: " << center_pos << std::endl;
 
-    //!!!!!REAR AXIS CENTER IN APOLLO IS Y / IN ROS IS X!!!!!
-    Eigen::Vector3d pos2center(0, -RFSM.car_d_cr_, 0);
-    //Eigen::Vector3d pos2center(-RFSM.car_d_cr_, 0, 0);
+    //REAR AXIS CENTER IN APOLLO IS Y / IN ROS IS X
+    Eigen::Vector3d pos2center(-RFSM.car_d_cr_x_, -RFSM.car_d_cr_y_, 0);
     //std::cout << "pos2center: " << pos2center << std::endl;
 
     Eigen::Quaterniond quaternion(msg->pose().orientation().qw(), msg->pose().orientation().qx(), 
@@ -272,23 +233,28 @@ void MincoMappingShenlanComponent::OdomCallback(const std::shared_ptr<apollo::lo
     Eigen::Quaterniond quaternion_(RFSM.imu2car_qw_, RFSM.imu2car_qx_, RFSM.imu2car_qy_, RFSM.imu2car_qz_);
 
     Eigen::Matrix3d R = quaternion.toRotationMatrix() * quaternion_.toRotationMatrix();
+
     Eigen::Vector3d pos = center_pos + R * pos2center;
     
     RFSM.cur_pos_ = pos.head(2);
 
-    double vx = 0;
-    vx = msg->pose().linear_velocity().x();    
-    double vy = 0;
-    vy = msg->pose().linear_velocity().y();
-    RFSM.cur_vel_ = std::sqrt(vx * vx + vy * vy);
+    double cur_vx_ = msg->pose().linear_velocity().x();
+    double cur_vy_ = msg->pose().linear_velocity().y();
+    RFSM.cur_vel_ = std::sqrt(cur_vx_ * cur_vx_ + cur_vy_ * cur_vy_);
     //std::cout << "RFSM.cur_vel_: " << RFSM.cur_vel_ << std::endl;
-   
+
     //Eigen::Vector3d eulerAngle = quaternion.matrix().eulerAngles(0,1,2);
     RFSM.cur_yaw_ = msg->pose().heading();//eulerAngle(2);
     //std::cout << "RFSM.cur_yaw_: " << RFSM.cur_yaw_ << std::endl;
 
+    // USE FOR setInitStateAndInput(replan_start_time, replan_init_state, cur_yaw_, cur_vel_, start_pos_, start_vel_, start_acc_);
+    Eigen::Vector3d linear_velocity(msg->pose().linear_velocity().x(), msg->pose().linear_velocity().y(), msg->pose().linear_velocity().z());
+    Eigen::Vector3d linear_acceleration(msg->pose().linear_acceleration().x(), msg->pose().linear_acceleration().y(), msg->pose().linear_acceleration().z());
+    RFSM.start_pos_ = center_pos.head(2);
+    RFSM.start_vel_ = linear_velocity.head(2);
+    RFSM.start_acc_ = linear_acceleration.head(2);
 
-/*
+    /*
     static tf::TransformBroadcaster br;
     tf::Transform transform;
     transform.setOrigin(tf::Vector3(cur_pos_(0), cur_pos_(1), 0.0));
@@ -296,13 +262,13 @@ void MincoMappingShenlanComponent::OdomCallback(const std::shared_ptr<apollo::lo
     q.setRPY(0, 0, cur_yaw_);
     transform.setRotation(q);
     br.sendTransform(tf::StampedTransform(transform, msg.header.stamp, "map", "car_"+to_string(car_id_)+"_pos"));
-*/
+    */
 }
 
 void MincoMappingShenlanComponent::execFSMCallback()
 {
-    //std::cout << "execFSM:" << apollo::cyber::Time::Now().ToNanosecond() << std::endl;
-    //exec_timer_->Stop();
+    // std::cout << "execFSM:" << apollo::cyber::Time::Now().ToNanosecond() << std::endl;
+    // exec_timer_->Stop();
     int ret = RFSM.execFSM();
     if (ret == 1) {
       auto kino_msg = std::make_shared<apollo::shenlan::NavPath>();
@@ -321,7 +287,27 @@ void MincoMappingShenlanComponent::execFSMCallback()
       calcMinco2ADC(adc_msg);
       adc_writer_->Write(adc_msg);
     }
-    //exec_timer_->Start();
+    // exec_timer_->Start();
+}
+
+void MincoMappingShenlanComponent::ParkingCallback(const std::shared_ptr<apollo::localization::Pose> &msg)
+{
+    return;
+    std::cout << "Triggered parking mode!" << std::endl;
+    // end_pt_ << msg.pose.position.x, msg.pose.position.y, 
+    //            tf::getYaw(msg.pose.orientation), 1.0e-2;
+    RFSM.end_pt_ << RFSM.target_x_, RFSM.target_y_, RFSM.target_yaw_, 1.0e-2;
+    std::cout << "end_pt: " << RFSM.end_pt_.transpose() << std::endl;
+    
+    RFSM.have_target_ = true;
+    // Eigen::Vector4d init_state;  init_state << cur_pos_, cur_yaw_, cur_vel_;
+    // planner_ptr_->setInitState(init_state);
+    // planner_ptr_->setParkingEnd(end_pt_);
+    // planner_ptr_->getKinoPath(end_pt_);
+    // planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
+    // planner_ptr_->RunMINCOParking();
+    // planner_ptr_->displayPolyH(planner_ptr_->display_hPolys());
+    // planner_ptr_->displayMincoTraj(planner_ptr_->trajectory());
 }
 
 void MincoMappingShenlanComponent::displayKinoPath(const std::shared_ptr<apollo::shenlan::NavPath> &kino_msg)
@@ -436,103 +422,118 @@ void MincoMappingShenlanComponent::calcTraj2Controller(const std::shared_ptr<apo
     traj_msg->set_traj_type(1);
 }
 
-
 void MincoMappingShenlanComponent::calcMinco2ADC(const std::shared_ptr<apollo::planning::ADCTrajectory> &traj_msg)
 {
+    // double t0 = RFSM.planner_ptr_->start_time_;
+    double t1 = 0;// s = 0;
+
     auto timestamp = apollo::cyber::Time::Now().ToSecond();
     traj_msg->mutable_header()->set_timestamp_sec(timestamp);
     traj_msg->mutable_header()->set_module_name("planning");
     traj_msg->mutable_header()->set_sequence_num(seq_num_adc);
-    seq_num_adc += 1;
-    // traj_msg->set_total_path_length(0);
-    // traj_msg->set_total_path_time(0);
     traj_msg->set_gear(apollo::canbus::Chassis::GEAR_DRIVE);
     traj_msg->mutable_engage_advice()->set_advice(apollo::common::EngageAdvice::READY_TO_ENGAGE);
     traj_msg->mutable_estop()->set_is_estop(0);
-
-    double t0 = RFSM.planner_ptr_->start_time_;
+    
+    // there is only one traj in ADCtrajectory
     for(int i = 0; i < (int)RFSM.planner_ptr_->kino_trajs_.size(); i++)
     {
+        // GET EVERY POINT POSITION
         Eigen::MatrixXd positions = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getPositions();
+        //std::cout << "positions: " << positions << std::endl;
+
+        // GET EVERY POINT DURATION
         Eigen::VectorXd durations = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getDurations();
+        //std::cout << "durations: " << durations << std::endl;
+
+        // SET TOTAL PATH TIME
+        // double totalduration = RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration;
         double totalduration = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getTotalDuration();
         traj_msg->set_total_path_time(totalduration);
-        t0 = t0 + durations.sum();
 
-        double angle = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getAngle(durations(i));
-        double vel = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getVel(durations(i));
-        double acc = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getAcc(durations(i));
-        double curv = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getCurv(durations(i));
-        // double curv_ = 0;
-        // double _curv = 0;
-        // _curv = curv - curv_;
-
-        //std::cout << "t0" << t0 << std::endl;
-        //std::cout << poses.cols() << "|" << ts.size() << std::endl;
-        //auto rt = t0;
-
-        // Eigen::Vector2d vel_ = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getdSigma(durations.sum());
-        // double vel = vel_.norm();
-
-        for (int j=0; j<positions.cols(); j++)
+        // SET TOTAL LENGTH
+        // traj_msg->set_total_path_length(0);
+        
+        // REMOVE LAST POINT FOR SAFETY
+        for (int j = 0; j < positions.cols() -1 ; j ++)
         {
-            auto traj_point = traj_msg->add_trajectory_point();
+            // t0 = t0 + durations(j);
+            t1 = t1 + durations(j);
+            // std::cout << "t1: " << t1 << std::endl;
             apollo::common::PathPoint point;
-            //geometry_msgs::Point temp;
 
+            // SET POINT POSITION
             point.set_x(positions(0, j));
             point.set_y(positions(1, j));
-            
-            // double x = positions(0, j);
-            // double x_ = 0;
-            // double y = positions(1, j);
-            // double y_ = 0;
-            // s = std::sqrt((x - x_) * (x - x_) + (y - y_) * (y - y_));
-
             point.set_z(0);
 
-            point.set_theta(angle); //localization.pose.heading = The heading is zero when the car is facing East and positive when facing North.
+            // SET S = accumulated distance from beginning of the path
+            // s = s + (positions(j) - positions(j+1)).abs() 
+            // point.set_s(s)
 
+            // SET THETA = direction on the x-y plane
+            double angle = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getAngle(t1);
+            // std::cout << "angle: " << angle << std::endl;
+            point.set_theta(angle); //localization.pose.heading = The heading is zero when the car is facing East and positive when facing North.
+            
+            // SET KAPPA = curvature on the x-y planning
+            double curv = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getCurv(t1);
+            // std::cout << "curv: " << curv << std::endl;
             point.set_kappa(curv); //curvature = tan(radians(carsteer / 100 * degrees(max_steer_)) / carsteer_ratio) / carwheel_base = tan()
 
-            //double curvature_change_rate;
-            //curvature_change_rate = (curv - curv_)/(vel * 0.01);
-            //point.set_dkappa(curvature_change_rate); //curvature_change_rate = (curvature - carcurvature) / (carspeed * 0.01)
+            // SET DKAPPA = derivative of kappa w.r.t s.(in planner, dkappa is v)
+            // point.set_dkappa(dcurv); 
 
-            // double s = 0;
-            // s += vel * durations(j);
-            // point.set_s(s); //cars += carspeed * 0.01
-            // traj_msg->set_total_path_length(s);
+            // SET DDKAPPA = derivative of derivative of kappa w.r.t s.(in planner, dkappa is a)
+            // point.set_ddkappa(ddcurv); 
+          
+            auto traj_point = traj_msg->add_trajectory_point();
 
+            // SET PATH POINT
             traj_point->mutable_path_point()->CopyFrom(point);
 
+            // SET V = linear velocity
+            double vel = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getVel(t1);
+            // std::cout << "vel: " << vel << std::endl;
             traj_point->set_v(vel);
-            traj_point->set_a(acc); //linear_acceleration_vrf = Linear acceleration of the VRP in the vehicle reference frame. Right/forward/up in meters per square second.
-            //traj_point->set_relative_time(durations.sum()); //relative_time = data['time'][i] - data['time'][closestpoint] - now + starttime
-            //if (i < ts.size())
-            //    rt += ts(i); 
-        }
-        //curv_ = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getCurv(t0);
-        break; // there is only one traj in ADCtrajectory.
-    }
 
-    //this snippet comes from displayMincoTraj in traj_manager.h
-    /*
-    auto minco_traj = RFSM.planner_ptr_->trajectory();
-    for (unsigned int i = 0; i < minco_traj->size(); ++i)
-    {
-        double total_duration = minco_traj->at(i).duration;
-        for (double t = 0; t <= total_duration; t += 0.01)
-        {
-            Eigen::Vector2d pt = minco_traj->at(i).traj.getPos(t);
-            apollo::common::PathPoint *point = traj_msg->add_path_point();
-            point->set_x(pt[0]);
-            point->set_y(pt[1]);
-            point->set_z(0.2);
+            // SET A = linear acceleration
+            double acc = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getAcc(t1);
+            // std::cout << "acc: " << acc << std::endl;
+            traj_point->set_a(acc); 
+ 
+            // SET RELATIVE TIME = relative time from beginning of the trajectory
+            traj_point->set_relative_time(t1);
+
+            // SET DA = longitudinal jerk
+            // traj_point->set_da();
+
+            // SET STEER = The angle between vehicle front wheel and vehicle longitudinal axis
+            // traj_point->set_steer();
         }
-        break; // there is only one path_point in ADCtrajectory.
+        
+        // there is only one traj in ADCtrajectory
+        break; 
     }
-    */
+    seq_num_adc += 1;
+}
+
+void MincoMappingShenlanComponent::checkCollisionCallback()
+{
+    //std::cout << "checkcolli:" << apollo::cyber::Time::Now().ToNanosecond() << std::endl;
+    //std::cout << "checkcolli:" << last_seq << std::endl;
+    //double time_now = ros::Time::now().toSec();
+    double time_now = apollo::cyber::Time::Now().ToSecond();
+    // set other cars' position of map is free
+    RFSM.planner_ptr_->setMapFree(time_now);
+
+    // check collision with static obstacles
+    if(RFSM.exec_state_ == RFSM.EXEC_TRAJ)
+        RFSM.collision_with_obs_ = RFSM.planner_ptr_->checkCollisionWithObs(time_now);
+
+    // check collision with surround cars
+    if(RFSM.exec_state_ == RFSM.EXEC_TRAJ)
+        RFSM.collision_with_othercars_ = RFSM.planner_ptr_->checkCollisionWithOtherCars(time_now);
 }
 
 }  // namespace shenlan

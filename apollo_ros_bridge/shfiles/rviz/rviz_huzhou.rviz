@@ -24,7 +24,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: topic_gridmap
+    SyncSource: ""
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -50,10 +50,10 @@ Visualization Manager:
         Line Width: 0.029999999329447746
         Value: Lines
       Name: conf_map_x0y0
-      Normal Cell Count: 700
+      Normal Cell Count: 800
       Offset:
         X: -200
-        Y: -500
+        Y: -200
         Z: 0
       Plane: YZ
       Plane Cell Count: 1
@@ -68,10 +68,10 @@ Visualization Manager:
         Line Width: 0.029999999329447746
         Value: Lines
       Name: conf_map_x0y1
-      Normal Cell Count: 1020
+      Normal Cell Count: 800
       Offset:
         X: -200
-        Y: 10
+        Y: 200
         Z: 0
       Plane: XZ
       Plane Cell Count: 1
@@ -86,10 +86,10 @@ Visualization Manager:
         Line Width: 0.029999999329447746
         Value: Lines
       Name: conf_map_x1y0
-      Normal Cell Count: 1020
+      Normal Cell Count: 800
       Offset:
-        X: 150
-        Y: -500
+        X: 200
+        Y: -200
         Z: 0
       Plane: XZ
       Plane Cell Count: 1
@@ -104,33 +104,15 @@ Visualization Manager:
         Line Width: 0.029999999329447746
         Value: Lines
       Name: conf_map_x1y1
-      Normal Cell Count: 700
+      Normal Cell Count: 800
       Offset:
-        X: 150
-        Y: 10
+        X: 200
+        Y: 200
         Z: 0
       Plane: YZ
       Plane Cell Count: 1
       Reference Frame: map
       Value: true
-    - Alpha: 0.10000000149011612
-      Cell Size: 1
-      Class: rviz/Grid
-      Color: 0; 0; 0
-      Enabled: false
-      Line Style:
-        Line Width: 1
-        Value: Lines
-      Name: conf_map
-      Normal Cell Count: 0
-      Offset:
-        X: -150
-        Y: -150
-        Z: 0
-      Plane: XY
-      Plane Cell Count: 600
-      Reference Frame: map
-      Value: false
     - Alpha: 1
       Cell Size: 2
       Class: rviz/Grid
@@ -156,10 +138,6 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        agent_0:
-          Value: true
-        map:
-          Value: true
       Marker Alpha: 1
       Marker Scale: 10
       Name: topic_tf
@@ -167,10 +145,26 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          agent_0:
-            {}
+        {}
       Update Interval: 0
+      Value: true
+    - Alpha: 1
+      Cell Size: 1.5
+      Class: rviz/Grid
+      Color: 0; 0; 0
+      Enabled: true
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: topic_agent
+      Normal Cell Count: 2
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XZ
+      Plane Cell Count: 1
+      Reference Frame: agent_0
       Value: true
     - Alpha: 0.5
       Autocompute Intensity Bounds: true
@@ -331,7 +325,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: -6.28000020980835
+      Angle: -6.290002346038818
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
@@ -341,10 +335,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: 1.1795275211334229
+      Scale: 1.333563208580017
       Target Frame: agent_0
-      X: 47.97893524169922
-      Y: 100.10697174072266
+      X: 8.930706977844238
+      Y: -4.192743301391602
     Saved: ~
 Window Geometry:
   Displays:

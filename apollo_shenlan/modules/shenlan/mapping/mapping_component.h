@@ -51,7 +51,7 @@ public:
   void globalOccPc(const std::shared_ptr<drivers::PointCloud> &msg);
   void globalOccArr(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &msg);
 
-  int last_seq;
+  int last_timestamp;
 };
 
 CYBER_REGISTER_COMPONENT(MappingShenlanComponent);

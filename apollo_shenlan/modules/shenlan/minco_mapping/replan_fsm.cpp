@@ -16,12 +16,17 @@ void ReplanFSM::init(apollo::shenlan::ShenlanConf &shenlan_conf)
     target_vel_ = shenlan_conf.replanfsm_conf().target_vel();//0.1
     end_pt_ << target_x_, target_y_, target_yaw_, target_vel_;
 
+    exec_positon_ = shenlan_conf.replanfsm_conf().exec_positon();//10.0
+    exec_time_ = shenlan_conf.replanfsm_conf().exec_time();//2.5
+
     have_target_ = true;
     collision_with_obs_ = false;
     collision_with_othercars_ = false;
 
     //apollo::shenlan::VehicleConf vehicle_conf;
     car_d_cr_ = shenlan_conf.vehicle_conf().car_d_cr();//1.3864;
+    car_d_cr_x_ = shenlan_conf.vehicle_conf().car_d_cr_x();//0;
+    car_d_cr_y_ = shenlan_conf.vehicle_conf().car_d_cr_y();//1.3864;
     car_id_ = shenlan_conf.vehicle_conf().car_id();//0;
     imu2car_qw_ = shenlan_conf.vehicle_conf().imu2car_qw();
     imu2car_qx_ = shenlan_conf.vehicle_conf().imu2car_qx();
@@ -106,11 +111,11 @@ int ReplanFSM::execFSM() {
             planner_ptr_->getKinoPath(end_pt_, true);
 
             // planner_ptr_->displayPolyH(planner_ptr_->display_hPolys());
-            planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
+            // planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
 
             planner_ptr_->RunMINCOParking();
 
-            planner_ptr_->broadcastTraj2SwarmBridge();
+            // planner_ptr_->broadcastTraj2SwarmBridge();
 
             //ros::Time t2 = ros::Time::now();
             auto t2 = apollo::cyber::Time::Now().ToSecond();
@@ -121,15 +126,17 @@ int ReplanFSM::execFSM() {
             if(TIME_BUDGET > time_spent_in_planning)
             {
                 //ros::Duration(TIME_BUDGET - time_spent_in_planning).sleep(); ??????
+                cyber::Duration(TIME_BUDGET - time_spent_in_planning).Sleep();
             }
             else
             {
                 std::cout << "Out of time budget!" << std::endl;;
             }
             //planner_ptr_->publishTraj2Controller();
+
+            // planner_ptr_->displayMincoTraj(planner_ptr_->trajectory());
+
             ret = 1;
-            
-            planner_ptr_->displayMincoTraj(planner_ptr_->trajectory());
 
             changeFSMExecState(EXEC_TRAJ, "FSM");
 
@@ -151,8 +158,11 @@ int ReplanFSM::execFSM() {
             start_world_time_ = replan_start_time;
             
             auto t1 = apollo::cyber::Time::Now().ToSecond();
+
             Eigen::Vector4d replan_init_state;
-            planner_ptr_->setInitStateAndInput(replan_start_time, replan_init_state);
+
+            planner_ptr_->setInitStateAndInput(replan_start_time, replan_init_state, cur_vel_, cur_yaw_, start_pos_, start_vel_, start_acc_);
+
             init_state_ = replan_init_state;
 
             planner_ptr_->setParkingEnd(end_pt_);
@@ -174,7 +184,8 @@ int ReplanFSM::execFSM() {
                 // ros::Duration(0.5).sleep();
                 break;
             }
-            planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
+
+            // planner_ptr_->displayKinoPath(planner_ptr_->display_kino_path());
 
             if(!planner_ptr_->RunMINCOParking())
             {
@@ -192,7 +203,8 @@ int ReplanFSM::execFSM() {
                 }
                 break;
             }
-            planner_ptr_->broadcastTraj2SwarmBridge();
+            // planner_ptr_->broadcastTraj2SwarmBridge();
+
             auto t2 = apollo::cyber::Time::Now().ToSecond();
             double time_spent_in_planning = (t2 - t1);
             if(TIME_BUDGET > time_spent_in_planning)
@@ -213,7 +225,6 @@ int ReplanFSM::execFSM() {
             }
             else
             {
-                //ROS_ERROR("Out of time budget!");
                 std::cout << "Out of time budget!" << std::endl;
             }
             //planner_ptr_->publishTraj2Controller();
@@ -221,7 +232,8 @@ int ReplanFSM::execFSM() {
             
             // planner_ptr_->displayPolyH(planner_ptr_->display_hPolys());
             
-            planner_ptr_->displayMincoTraj(planner_ptr_->trajectory());
+            // planner_ptr_->displayMincoTraj(planner_ptr_->trajectory());
+            
             changeFSMExecState(EXEC_TRAJ, "FSM");
 
             break;
@@ -231,11 +243,25 @@ int ReplanFSM::execFSM() {
         {
             std::cout << "case4 EXEC_TRAJ" << std::endl;
             auto t_now = apollo::cyber::Time::Now().ToSecond();
-            if(((cur_pos_ - init_state_.head(2)).norm() > 10.0 || (t_now - start_world_time_) > 2.5) && (cur_pos_ - end_pt_.head(2)).norm() > 5.0 /*&& !collision_with_othercars_*/)
+
+            // EXEC_TRAJ BY POSITION OR BY TIME 
+            if(((cur_pos_ - init_state_.head(2)).norm() > exec_positon_ || (t_now - start_world_time_) > exec_time_) && (cur_pos_ - end_pt_.head(2)).norm() > 5.0 /*&& !collision_with_othercars_*/)
             {
-                //std::cout << "cur_pos_ - init_state_.head(2)).norm() > 10.0: "<< std::endl << (cur_pos_ - init_state_.head(2)).norm() << " " << cur_pos_<< " " << init_state_.head(2) << std::endl;
-                //std::cout << "t_now - start_world_time_ > 2.5: "<< std::endl << t_now - start_world_time_<< " " << t_now << " " << start_world_time_ << std::endl;
-                //std::cout << "cur_pos_ - end_pt_.head(2)).norm() > 5.0: "<< std::endl << (cur_pos_ - end_pt_.head(2)).norm()<< " " << cur_pos_<< " " << end_pt_.head(2) << std::endl;
+                // std::cout << "--------------------condition1: "<< std::endl;
+                // std::cout << "cur_pos_ - init_state_: " << (cur_pos_ - init_state_.head(2)).norm() << " > 10.0 ?" << std::endl;
+                // std::cout << "cur_pos_: " << cur_pos_ << std::endl;
+                // std::cout << "init_state_.head(2): " << init_state_.head(2) << std::endl;
+
+                // std::cout << "--------------------condition2: "<< std::endl;
+                // std::cout << "t_now - start_world_time_: " << t_now - start_world_time_ << " > 2.5 ?" <<  std::endl;
+                // std::cout << "t_now: " << t_now << std::endl;
+                // std::cout << "start_world_time_: " << start_world_time_ << std::endl;
+
+                // std::cout << "--------------------condition3: "<< std::endl;
+                // std::cout << "cur_pos_ - end_pt_: " << (cur_pos_ - end_pt_.head(2)).norm() << " > 5.0 ?" << std::endl;
+                // std::cout << "cur_pos_: " << cur_pos_ << std::endl;
+                // std::cout << "end_pt_.head(2): " << end_pt_.head(2) << std::endl;
+                
                 changeFSMExecState(REPLAN_TRAJ, "FSM");
             }
 

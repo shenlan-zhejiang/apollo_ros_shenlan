@@ -1,3 +1,4 @@
+# ******************** SVL ******************** #
 # MKZ
 vehicle_conf {
     # single car
@@ -6,15 +7,17 @@ vehicle_conf {
     # agent_0
     car_id: 0
 
-    car_width: 3.0
-    car_length: 5.5
-    car_wheelbase: 2.8448
+    car_width: 2.5
+    car_length: 5.0
+    car_wheelbase: 2.8
 
     # (deg) max steering angle
-    car_max_steering_angle: 30.0
+    car_max_steering_angle: 35.0
 
-    # (m) rear axis center to car center, -y
-    car_d_cr: 1.3864
+    # (m) rear axis center to car center, apollo (0, y), ros (x, 0)
+    car_d_cr: 1.5
+    car_d_cr_x: 0
+    car_d_cr_y: 1.5
 
     # lidar_novatel_extrinsics
     lidar2imu_qw: 0.7071
@@ -29,40 +32,13 @@ vehicle_conf {
     imu2car_qz: 0
 }
 
-# PIX HOOKE
-# vehicle_conf {
-#     cars_num: 1
-#     car_id: 0
-#     car_width: 1.7
-#     car_length: 3.0
-#     car_wheelbase: 1.9
-#     car_max_steering_angle: 20.0
-#     car_d_cr: 0.92
-# }
-
-# RUIMOVE
-# vehicle_conf {
-#     cars_num: 1
-#     car_id: 0
-#     car_width: 1.2  
-#     car_length: 2.5
-#     car_wheelbase: 1.1
-#     car_max_steering_angle: 20.0
-#     car_d_cr: 0.55
-# }
-
 mapping_conf {
     # (m) map center
-    # huzhou map center
-    # origin_x: 218381.0
-    # origin_y: 3418222.0
-    # origin_z: 0
-
     origin_x: 587061.0
     origin_y: 4141628.0
     origin_z: 0
 
-    # (m) "map_origin_x/y/z" = "origin_" - "origin_x/y/z"
+    # (m) map_origin_x/y/z = origin_ - origin_x/y/z
     map_origin_x: -200
     map_origin_y: -500
     map_origin_z: -8
@@ -70,7 +46,7 @@ mapping_conf {
     # (m) map length/width/height
     map_size_x: 350
     map_size_y: 510
-    map_size_z: 20
+    map_size_z: 10
 
     # (m) grid size
     resolution: 0.3
@@ -88,29 +64,38 @@ mapping_conf {
     # (m) lidar to imu, lidar to ground is 1.7m
     lidar_height: 2.3
 
-    # (m) "obs_low/hight" + "lidar_height" is lazer scan range
-    obs_low: -2.0
+    # (m) obs_low/hight + lidar_height is lazer scan range
+    obs_low: -2.5
     obs_high: 0
 
     # (m^2) surround car
-    obs_circle: 25.0
+    obs_circle: 9.0
 }
 
 replanfsm_conf {
     # (m) target to map center
-    target_x: -1
-    target_y: -170
+    target_x: -18
+    target_y: -380
 
-    # target_x: 35
-    # target_y: -55
+    # target_x: -1
+    # target_y: -175
+
+    # target_x: 30
+    # target_y: -40
 
     target_yaw: -0.3
 
     target_vel: 0.0
+
+    # EXEC_TRAJ before cur_pos_ - init_state_ > exec_positon
+    exec_positon: 10.0
+
+    # or EXEC_TRAJ before t_now - start_world_time_ > exec_time
+    exec_time: 2.0
 }
 
 kinoastar_conf {
-    # euclidean distance
+    # euclidean distance to decide the near end
     horizon: 50
 
     # yaw size, 0.3rad = 0.3 * 57.2958de = 17.4de
@@ -147,11 +132,14 @@ kinoastar_conf {
     time_resolution: 0.1
     distance_resolution: 0.5
     velocity_resolution: 1.0
+
+    # the truncated path list includes the points along the path
+    truncate_len: 30.0
 }
 
 trajplanner_conf {
-    # time per piece
-    traj_piece_duration: 1
+    # time per piece, piece_nums = kinoTotalduration / timePerPiece
+    traj_piece_duration: 0.1
 
     # number of distinctive constrain points for searching
     # each piece
@@ -178,14 +166,14 @@ trajplanner_conf {
     surround_clearance: 1.0
 
     # dynamic limits
-    max_vel: 2.0
+    max_vel: 5.0
     min_vel: 0
-    max_acc: 4.0
-    min_acc: -4.0
+    max_acc: 6.0
+    min_acc: -6.0
     
     # max curvature, curvature = theta * r
     max_cur: 0.3
 
     # safe margin, car_width/length += 2 * half_margin
-    half_margin: 2.0
+    half_margin: 0.5
 }

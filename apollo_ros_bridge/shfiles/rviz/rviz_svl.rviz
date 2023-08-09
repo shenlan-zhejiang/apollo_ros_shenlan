@@ -113,29 +113,11 @@ Visualization Manager:
       Plane Cell Count: 1
       Reference Frame: map
       Value: true
-    - Alpha: 0.10000000149011612
-      Cell Size: 1
-      Class: rviz/Grid
-      Color: 0; 0; 0
-      Enabled: false
-      Line Style:
-        Line Width: 1
-        Value: Lines
-      Name: conf_map
-      Normal Cell Count: 0
-      Offset:
-        X: -150
-        Y: -150
-        Z: 0
-      Plane: XY
-      Plane Cell Count: 600
-      Reference Frame: map
-      Value: false
     - Alpha: 1
       Cell Size: 2
       Class: rviz/Grid
       Color: 239; 41; 41
-      Enabled: true
+      Enabled: false
       Line Style:
         Line Width: 0.30000001192092896
         Value: Billboards
@@ -148,7 +130,7 @@ Visualization Manager:
       Plane: XY
       Plane Cell Count: 1
       Reference Frame: map
-      Value: true
+      Value: false
     - Class: rviz/TF
       Enabled: true
       Filter (blacklist): ""
@@ -171,6 +153,24 @@ Visualization Manager:
           agent_0:
             {}
       Update Interval: 0
+      Value: true
+    - Alpha: 1
+      Cell Size: 2.5
+      Class: rviz/Grid
+      Color: 0; 0; 0
+      Enabled: true
+      Line Style:
+        Line Width: 1
+        Value: Lines
+      Name: topic_agent
+      Normal Cell Count: 2
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XZ
+      Plane Cell Count: 1
+      Reference Frame: agent_0
       Value: true
     - Alpha: 0.5
       Autocompute Intensity Bounds: true
@@ -204,7 +204,7 @@ Visualization Manager:
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
         Max Value: 1.4500000476837158
-        Min Value: -3.049999952316284
+        Min Value: -6.949999809265137
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -264,7 +264,7 @@ Visualization Manager:
       Head Diameter: 0.30000001192092896
       Head Length: 0.20000000298023224
       Length: 0.30000001192092896
-      Line Style: Lines
+      Line Style: Billboards
       Line Width: 0.25
       Name: topic_kino
       Offset:
@@ -288,7 +288,7 @@ Visualization Manager:
       Head Diameter: 0.30000001192092896
       Head Length: 0.20000000298023224
       Length: 0.30000001192092896
-      Line Style: Lines
+      Line Style: Billboards
       Line Width: 0.5
       Name: topic_minco
       Offset:
@@ -331,7 +331,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: -6.28000020980835
+      Angle: -3.1400022506713867
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
@@ -341,10 +341,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: 1.1795275211334229
+      Scale: 7.438156604766846
       Target Frame: agent_0
-      X: 47.97893524169922
-      Y: 100.10697174072266
+      X: -3.8082141876220703
+      Y: -27.920597076416016
     Saved: ~
 Window Geometry:
   Displays:
