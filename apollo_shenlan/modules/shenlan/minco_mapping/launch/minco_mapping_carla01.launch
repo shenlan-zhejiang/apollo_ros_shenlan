@@ -1,7 +1,0 @@
-<cyber>
-    <module>
-        <name>shenlan_minco_mapping</name>
-        <dag_conf>/apollo/modules/shenlan/minco_mapping/dag/minco_mapping_carla01.dag</dag_conf>
-        <process_name>shenlan_minco_mapping</process_name>
-    </module>
-</cyber>

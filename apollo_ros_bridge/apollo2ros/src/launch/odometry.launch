@@ -1,0 +1,12 @@
+<launch>
+
+  <include file="$(find apollo2ros)/launch/advanced_param.xml">
+    
+  </include>
+
+  <node pkg="apollo2ros" type="odometry" name="odometry" output="screen">
+
+  </node>
+  
+</launch>
+

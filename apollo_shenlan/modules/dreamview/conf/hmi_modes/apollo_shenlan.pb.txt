@@ -1,59 +1,59 @@
 cyber_modules {
-  key: "Transform"
+  key: "01_Transform"
   value: {
     dag_files: "/apollo/modules/transform/dag/static_transform.dag"
   }
 }
 cyber_modules {
-  key: "Lidar"
+  key: "02_Lidar"
   value: {
     dag_files: "/apollo/modules/drivers/lidar/dag/lidar.dag"
   }
 }
 cyber_modules {
-  key: "GNSS/IMU"
+  key: "03_GNSS/IMU"
   value: {
     dag_files: "/apollo/modules/drivers/gnss/dag/gnss.dag"
   }
 }
 cyber_modules {
-  key: "Localization"
+  key: "04_Localization"
   value: {
     dag_files: "/apollo/modules/localization/dag/dag_streaming_rtk_localization.dag"
   }
 }
 cyber_modules {
-  key: "Bridge"
+  key: "05_Bridge"
   value: {
     dag_files: "/apollo/modules/bridge/dag/bridge_sender.dag"
   }
 }
 cyber_modules {
-  key: "Mapping"
+  key: "06_Mapping"
   value: {
     dag_files: "/apollo/modules/shenlan/mapping/dag/mapping.dag"
   }
 }
 cyber_modules {
-  key: "Minco"
+  key: "07_Minco"
   value: {
     dag_files: "/apollo/modules/shenlan/minco/dag/minco.dag"
   }
 }
 cyber_modules {
-  key: "MincoMapping"
+  key: "08_MincoMapping"
   value: {
     dag_files: "/apollo/modules/shenlan/minco_mapping/dag/minco_mapping.dag"
   }
 }
 cyber_modules {
-  key: "Control"
+  key: "09_Control"
   value: {
     dag_files: "/apollo/modules/control/dag/control.dag"
   }
 }
 cyber_modules {
-  key: "Canbus"
+  key: "10_Canbus"
   value: {
     dag_files: "/apollo/modules/canbus/dag/canbus.dag"
   }

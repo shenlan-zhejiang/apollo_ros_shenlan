@@ -1,4 +1,3 @@
-# ******************** borregasave ******************** #
 # MKZ
 vehicle_conf {
     # single car

@@ -1,7 +1,0 @@
-<cyber>
-    <module>
-        <name>shenlan_minco</name>
-        <dag_conf>/apollo/modules/shenlan/minco/dag/_huzhou.dag</dag_conf>
-        <process_name>shenlan_minco</process_name>
-    </module>
-</cyber>

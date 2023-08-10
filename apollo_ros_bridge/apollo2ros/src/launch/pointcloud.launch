@@ -1,0 +1,11 @@
+<launch>
+
+  <include file="$(find apollo2ros)/launch/advanced_param.xml">
+
+  </include>
+
+  <node pkg="apollo2ros" type="pointcloud" name="pointcloud" output="screen">
+
+  </node>
+
+</launch>
