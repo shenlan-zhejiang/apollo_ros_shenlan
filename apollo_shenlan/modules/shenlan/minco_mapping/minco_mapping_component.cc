@@ -35,11 +35,10 @@ bool MincoMappingShenlanComponent::Init()
 
   pc_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/pointcloud");
   map_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/gird_map");
-  traj_writer_ = node_->CreateWriter<apollo::shenlan::mpc::Trajectory>("/apollo/shenlan/minco/mpc_trajectory");
-  //adc_writer_ = node_->CreateWriter<apollo::planning::ADCTrajectory>("/apollo/shenlan/minco/ADCTrajectory");
-  adc_writer_ = node_->CreateWriter<apollo::planning::ADCTrajectory>("/apollo/planning");
   kino_writer_ = node_->CreateWriter<apollo::shenlan::NavPath>("/apollo/shenlan/minco/kino_traj");
   minco_writer_ = node_->CreateWriter<apollo::shenlan::NavPath>("/apollo/shenlan/minco/minco_traj");
+  traj_writer_ = node_->CreateWriter<apollo::shenlan::mpc::Trajectory>("/apollo/shenlan/minco/mpc_trajectory");
+  adc_writer_ = node_->CreateWriter<apollo::planning::ADCTrajectory>("/apollo/planning");
   
   last_seq = -1;
 

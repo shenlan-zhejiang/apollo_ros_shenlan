@@ -295,7 +295,7 @@ failure:
 
   // .tutorial.Person.PhoneType type = 2;
   if (this->type() != 0) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       2, this->_internal_type(), target);
   }
@@ -579,7 +579,7 @@ failure:
 
   // int32 id = 2;
   if (this->id() != 0) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_id(), target);
   }
 
@@ -596,14 +596,14 @@ failure:
   // repeated .tutorial.Person.PhoneNumber phones = 4;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_phones_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(4, this->_internal_phones(i), target, stream);
   }
 
   // .google.protobuf.Timestamp last_updated = 5;
   if (this->has_last_updated()) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         5, _Internal::last_updated(this), target, stream);
@@ -843,7 +843,7 @@ failure:
   // repeated .tutorial.Person people = 1;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_people_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(1, this->_internal_people(i), target, stream);
   }

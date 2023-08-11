@@ -516,7 +516,7 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.common.Point3D position_std_dev = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, _Internal::position_std_dev(this), target, stream);
@@ -524,7 +524,7 @@ failure:
 
   // optional .apollo.common.Point3D orientation_std_dev = 2;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         2, _Internal::orientation_std_dev(this), target, stream);
@@ -532,7 +532,7 @@ failure:
 
   // optional .apollo.common.Point3D linear_velocity_std_dev = 3;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, _Internal::linear_velocity_std_dev(this), target, stream);
@@ -540,7 +540,7 @@ failure:
 
   // optional .apollo.common.Point3D linear_acceleration_std_dev = 4;
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         4, _Internal::linear_acceleration_std_dev(this), target, stream);
@@ -548,7 +548,7 @@ failure:
 
   // optional .apollo.common.Point3D angular_velocity_std_dev = 5;
   if (cached_has_bits & 0x00000010u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         5, _Internal::angular_velocity_std_dev(this), target, stream);
@@ -971,7 +971,7 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.common.Header header = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, _Internal::header(this), target, stream);
@@ -979,7 +979,7 @@ failure:
 
   // optional .apollo.localization.Pose pose = 2;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         2, _Internal::pose(this), target, stream);
@@ -987,7 +987,7 @@ failure:
 
   // optional .apollo.localization.Uncertainty uncertainty = 3;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, _Internal::uncertainty(this), target, stream);
@@ -995,21 +995,21 @@ failure:
 
   // optional double measurement_time = 4;
   if (cached_has_bits & 0x00000020u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(4, this->_internal_measurement_time(), target);
   }
 
   // repeated .apollo.common.TrajectoryPoint trajectory_point = 5;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_trajectory_point_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(5, this->_internal_trajectory_point(i), target, stream);
   }
 
   // optional .apollo.localization.MsfStatus msf_status = 6;
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         6, _Internal::msf_status(this), target, stream);
@@ -1017,7 +1017,7 @@ failure:
 
   // optional .apollo.localization.MsfSensorMsgStatus sensor_status = 7;
   if (cached_has_bits & 0x00000010u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         7, _Internal::sensor_status(this), target, stream);
@@ -1392,7 +1392,7 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.common.Header header = 1;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, _Internal::header(this), target, stream);
@@ -1400,28 +1400,28 @@ failure:
 
   // optional .apollo.localization.MeasureState fusion_status = 2;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       2, this->_internal_fusion_status(), target);
   }
 
   // optional .apollo.localization.MeasureState gnss_status = 3 [deprecated = true];
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       3, this->_internal_gnss_status(), target);
   }
 
   // optional .apollo.localization.MeasureState lidar_status = 4 [deprecated = true];
   if (cached_has_bits & 0x00000020u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       4, this->_internal_lidar_status(), target);
   }
 
   // optional double measurement_time = 5;
   if (cached_has_bits & 0x00000010u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(5, this->_internal_measurement_time(), target);
   }
 
@@ -1739,7 +1739,7 @@ failure:
 
   // required int32 id = 2;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_id(), target);
   }
 

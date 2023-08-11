@@ -64,14 +64,12 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 };
 
 const char descriptor_table_protodef_shenlan_5fpb_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\020shenlan_pb.proto\022\016apollo.shenlan\032\016geom"
-  "etry.proto\032\014header.proto\032\npose.proto\"Y\n\007"
-  "NavPath\022%\n\006header\030\001 \001(\0132\025.apollo.common."
-  "Header\022\'\n\004Pose\030\002 \003(\0132\031.apollo.localizati"
-  "on.Pose"
+  "\n\020shenlan_pb.proto\022\016apollo.shenlan\032\014head"
+  "er.proto\032\npose.proto\"Y\n\007NavPath\022%\n\006heade"
+  "r\030\001 \001(\0132\025.apollo.common.Header\022\'\n\004pose\030\002"
+  " \003(\0132\031.apollo.localization.Pose"
   ;
-static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_shenlan_5fpb_2eproto_deps[3] = {
-  &::descriptor_table_geometry_2eproto,
+static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_shenlan_5fpb_2eproto_deps[2] = {
   &::descriptor_table_header_2eproto,
   &::descriptor_table_pose_2eproto,
 };
@@ -81,8 +79,8 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_she
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_shenlan_5fpb_2eproto_once;
 static bool descriptor_table_shenlan_5fpb_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_shenlan_5fpb_2eproto = {
-  &descriptor_table_shenlan_5fpb_2eproto_initialized, descriptor_table_protodef_shenlan_5fpb_2eproto, "shenlan_pb.proto", 167,
-  &descriptor_table_shenlan_5fpb_2eproto_once, descriptor_table_shenlan_5fpb_2eproto_sccs, descriptor_table_shenlan_5fpb_2eproto_deps, 1, 3,
+  &descriptor_table_shenlan_5fpb_2eproto_initialized, descriptor_table_protodef_shenlan_5fpb_2eproto, "shenlan_pb.proto", 151,
+  &descriptor_table_shenlan_5fpb_2eproto_once, descriptor_table_shenlan_5fpb_2eproto_sccs, descriptor_table_shenlan_5fpb_2eproto_deps, 1, 2,
   schemas, file_default_instances, TableStruct_shenlan_5fpb_2eproto::offsets,
   file_level_metadata_shenlan_5fpb_2eproto, 1, file_level_enum_descriptors_shenlan_5fpb_2eproto, file_level_service_descriptors_shenlan_5fpb_2eproto,
 };
@@ -191,7 +189,7 @@ const char* NavPath::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::in
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // repeated .apollo.localization.Pose Pose = 2;
+      // repeated .apollo.localization.Pose pose = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
           ptr -= 1;
@@ -233,16 +231,16 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.common.Header header = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, _Internal::header(this), target, stream);
   }
 
-  // repeated .apollo.localization.Pose Pose = 2;
+  // repeated .apollo.localization.Pose pose = 2;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_pose_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(2, this->_internal_pose(i), target, stream);
   }
@@ -263,7 +261,7 @@ size_t NavPath::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated .apollo.localization.Pose Pose = 2;
+  // repeated .apollo.localization.Pose pose = 2;
   total_size += 1UL * this->_internal_pose_size();
   for (const auto& msg : this->pose_) {
     total_size +=

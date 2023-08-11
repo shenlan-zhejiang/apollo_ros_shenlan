@@ -338,7 +338,7 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.common.Header header = 1;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, _Internal::header(this), target, stream);
@@ -356,7 +356,7 @@ failure:
 
   // optional .apollo.localization.Pose location = 3;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, _Internal::location(this), target, stream);
@@ -364,14 +364,14 @@ failure:
 
   // repeated .apollo.common.DriveEvent.Type type = 4;
   for (int i = 0, n = this->_internal_type_size(); i < n; i++) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
         4, this->_internal_type(i), target);
   }
 
   // optional bool is_reportable = 5;
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(5, this->_internal_is_reportable(), target);
   }
 

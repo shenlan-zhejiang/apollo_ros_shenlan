@@ -315,7 +315,7 @@ failure:
 
   // optional bool enable = 4;
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(4, this->_internal_enable(), target);
   }
 
@@ -555,7 +555,7 @@ failure:
   // repeated .apollo.static_transform.ExtrinsicFile extrinsic_file = 1;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_extrinsic_file_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(1, this->_internal_extrinsic_file(i), target, stream);
   }

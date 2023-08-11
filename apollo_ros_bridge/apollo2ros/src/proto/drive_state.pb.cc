@@ -245,7 +245,7 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.common.EngageAdvice.Advice advice = 1 [default = DISALLOW_ENGAGE];
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       1, this->_internal_advice(), target);
   }

@@ -471,7 +471,7 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.common.PointENU position = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, _Internal::position(this), target, stream);
@@ -479,7 +479,7 @@ failure:
 
   // optional .apollo.common.Quaternion orientation = 2;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         2, _Internal::orientation(this), target, stream);
@@ -487,7 +487,7 @@ failure:
 
   // optional .apollo.common.Point3D linear_velocity = 3;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, _Internal::linear_velocity(this), target, stream);
@@ -495,7 +495,7 @@ failure:
 
   // optional .apollo.common.Point3D linear_acceleration = 4;
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         4, _Internal::linear_acceleration(this), target, stream);
@@ -503,7 +503,7 @@ failure:
 
   // optional .apollo.common.Point3D angular_velocity = 5;
   if (cached_has_bits & 0x00000010u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         5, _Internal::angular_velocity(this), target, stream);
@@ -511,13 +511,13 @@ failure:
 
   // optional double heading = 6;
   if (cached_has_bits & 0x00000100u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(6, this->_internal_heading(), target);
   }
 
   // optional .apollo.common.Point3D linear_acceleration_vrf = 7;
   if (cached_has_bits & 0x00000020u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         7, _Internal::linear_acceleration_vrf(this), target, stream);
@@ -525,7 +525,7 @@ failure:
 
   // optional .apollo.common.Point3D angular_velocity_vrf = 8;
   if (cached_has_bits & 0x00000040u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         8, _Internal::angular_velocity_vrf(this), target, stream);
@@ -533,7 +533,7 @@ failure:
 
   // optional .apollo.common.Point3D euler_angles = 9;
   if (cached_has_bits & 0x00000080u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         9, _Internal::euler_angles(this), target, stream);

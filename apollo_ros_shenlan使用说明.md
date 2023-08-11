@@ -30,49 +30,50 @@
    ./apollo.sh build_opt shenlan
    ```
 
-2. shenlan_mapping模块
+2. mapping模块
 
    + 用于单独建图，需开启transform、lidar、gnss/imu、localizaiton模块
    + 读入话题(在mapping.dag中修改)：
      + 位姿：/apollo/localization/pose
      + 点云：/apollo/sensor/lidar/compensator/PointCloud2
    + 写出话题(在mapping_component.cc中修改)：
-     + 栅格状态：/apollo/shenlan/mapping/occupancy
-     + 融合姿点云(可视化)：/apollo/shenlan/mapping/pointcloud
+     + 融合位姿点云(可视化)：/apollo/shenlan/mapping/pointcloud
      + 占据栅格(可视化)：/apollo/shenlan/mapping/gird_map
+     + 栅格状态：/apollo/shenlan/mapping/occupancy
 
    ```sh
    cyber_launch start modules/shenlan/mapping/launch/mapping.launch
    ```
 
-3. shenlan_minco模块
+3. minco模块
 
    + 用于单独规划，需开启transform、gnss/imu、localizaiton、control、canbus模块
    + 读入话题(在minco.dag中修改)：
      + 位姿：/apollo/localization/pose
      + 栅格状态：/apollo/shenlan/mapping/occupancy
    + 写出话题(在minco_component.cc中修改)：
-     + 规划数据：/apollo/planning
      + kino轨迹(可视化)：/apollo/shenlan/minco/kino_traj
      + minco轨迹(可视化)：/apollo/shenlan/minco/minco_traj
+     + 规划数据：/apollo/planning
 
    ```sh
    cyber_launch start modules/shenlan/minco/launch/minco.launch
    ```
 
-4. shenlan_minco_mapping模块
+4. minco_mapping模块
 
    + 用于同时建图规划，需开启transform、lidar、gnss/imu、localizaiton、control、canbus模块
    + 读入话题(在minco_mapping.dag中修改)：
      + 位姿：/apollo/localization/pose
      + 点云：/apollo/sensor/lidar/compensator/PointCloud2
    + 写出话题(在minco_mapping_component.cc中修改)：
-     + 规划数据：/apollo/planning
-     + 融合姿点云(可视化)：/apollo/shenlan/mapping/pointcloud
+     + 融合位姿点云(可视化)：/apollo/shenlan/mapping/pointcloud
      + 占据栅格(可视化)：/apollo/shenlan/mapping/gird_map
      + kino轨迹(可视化)：/apollo/shenlan/minco/kino_traj
      + minco轨迹(可视化)：/apollo/shenlan/minco/minco_traj
-
+     + 原始规划数据：/apollo/shenlan/minco/mpc_trajectory
+     + 规划数据：/apollo/planning
+   
    ```sh
    cyber_launch start modules/shenlan/minco_mapping/launch/minco_mapping.launch
    ```
@@ -87,7 +88,7 @@
 
 2. bridge_sender模块
 
-   + 用于apollo向ros发送数据，需配合apollo2ros_xxx使用
+   + 用于apollo向ros发送数据，需配合apollo2ros使用
    + 配置文件对应bridge_sender.launch、bridge_sender.dag、udp_bridge_sender_89xx_xxx.pb.txt
    + 一个dag可以同时发送多个数据
    + 新话题需要在udp_bridge_sender_component.h和udp_bridge_sender_component.cc中注册
@@ -98,7 +99,7 @@
 
 3. bridge_receiver模块
 
-   + 用于apollo接收ros的数据，需配合ros2apollo_xxx使用
+   + 用于apollo接收ros的数据，需配合ros2apollo使用
    + 配置文件对应bridge_receiver.launch、bridge_receiver_89xx_xxx.dag、udp_bridge_receiver_89xx_xxx.pb.txt
    + 一个dag只能接收一个数据，使用bridge_receiver.launch启动多个dag可以同时接受多个数据
    + 新话题需要在udp_bridge_receiver_component.h和udp_bridge_receiver_component.cc中注册
@@ -106,6 +107,12 @@
    ```sh
    cyber_launch start modules/bridge/launch/bridge_receiver.launch
    ```
+
+### 1.4.注意事项
+
++ 若cyber_launch无法通过ctrl+c关闭，则在终端中输入`kill -9 xxx` (xxx为 cyber_launch的进程数)， 可输入 `ps -elf | grep mainboard`获取进程数
+
+
 
 ## 2.apollo_ros_bridge
 
@@ -116,16 +123,16 @@
 2. 编译protobuf
 
    ```sh
-   cd apollo_ros_bridge/protobuf
+   cd apollo_ros_bridge/protobuf-3.10.1
    sudo apt-get install autoconf automake libtool curl make g++ unzip
    ./autogen.sh 
    ./configure 
    make -j8
    sudo make install 
-   sudo ldconfigs
+   sudo ldconfig
    
-   # 编译 xxx.proto：
-   protoc addressbook.proto --cpp_out=./
+   # 编译 xxx.proto 示例：
+   protoc xxx.proto --cpp_out=./
    ```
 
 ### 2.2.apollo2ros
@@ -143,7 +150,11 @@ cd apollo_ros_bridge/apollo2ros
 catkin_make
 source devel/setup.bash
 roslaunch apollo2ros xxx.launch
-# 或 ./xxx.sh
+
+# 或 
+echo "source ~/apollo_ros_shenlan/apollo_ros_bridge/apollo2ros/devel/setup.bash">> ~/.bashrc 
+source ~/.bashrc
+./shfiles/apollo2ros/xxx.sh
 
 # 修改apollo2ros/src/launch/advanced_param.xml中的地图原点坐标，以配合rviz使用
 rviz -d xxx.rviz
@@ -156,8 +167,14 @@ cd apollo_ros_bridge/ros2apollo
 catkin_make
 source devel/setup.bash
 roslaunch ros2apollo xxx.launch
-# 或 ./xxx.sh
+
+# 或 
+echo "source ~/apollo_ros_shenlan/apollo_ros_bridge/ros2apollo/devel/setup.bash">> ~/.bashrc 
+source ~/.bashrc
+./shfiles/ros2apollo/xxx.sh
 ```
+
+
 
 ## 3.planner_src
 
@@ -206,6 +223,8 @@ roslaunch traj_planner swarm_apollo.launch
 # 将apollo数据传入planner_src需关闭仿真时间
 rosparam set use_sim_time false
 ```
+
+
 
 ## 4.carla_apollo_bridge_guardstrikelab
 
@@ -294,16 +313,20 @@ python manual_control.py
 --map_dir /apollo/modules/map/data/san_francisco
 ```
 
+
+
 ## 5.SORA-SVL
 
 ```sh
-# https://github.com/YuqiHuai/SORA-SVL
+git clone https://github.com/YuqiHuai/SORA-SVL.git
+cp SORA-SVL/client/.env.template SORA-SVL/client/.env
+cp SORA-SVL/server/.env.template SORA-SVL/server/.env
+docker-compose up --build -d
 
 # 启动 simulator
 ./simulator/simulator
 # 点击 go offline 刷新传感器
 
-# 启动 docker
 docker-compose up
 
 # 点击 go online
@@ -323,8 +346,4 @@ python 02-Apollo-v7.py
 # 修改车型：ego = sim.add_agent('2e966a70-4a19-44b5-a5e7-64e00a7bc5de', lgsvl.AgentType.EGO, state)
 # 车型ID：SORA-SVL/server/assets/vehicles
 ```
-
-## 6.注意事项
-
-+ 若cyber_launch无法通过`ctrl + c`关闭，则在终端中输入`kill -9 xxx` (xxx为 cyber_launch的进程数)， 可输入 `ps -elf | grep mainboard`获取进程数
 

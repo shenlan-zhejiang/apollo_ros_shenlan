@@ -543,21 +543,21 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.localization.ImuMsgDelayStatus imu_delay_status = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       1, this->_internal_imu_delay_status(), target);
   }
 
   // optional .apollo.localization.ImuMsgMissingStatus imu_missing_status = 2;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       2, this->_internal_imu_missing_status(), target);
   }
 
   // optional .apollo.localization.ImuMsgDataStatus imu_data_status = 3;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       3, this->_internal_imu_data_status(), target);
   }
@@ -869,42 +869,42 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.localization.LocalLidarConsistency local_lidar_consistency = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       1, this->_internal_local_lidar_consistency(), target);
   }
 
   // optional .apollo.localization.GnssConsistency gnss_consistency = 2;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       2, this->_internal_gnss_consistency(), target);
   }
 
   // optional .apollo.localization.LocalLidarStatus local_lidar_status = 3;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       3, this->_internal_local_lidar_status(), target);
   }
 
   // optional .apollo.localization.LocalLidarQuality local_lidar_quality = 4;
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       4, this->_internal_local_lidar_quality(), target);
   }
 
   // optional .apollo.localization.GnssPositionType gnsspos_position_type = 5;
   if (cached_has_bits & 0x00000010u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       5, this->_internal_gnsspos_position_type(), target);
   }
 
   // optional .apollo.localization.MsfRunningStatus msf_running_status = 6;
   if (cached_has_bits & 0x00000020u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       6, this->_internal_msf_running_status(), target);
   }

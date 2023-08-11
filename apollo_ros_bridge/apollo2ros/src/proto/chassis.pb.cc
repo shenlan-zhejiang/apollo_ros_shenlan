@@ -1268,136 +1268,136 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional bool engine_started = 3;
   if (cached_has_bits & 0x00000200u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(3, this->_internal_engine_started(), target);
   }
 
   // optional float engine_rpm = 4 [default = nan];
   if (cached_has_bits & 0x00800000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(4, this->_internal_engine_rpm(), target);
   }
 
   // optional float speed_mps = 5 [default = nan];
   if (cached_has_bits & 0x01000000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(5, this->_internal_speed_mps(), target);
   }
 
   // optional float odometer_m = 6 [default = nan];
   if (cached_has_bits & 0x02000000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(6, this->_internal_odometer_m(), target);
   }
 
   // optional int32 fuel_range_m = 7;
   if (cached_has_bits & 0x00000100u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(7, this->_internal_fuel_range_m(), target);
   }
 
   // optional float throttle_percentage = 8 [default = nan];
   if (cached_has_bits & 0x04000000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(8, this->_internal_throttle_percentage(), target);
   }
 
   // optional float brake_percentage = 9 [default = nan];
   if (cached_has_bits & 0x08000000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(9, this->_internal_brake_percentage(), target);
   }
 
   // optional float steering_percentage = 11 [default = nan];
   if (cached_has_bits & 0x10000000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(11, this->_internal_steering_percentage(), target);
   }
 
   // optional float steering_torque_nm = 12 [default = nan];
   if (cached_has_bits & 0x20000000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(12, this->_internal_steering_torque_nm(), target);
   }
 
   // optional bool parking_brake = 13;
   if (cached_has_bits & 0x00000400u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(13, this->_internal_parking_brake(), target);
   }
 
   // optional bool high_beam_signal = 14 [deprecated = true];
   if (cached_has_bits & 0x00000800u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(14, this->_internal_high_beam_signal(), target);
   }
 
   // optional bool low_beam_signal = 15 [deprecated = true];
   if (cached_has_bits & 0x00001000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(15, this->_internal_low_beam_signal(), target);
   }
 
   // optional bool left_turn_signal = 16 [deprecated = true];
   if (cached_has_bits & 0x00002000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(16, this->_internal_left_turn_signal(), target);
   }
 
   // optional bool right_turn_signal = 17 [deprecated = true];
   if (cached_has_bits & 0x00004000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(17, this->_internal_right_turn_signal(), target);
   }
 
   // optional bool horn = 18 [deprecated = true];
   if (cached_has_bits & 0x00008000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(18, this->_internal_horn(), target);
   }
 
   // optional bool wiper = 19;
   if (cached_has_bits & 0x00010000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(19, this->_internal_wiper(), target);
   }
 
   // optional bool disengage_status = 20 [deprecated = true];
   if (cached_has_bits & 0x00020000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(20, this->_internal_disengage_status(), target);
   }
 
   // optional .apollo.canbus.Chassis.DrivingMode driving_mode = 21 [default = COMPLETE_MANUAL];
   if (cached_has_bits & 0x00040000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       21, this->_internal_driving_mode(), target);
   }
 
   // optional .apollo.canbus.Chassis.ErrorCode error_code = 22 [default = NO_ERROR];
   if (cached_has_bits & 0x00080000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       22, this->_internal_error_code(), target);
   }
 
   // optional .apollo.canbus.Chassis.GearPosition gear_location = 23;
   if (cached_has_bits & 0x00200000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       23, this->_internal_gear_location(), target);
   }
 
   // optional double steering_timestamp = 24;
   if (cached_has_bits & 0x00100000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(24, this->_internal_steering_timestamp(), target);
   }
 
   // optional .apollo.common.Header header = 25;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         25, _Internal::header(this), target, stream);
@@ -1405,13 +1405,13 @@ failure:
 
   // optional int32 chassis_error_mask = 26 [default = 0];
   if (cached_has_bits & 0x00400000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(26, this->_internal_chassis_error_mask(), target);
   }
 
   // optional .apollo.common.VehicleSignal signal = 27;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         27, _Internal::signal(this), target, stream);
@@ -1419,7 +1419,7 @@ failure:
 
   // optional .apollo.canbus.ChassisGPS chassis_gps = 28;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         28, _Internal::chassis_gps(this), target, stream);
@@ -1427,7 +1427,7 @@ failure:
 
   // optional .apollo.common.EngageAdvice engage_advice = 29;
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         29, _Internal::engage_advice(this), target, stream);
@@ -1435,7 +1435,7 @@ failure:
 
   // optional .apollo.canbus.WheelSpeed wheel_speed = 30;
   if (cached_has_bits & 0x00000010u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         30, _Internal::wheel_speed(this), target, stream);
@@ -1443,7 +1443,7 @@ failure:
 
   // optional .apollo.canbus.Surround surround = 31;
   if (cached_has_bits & 0x00000020u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         31, _Internal::surround(this), target, stream);
@@ -1451,7 +1451,7 @@ failure:
 
   // optional .apollo.canbus.License license = 32 [deprecated = true];
   if (cached_has_bits & 0x00000040u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         32, _Internal::license(this), target, stream);
@@ -1459,7 +1459,7 @@ failure:
 
   // optional .apollo.common.VehicleID vehicle_id = 33;
   if (cached_has_bits & 0x00000080u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         33, _Internal::vehicle_id(this), target, stream);
@@ -1467,7 +1467,7 @@ failure:
 
   // optional int32 battery_soc_percentage = 34 [default = -1];
   if (cached_has_bits & 0x40000000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(34, this->_internal_battery_soc_percentage(), target);
   }
 
@@ -2210,122 +2210,122 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional double latitude = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(1, this->_internal_latitude(), target);
   }
 
   // optional double longitude = 2;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(2, this->_internal_longitude(), target);
   }
 
   // optional bool gps_valid = 3;
   if (cached_has_bits & 0x00000400u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(3, this->_internal_gps_valid(), target);
   }
 
   // optional int32 year = 4;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(4, this->_internal_year(), target);
   }
 
   // optional int32 month = 5;
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(5, this->_internal_month(), target);
   }
 
   // optional int32 day = 6;
   if (cached_has_bits & 0x00000010u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(6, this->_internal_day(), target);
   }
 
   // optional int32 hours = 7;
   if (cached_has_bits & 0x00000020u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(7, this->_internal_hours(), target);
   }
 
   // optional int32 minutes = 8;
   if (cached_has_bits & 0x00000040u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(8, this->_internal_minutes(), target);
   }
 
   // optional int32 seconds = 9;
   if (cached_has_bits & 0x00000080u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(9, this->_internal_seconds(), target);
   }
 
   // optional double compass_direction = 10;
   if (cached_has_bits & 0x00000100u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(10, this->_internal_compass_direction(), target);
   }
 
   // optional double pdop = 11;
   if (cached_has_bits & 0x00000200u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(11, this->_internal_pdop(), target);
   }
 
   // optional bool is_gps_fault = 12;
   if (cached_has_bits & 0x00000800u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(12, this->_internal_is_gps_fault(), target);
   }
 
   // optional bool is_inferred = 13;
   if (cached_has_bits & 0x00001000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(13, this->_internal_is_inferred(), target);
   }
 
   // optional double altitude = 14;
   if (cached_has_bits & 0x00004000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(14, this->_internal_altitude(), target);
   }
 
   // optional double heading = 15;
   if (cached_has_bits & 0x00008000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(15, this->_internal_heading(), target);
   }
 
   // optional double hdop = 16;
   if (cached_has_bits & 0x00010000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(16, this->_internal_hdop(), target);
   }
 
   // optional double vdop = 17;
   if (cached_has_bits & 0x00020000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(17, this->_internal_vdop(), target);
   }
 
   // optional .apollo.canbus.GpsQuality quality = 18;
   if (cached_has_bits & 0x00002000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       18, this->_internal_quality(), target);
   }
 
   // optional int32 num_satellites = 19;
   if (cached_has_bits & 0x00080000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(19, this->_internal_num_satellites(), target);
   }
 
   // optional double gps_speed = 20;
   if (cached_has_bits & 0x00040000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(20, this->_internal_gps_speed(), target);
   }
 
@@ -2879,77 +2879,77 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional bool is_wheel_spd_rr_valid = 1 [default = false];
   if (cached_has_bits & 0x00000010u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(1, this->_internal_is_wheel_spd_rr_valid(), target);
   }
 
   // optional .apollo.canbus.WheelSpeed.WheelSpeedType wheel_direction_rr = 2 [default = INVALID];
   if (cached_has_bits & 0x00000100u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       2, this->_internal_wheel_direction_rr(), target);
   }
 
   // optional double wheel_spd_rr = 3 [default = 0];
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(3, this->_internal_wheel_spd_rr(), target);
   }
 
   // optional bool is_wheel_spd_rl_valid = 4 [default = false];
   if (cached_has_bits & 0x00000020u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(4, this->_internal_is_wheel_spd_rl_valid(), target);
   }
 
   // optional .apollo.canbus.WheelSpeed.WheelSpeedType wheel_direction_rl = 5 [default = INVALID];
   if (cached_has_bits & 0x00000200u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       5, this->_internal_wheel_direction_rl(), target);
   }
 
   // optional double wheel_spd_rl = 6 [default = 0];
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(6, this->_internal_wheel_spd_rl(), target);
   }
 
   // optional bool is_wheel_spd_fr_valid = 7 [default = false];
   if (cached_has_bits & 0x00000040u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(7, this->_internal_is_wheel_spd_fr_valid(), target);
   }
 
   // optional .apollo.canbus.WheelSpeed.WheelSpeedType wheel_direction_fr = 8 [default = INVALID];
   if (cached_has_bits & 0x00000400u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       8, this->_internal_wheel_direction_fr(), target);
   }
 
   // optional double wheel_spd_fr = 9 [default = 0];
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(9, this->_internal_wheel_spd_fr(), target);
   }
 
   // optional bool is_wheel_spd_fl_valid = 10 [default = false];
   if (cached_has_bits & 0x00000080u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(10, this->_internal_is_wheel_spd_fl_valid(), target);
   }
 
   // optional .apollo.canbus.WheelSpeed.WheelSpeedType wheel_direction_fl = 11 [default = INVALID];
   if (cached_has_bits & 0x00000800u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       11, this->_internal_wheel_direction_fl(), target);
   }
 
   // optional double wheel_spd_fl = 12 [default = 0];
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(12, this->_internal_wheel_spd_fl(), target);
   }
 
@@ -3327,13 +3327,13 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional double range = 1;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(1, this->_internal_range(), target);
   }
 
   // optional .apollo.common.Point3D translation = 2;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         2, _Internal::translation(this), target, stream);
@@ -3341,7 +3341,7 @@ failure:
 
   // optional .apollo.common.Quaternion rotation = 3;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, _Internal::rotation(this), target, stream);
@@ -3849,146 +3849,146 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional bool cross_traffic_alert_left = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(1, this->_internal_cross_traffic_alert_left(), target);
   }
 
   // optional bool cross_traffic_alert_left_enabled = 2;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(2, this->_internal_cross_traffic_alert_left_enabled(), target);
   }
 
   // optional bool blind_spot_left_alert = 3;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(3, this->_internal_blind_spot_left_alert(), target);
   }
 
   // optional bool blind_spot_left_alert_enabled = 4;
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(4, this->_internal_blind_spot_left_alert_enabled(), target);
   }
 
   // optional bool cross_traffic_alert_right = 5;
   if (cached_has_bits & 0x00000010u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(5, this->_internal_cross_traffic_alert_right(), target);
   }
 
   // optional bool cross_traffic_alert_right_enabled = 6;
   if (cached_has_bits & 0x00000020u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(6, this->_internal_cross_traffic_alert_right_enabled(), target);
   }
 
   // optional bool blind_spot_right_alert = 7;
   if (cached_has_bits & 0x00000040u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(7, this->_internal_blind_spot_right_alert(), target);
   }
 
   // optional bool blind_spot_right_alert_enabled = 8;
   if (cached_has_bits & 0x00000080u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(8, this->_internal_blind_spot_right_alert_enabled(), target);
   }
 
   // optional double sonar00 = 9;
   if (cached_has_bits & 0x00000100u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(9, this->_internal_sonar00(), target);
   }
 
   // optional double sonar01 = 10;
   if (cached_has_bits & 0x00000200u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(10, this->_internal_sonar01(), target);
   }
 
   // optional double sonar02 = 11;
   if (cached_has_bits & 0x00000400u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(11, this->_internal_sonar02(), target);
   }
 
   // optional double sonar03 = 12;
   if (cached_has_bits & 0x00000800u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(12, this->_internal_sonar03(), target);
   }
 
   // optional double sonar04 = 13;
   if (cached_has_bits & 0x00001000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(13, this->_internal_sonar04(), target);
   }
 
   // optional double sonar05 = 14;
   if (cached_has_bits & 0x00002000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(14, this->_internal_sonar05(), target);
   }
 
   // optional double sonar06 = 15;
   if (cached_has_bits & 0x00004000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(15, this->_internal_sonar06(), target);
   }
 
   // optional double sonar07 = 16;
   if (cached_has_bits & 0x00008000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(16, this->_internal_sonar07(), target);
   }
 
   // optional double sonar08 = 17;
   if (cached_has_bits & 0x00010000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(17, this->_internal_sonar08(), target);
   }
 
   // optional double sonar09 = 18;
   if (cached_has_bits & 0x00020000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(18, this->_internal_sonar09(), target);
   }
 
   // optional double sonar10 = 19;
   if (cached_has_bits & 0x00040000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(19, this->_internal_sonar10(), target);
   }
 
   // optional double sonar11 = 20;
   if (cached_has_bits & 0x00080000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(20, this->_internal_sonar11(), target);
   }
 
   // optional bool sonar_enabled = 21;
   if (cached_has_bits & 0x00100000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(21, this->_internal_sonar_enabled(), target);
   }
 
   // optional bool sonar_fault = 22;
   if (cached_has_bits & 0x00200000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(22, this->_internal_sonar_fault(), target);
   }
 
   // repeated double sonar_range = 23;
   for (int i = 0, n = this->_internal_sonar_range_size(); i < n; i++) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(23, this->_internal_sonar_range(i), target);
   }
 
   // repeated .apollo.canbus.Sonar sonar = 24;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_sonar_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(24, this->_internal_sonar(i), target, stream);
   }

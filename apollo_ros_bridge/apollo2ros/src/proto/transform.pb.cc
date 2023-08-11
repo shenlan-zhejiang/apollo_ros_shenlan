@@ -325,7 +325,7 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.common.Point3D translation = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, _Internal::translation(this), target, stream);
@@ -333,7 +333,7 @@ failure:
 
   // optional .apollo.common.Quaternion rotation = 2;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         2, _Internal::rotation(this), target, stream);
@@ -619,7 +619,7 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.common.Header header = 1;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, _Internal::header(this), target, stream);
@@ -637,7 +637,7 @@ failure:
 
   // optional .apollo.transform.Transform transform = 3;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, _Internal::transform(this), target, stream);
@@ -900,7 +900,7 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.common.Header header = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, _Internal::header(this), target, stream);
@@ -909,7 +909,7 @@ failure:
   // repeated .apollo.transform.TransformStamped transforms = 2;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_transforms_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(2, this->_internal_transforms(i), target, stream);
   }

@@ -575,7 +575,7 @@ failure:
 
   // optional .apollo.common.Point3D translation = 3;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, _Internal::translation(this), target, stream);
@@ -583,7 +583,7 @@ failure:
 
   // optional .apollo.common.Quaternion rotation = 4;
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         4, _Internal::rotation(this), target, stream);
@@ -824,7 +824,7 @@ failure:
   // repeated .apollo.common.Transform tansforms = 1;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_tansforms_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(1, this->_internal_tansforms(i), target, stream);
   }
@@ -1364,25 +1364,25 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional double dead_time = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(1, this->_internal_dead_time(), target);
   }
 
   // optional double rise_time = 2;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(2, this->_internal_rise_time(), target);
   }
 
   // optional double peak_time = 3;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(3, this->_internal_peak_time(), target);
   }
 
   // optional double settling_time = 4;
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(4, this->_internal_settling_time(), target);
   }
 
@@ -1984,14 +1984,14 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.common.VehicleBrand brand = 1;
   if (cached_has_bits & 0x00000010u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
       1, this->_internal_brand(), target);
   }
 
   // optional .apollo.common.VehicleID vehicle_id = 2;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         2, _Internal::vehicle_id(this), target, stream);
@@ -1999,121 +1999,121 @@ failure:
 
   // optional double front_edge_to_center = 3 [default = nan];
   if (cached_has_bits & 0x00000040u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(3, this->_internal_front_edge_to_center(), target);
   }
 
   // optional double back_edge_to_center = 4 [default = nan];
   if (cached_has_bits & 0x00000080u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(4, this->_internal_back_edge_to_center(), target);
   }
 
   // optional double left_edge_to_center = 5 [default = nan];
   if (cached_has_bits & 0x00000100u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(5, this->_internal_left_edge_to_center(), target);
   }
 
   // optional double right_edge_to_center = 6 [default = nan];
   if (cached_has_bits & 0x00000200u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(6, this->_internal_right_edge_to_center(), target);
   }
 
   // optional double length = 7 [default = nan];
   if (cached_has_bits & 0x00000400u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(7, this->_internal_length(), target);
   }
 
   // optional double width = 8 [default = nan];
   if (cached_has_bits & 0x00000800u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(8, this->_internal_width(), target);
   }
 
   // optional double height = 9 [default = nan];
   if (cached_has_bits & 0x00001000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(9, this->_internal_height(), target);
   }
 
   // optional double min_turn_radius = 10 [default = nan];
   if (cached_has_bits & 0x00002000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(10, this->_internal_min_turn_radius(), target);
   }
 
   // optional double max_acceleration = 11 [default = nan];
   if (cached_has_bits & 0x00004000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(11, this->_internal_max_acceleration(), target);
   }
 
   // optional double max_deceleration = 12 [default = nan];
   if (cached_has_bits & 0x00008000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(12, this->_internal_max_deceleration(), target);
   }
 
   // optional double max_steer_angle = 13 [default = nan];
   if (cached_has_bits & 0x00010000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(13, this->_internal_max_steer_angle(), target);
   }
 
   // optional double max_steer_angle_rate = 14 [default = nan];
   if (cached_has_bits & 0x00020000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(14, this->_internal_max_steer_angle_rate(), target);
   }
 
   // optional double min_steer_angle_rate = 15 [default = nan];
   if (cached_has_bits & 0x00040000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(15, this->_internal_min_steer_angle_rate(), target);
   }
 
   // optional double steer_ratio = 16 [default = nan];
   if (cached_has_bits & 0x00080000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(16, this->_internal_steer_ratio(), target);
   }
 
   // optional double wheel_base = 17 [default = nan];
   if (cached_has_bits & 0x00100000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(17, this->_internal_wheel_base(), target);
   }
 
   // optional double wheel_rolling_radius = 18 [default = nan];
   if (cached_has_bits & 0x00200000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(18, this->_internal_wheel_rolling_radius(), target);
   }
 
   // optional float max_abs_speed_when_stopped = 19 [default = nan];
   if (cached_has_bits & 0x00000020u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(19, this->_internal_max_abs_speed_when_stopped(), target);
   }
 
   // optional double brake_deadzone = 20 [default = nan];
   if (cached_has_bits & 0x00400000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(20, this->_internal_brake_deadzone(), target);
   }
 
   // optional double throttle_deadzone = 21 [default = nan];
   if (cached_has_bits & 0x00800000u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(21, this->_internal_throttle_deadzone(), target);
   }
 
   // optional .apollo.common.LatencyParam steering_latency_param = 22;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         22, _Internal::steering_latency_param(this), target, stream);
@@ -2121,7 +2121,7 @@ failure:
 
   // optional .apollo.common.LatencyParam throttle_latency_param = 23;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         23, _Internal::throttle_latency_param(this), target, stream);
@@ -2129,7 +2129,7 @@ failure:
 
   // optional .apollo.common.LatencyParam brake_latency_param = 24;
   if (cached_has_bits & 0x00000008u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         24, _Internal::brake_latency_param(this), target, stream);
@@ -2637,7 +2637,7 @@ failure:
   cached_has_bits = _has_bits_[0];
   // optional .apollo.common.Header header = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, _Internal::header(this), target, stream);
@@ -2645,7 +2645,7 @@ failure:
 
   // optional .apollo.common.VehicleParam vehicle_param = 2;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         2, _Internal::vehicle_param(this), target, stream);
@@ -2653,7 +2653,7 @@ failure:
 
   // optional .apollo.common.Extrinsics extrinsics = 3;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
+    stream->EnsureSpace(&target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, _Internal::extrinsics(this), target, stream);
