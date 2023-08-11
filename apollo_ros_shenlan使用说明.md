@@ -318,6 +318,7 @@ python manual_control.py
 ## 5.SORA-SVL
 
 ```sh
+# 配置仿真器
 git clone https://github.com/YuqiHuai/SORA-SVL.git
 cp SORA-SVL/client/.env.template SORA-SVL/client/.env
 cp SORA-SVL/server/.env.template SORA-SVL/server/.env

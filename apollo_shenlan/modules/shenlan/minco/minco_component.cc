@@ -185,7 +185,15 @@ void MincoShenlanComponent::calcMinco2ADC(const std::shared_ptr<apollo::planning
     traj_msg->mutable_header()->set_timestamp_sec(timestamp);
     traj_msg->mutable_header()->set_module_name("planning");
     traj_msg->mutable_header()->set_sequence_num(seq_num_adc);
-    traj_msg->set_gear(apollo::canbus::Chassis::GEAR_DRIVE);
+    
+    for(int i = 0; i < (int)RFSM.planner_ptr_->kino_trajs_.size(); i++)
+    {
+        if (RFSM.planner_ptr_->kino_trajs_.at(i).singul == 1)
+            traj_msg->set_gear(apollo::canbus::Chassis::GEAR_DRIVE);
+        else
+            traj_msg->set_gear(apollo::canbus::Chassis::GEAR_REVERSE);
+    }
+    
     traj_msg->mutable_engage_advice()->set_advice(apollo::common::EngageAdvice::READY_TO_ENGAGE);
     traj_msg->mutable_estop()->set_is_estop(0);
     

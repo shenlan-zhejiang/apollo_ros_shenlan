@@ -209,8 +209,8 @@ void MappingProcess::raycastProcess(const Eigen::Vector3d& t_wc, const std::shar
             continue;
 
         //------------------- With the "if" below, the map in the past is also stored ----------------------------//
-        // if(occupancy_buffer_[idx_ctns] <= min_occupancy_log_)
-        // {
+        if(occupancy_buffer_[idx_ctns] <= min_occupancy_log_)
+        {
             occupancy_buffer_[idx_ctns] =
                 std::min(std::max(occupancy_buffer_[idx_ctns] + log_odds_update, clamp_min_log_), clamp_max_log_);
                 // std::min(occupancy_buffer_[idx_ctns] + log_odds_update, clamp_max_log_);
@@ -241,7 +241,7 @@ void MappingProcess::raycastProcess(const Eigen::Vector3d& t_wc, const std::shar
                     occupancy_buffer_2d_[idx_ctns_2d] = 0;
                 }
             }
-        // }
+        }
 
     }
 }
