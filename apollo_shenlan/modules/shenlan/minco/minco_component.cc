@@ -217,7 +217,7 @@ void MincoShenlanComponent::calcMinco2ADC(const std::shared_ptr<apollo::planning
         // traj_msg->set_total_path_length(0);
         
         // REMOVE LAST POINT FOR SAFETY
-        for (int j = 0; j < positions.cols() -1 ; j ++)
+        for (int j = 0; j < positions.cols() -1; j ++)
         {
             // t0 = t0 + durations(j);
             t1 = t1 + durations(j);

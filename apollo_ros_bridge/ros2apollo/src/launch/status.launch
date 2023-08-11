@@ -1,9 +1,5 @@
 <launch>
 
-  <include file="$(find ros2apollo)/launch/advanced_param.xml">
-    
-  </include>
-
   <node pkg="ros2apollo" type="status" name="status" output="screen">
 
   </node>
