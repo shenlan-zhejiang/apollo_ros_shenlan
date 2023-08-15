@@ -1,3 +1,4 @@
+# ******************** shalun ******************** #
 # MKZ
 vehicle_conf {
     # single car
@@ -159,7 +160,7 @@ trajplanner_conf {
     surround_clearance: 1.0
 
     # dynamic limits
-    max_vel: 5.0
+    max_vel: 4.0
     min_vel: 0
     max_acc: 6.0
     min_acc: -6.0
@@ -168,5 +169,5 @@ trajplanner_conf {
     max_cur: 0.3
 
     # safe margin, car_width/length += 2 * half_margin
-    half_margin: 0.5
+    half_margin: 1.0
 }

@@ -58,7 +58,7 @@ public:
     // void set_map_interface(map_utils::TrajPlannerMapItf* map_itf);
     // void set_initial_state(const State& state);
     void setInitStateAndInput(const Eigen::Vector4d& state, const double& start_time);
-    void setInitStateAndInput(const double& t, Eigen::Vector4d& replan_init_state, const double& cur_vel_, const double& cur_yaw_, const Eigen::Vector2d& start_pos, const Eigen::Vector2d& start_vel, const Eigen::Vector2d& start_acc);
+    void setInitStateAndInput(const double& t, Eigen::Vector4d& replan_init_state, const double& cur_yaw_, const Eigen::Vector2d& start_pos, const Eigen::Vector2d& start_vel, const Eigen::Vector2d& start_acc);
     //void setSwarmTrajs(const apollo::shenlan::swarm_bridge::Trajectory& traj_msg);
     void setMapFree(double& time_now);
     // void release_initial_state(){has_init_state_ = false;};

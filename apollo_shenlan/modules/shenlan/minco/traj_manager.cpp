@@ -117,7 +117,8 @@ void TrajPlanner::setInitStateAndInput(const Eigen::Vector4d& state, const doubl
 }
 
 // void TrajPlanner::setInitStateAndInput(const double& t, Eigen::Vector4d& replan_init_state, Eigen::Vector2d start_pos)
-void TrajPlanner::setInitStateAndInput(const double& t, Eigen::Vector4d& replan_init_state, const double& cur_vel_, const double& cur_yaw_, const Eigen::Vector2d& start_pos, const Eigen::Vector2d& start_vel, const Eigen::Vector2d& start_acc)
+void TrajPlanner::setInitStateAndInput(const double& t, Eigen::Vector4d& replan_init_state, const double& cur_yaw_,
+                                        const Eigen::Vector2d& start_pos, const Eigen::Vector2d& start_vel, const Eigen::Vector2d& start_acc)
 {
   // std::cout << "2222222222setState2222222222" << std::endl;
 
@@ -129,16 +130,29 @@ void TrajPlanner::setInitStateAndInput(const double& t, Eigen::Vector4d& replan_
   {
       t_bar = traj_container_.singul_traj[id].duration;
   }
-  int singul = traj_container_.singul_traj[id].traj.getSingul(t_bar);
-//   int singul = traj_container_.singul_traj[id].traj.getSingul(t_bar);
-//   // Eigen::Vector2d start_pos = traj_container_.singul_traj[id].traj.getPos(t_bar ); // LESS TIME POS FOR TRACKING
-//   Eigen::Vector2d start_vel = traj_container_.singul_traj[id].traj.getdSigma(t_bar);
-//   Eigen::Vector2d start_acc = traj_container_.singul_traj[id].traj.getddSigma(t_bar);
-//   double init_yaw = atan2(singul * start_vel(1), singul * start_vel(0));
-//   double init_vel = singul * start_vel.norm();
 
-  double init_vel = cur_vel_;
+  // @ROCY: singularity is enable forward and reverse moving, t_bar =  t_now + TIME_BUDGET - start_time
+  int singul = traj_container_.singul_traj[id].traj.getSingul(t_bar);
+
+  // @ROCY: start_pos, start_vel, start_acc using current odom ,not on traj point
+  // int singul = traj_container_.singul_traj[id].traj.getSingul(t_bar);
+  // Eigen::Vector2d start_pos = traj_container_.singul_traj[id].traj.getPos(t_bar ); // LESS TIME POS FOR TRACKING
+  // Eigen::Vector2d start_vel = traj_container_.singul_traj[id].traj.getdSigma(t_bar);
+  // Eigen::Vector2d start_acc = traj_container_.singul_traj[id].traj.getddSigma(t_bar);
+  
   double init_yaw = cur_yaw_;
+  // std::cout << " cur_yaw_ = 1.57: " << cur_yaw_ << std::endl;
+  // @ROCY: flatness yaw has some bugs
+  // double init_yaw = atan2(singul * start_vel(1), singul * start_vel(0));
+  // init_yaw -= M_PI / 2.0;
+  // std::cout << " init_yaw_ = 0: " << init_yaw_ << std::endl;
+  // double init_yaw = atan2(singul * start_vel(0), singul * start_vel(1));
+  // std::cout << " _init_yaw_ = -1.57: " << _init_yaw_ << std::endl;
+
+  double init_vel = singul * start_vel.norm();
+  // @ROCY: cant for reverse moving // const double& cur_vel_,  
+  // double init_vel = cur_vel_;
+
   Eigen::Vector4d init_state;
   init_state << start_pos, init_yaw, init_vel;
 
@@ -146,15 +160,16 @@ void TrajPlanner::setInitStateAndInput(const double& t, Eigen::Vector4d& replan_
   B << 0, -1,
        1,  0;
   double init_steer = atan(singul * (start_acc.transpose() * B * start_vel)(0, 0) * car_wheelbase_ / pow(start_vel.norm(), 3));
-  double init_acc = start_acc.norm();
-  //double init_acc = singul * (start_vel.transpose() * start_acc)(0, 0) / start_vel.norm();
+  double init_acc = singul * (start_vel.transpose() * start_acc)(0, 0) / start_vel.norm();
+  // @ROCY: not for reverse moving,
+  // double init_acc = start_acc.norm();
+
   Eigen::Vector2d init_input(init_steer, init_acc);
   
   replan_init_state = init_state;
   start_state_ = init_state;
   start_ctrl_  = init_input; 
 }
-
 
 // use kinodynamic a* to generate a path
 bool TrajPlanner::getKinoPath(Eigen::Vector4d &end_state, bool first_search, const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
@@ -168,7 +183,7 @@ bool TrajPlanner::getKinoPath(Eigen::Vector4d &end_state, bool first_search, con
   start_state = start_state_;
   //std::cout << "start_state: " << start_state.transpose() << std::endl;  
   // init_ctrl << head_state_.steer, head_state_.acceleration;
-  init_ctrl << start_ctrl_;
+  init_ctrl = start_ctrl_;
   //std::cout << "init_ctrl: " << init_ctrl.transpose() << std::endl;
   //steer and acc
   //std::cout<< "end_state: "<<end_state.transpose()<<std::endl;

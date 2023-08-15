@@ -1,4 +1,3 @@
-# ******************** borregasave ******************** #
 module_config {
     module_library: "/apollo/bazel-bin/modules/shenlan/minco_mapping/libminco_mapping_component.so"
     components {
@@ -6,12 +5,6 @@ module_config {
         config {
             name: "shenlan_minco_mapping"
             config_file_path: "/apollo/modules/shenlan/conf/shenlan_conf.pb.txt"
-            # config_file_path: "/apollo/modules/shenlan/conf/shenlan_conf_borregasave.pb.txt"
-            # config_file_path: "/apollo/modules/shenlan/conf/shenlan_conf_huzhou.pb.txt"
-            # config_file_path: "/apollo/modules/shenlan/conf/shenlan_conf_sanfrancisco.pb.txt"
-            # config_file_path: "/apollo/modules/shenlan/conf/shenlan_conf_town01.pb.txt"
-            # config_file_path: "/apollo/modules/shenlan/conf/shenlan_conf_town04.pb.txt"
-            # config_file_path: "/apollo/modules/shenlan/conf/shenlan_conf_town10.pb.txt"
             readers {
               channel: "/apollo/localization/pose",
             }
@@ -20,7 +13,7 @@ module_config {
               channel: "/apollo/sensor/velodyne128/compensator/PointCloud2"
               # huzhou
               # channel: "/apollo/sensor/lidar/compensator/PointCloud2"
-              # carla
+              # carla/svl
               # channel: "/apollo/sensor/lidar128/compensator/PointCloud2"
             }  
         }

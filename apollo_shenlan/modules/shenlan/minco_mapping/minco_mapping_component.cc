@@ -220,11 +220,11 @@ void MincoMappingShenlanComponent::OdomCallback(const std::shared_ptr<apollo::lo
     // std::cout << "+++++++++++++odomcb++++++++++++++++ " << std::endl;
 
     Eigen::Vector3d center_pos(msg->pose().position().x(), msg->pose().position().y(), msg->pose().position().z());
-    //std::cout << "center_pos: " << center_pos << std::endl;
+    // std::cout << "center_pos: " << center_pos << std::endl;
 
-    //REAR AXIS CENTER IN APOLLO IS Y / IN ROS IS X
+    // @ROCY: rear axis center in apollo is y, in ros is x
     Eigen::Vector3d pos2center(-RFSM.car_d_cr_x_, -RFSM.car_d_cr_y_, 0);
-    //std::cout << "pos2center: " << pos2center << std::endl;
+    // std::cout << "pos2center: " << pos2center << std::endl;
 
     Eigen::Quaterniond quaternion(msg->pose().orientation().qw(), msg->pose().orientation().qx(), 
                                   msg->pose().orientation().qy(), msg->pose().orientation().qz());
@@ -240,13 +240,13 @@ void MincoMappingShenlanComponent::OdomCallback(const std::shared_ptr<apollo::lo
     double cur_vx_ = msg->pose().linear_velocity().x();
     double cur_vy_ = msg->pose().linear_velocity().y();
     RFSM.cur_vel_ = std::sqrt(cur_vx_ * cur_vx_ + cur_vy_ * cur_vy_);
-    //std::cout << "RFSM.cur_vel_: " << RFSM.cur_vel_ << std::endl;
+    // std::cout << "RFSM.cur_vel_: " << RFSM.cur_vel_ << std::endl;
 
-    //Eigen::Vector3d eulerAngle = quaternion.matrix().eulerAngles(0,1,2);
+    // Eigen::Vector3d eulerAngle = quaternion.matrix().eulerAngles(0,1,2);
     RFSM.cur_yaw_ = msg->pose().heading();//eulerAngle(2);
     //std::cout << "RFSM.cur_yaw_: " << RFSM.cur_yaw_ << std::endl;
 
-    // USE FOR setInitStateAndInput(replan_start_time, replan_init_state, cur_yaw_, cur_vel_, start_pos_, start_vel_, start_acc_);
+    // @ROCY: use for setInitStateAndInput(replan_start_time, replan_init_state, cur_yaw_, cur_vel_, start_pos_, start_vel_, start_acc_);
     Eigen::Vector3d linear_velocity(msg->pose().linear_velocity().x(), msg->pose().linear_velocity().y(), msg->pose().linear_velocity().z());
     Eigen::Vector3d linear_acceleration(msg->pose().linear_acceleration().x(), msg->pose().linear_acceleration().y(), msg->pose().linear_acceleration().z());
     RFSM.start_pos_ = center_pos.head(2);
@@ -430,7 +430,7 @@ void MincoMappingShenlanComponent::calcMinco2ADC(const std::shared_ptr<apollo::p
     traj_msg->mutable_header()->set_timestamp_sec(timestamp);
     traj_msg->mutable_header()->set_module_name("planning");
     traj_msg->mutable_header()->set_sequence_num(seq_num_adc);
-
+    
     for(int i = 0; i < (int)RFSM.planner_ptr_->kino_trajs_.size(); i++)
     {
         if (RFSM.planner_ptr_->kino_trajs_.at(i).singul == 1)
@@ -445,78 +445,85 @@ void MincoMappingShenlanComponent::calcMinco2ADC(const std::shared_ptr<apollo::p
     // there is only one traj in ADCtrajectory
     for(int i = 0; i < (int)RFSM.planner_ptr_->kino_trajs_.size(); i++)
     {
-        // GET EVERY POINT POSITION
+        // @ROCY: get evert point position
         Eigen::MatrixXd positions = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getPositions();
         //std::cout << "positions: " << positions << std::endl;
 
-        // GET EVERY POINT DURATION
+        // @ROCY: get every point duration
         Eigen::VectorXd durations = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getDurations();
         //std::cout << "durations: " << durations << std::endl;
 
-        // SET TOTAL PATH TIME
+        // @ROCY: set_total_path_time
         // double totalduration = RFSM.planner_ptr_->traj_container_.singul_traj.at(i).duration;
         double totalduration = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getTotalDuration();
         traj_msg->set_total_path_time(totalduration);
 
-        // SET TOTAL LENGTH
+        // @ROCY: set_total_path_length
         // traj_msg->set_total_path_length(0);
         
-        // REMOVE LAST POINT FOR SAFETY
-        for (int j = 0; j < positions.cols() -1 ; j ++)
+        // @ROCY: REMOVE LAST POINT FOR SAFETY
+        for (int j = 0; j < positions.cols() -1; j ++)
         {
             // t0 = t0 + durations(j);
             t1 = t1 + durations(j);
             // std::cout << "t1: " << t1 << std::endl;
             apollo::common::PathPoint point;
 
-            // SET POINT POSITION
+            // @ROCY: set point positon
             point.set_x(positions(0, j));
             point.set_y(positions(1, j));
             point.set_z(0);
 
-            // SET S = accumulated distance from beginning of the path
+            // @ROCY: set_s = accumulated distance from beginning of the path
             // s = s + (positions(j) - positions(j+1)).abs() 
             // point.set_s(s)
 
-            // SET THETA = direction on the x-y plane
+            // @ROCY: set_theta = direction on the x-y plane
             double angle = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getAngle(t1);
             // std::cout << "angle: " << angle << std::endl;
             point.set_theta(angle); //localization.pose.heading = The heading is zero when the car is facing East and positive when facing North.
             
-            // SET KAPPA = curvature on the x-y planning
+            // @ROCY: set_kappa = curvature on the x-y planning
             double curv = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getCurv(t1);
             // std::cout << "curv: " << curv << std::endl;
             point.set_kappa(curv); //curvature = tan(radians(carsteer / 100 * degrees(max_steer_)) / carsteer_ratio) / carwheel_base = tan()
 
-            // SET DKAPPA = derivative of kappa w.r.t s.(in planner, dkappa is v)
+            // @ROCY: set_ddkappa = derivative of kappa w.r.t s.(in planner, dkappa is v)
             // point.set_dkappa(dcurv); 
 
-            // SET DDKAPPA = derivative of derivative of kappa w.r.t s.(in planner, dkappa is a)
+            // @ROCY: SET DDKAPPA = derivative of derivative of kappa w.r.t s.(in planner, dkappa is a)
             // point.set_ddkappa(ddcurv); 
           
             auto traj_point = traj_msg->add_trajectory_point();
 
-            // SET PATH POINT
+            // @ROCY: set path point
             traj_point->mutable_path_point()->CopyFrom(point);
 
-            // SET V = linear velocity
+            // @ROCY: set_v = linear velocity
             double vel = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getVel(t1);
             // std::cout << "vel: " << vel << std::endl;
             traj_point->set_v(vel);
 
-            // SET A = linear acceleration
-            double acc = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getAcc(t1);
+            // @ROCY: set_a = linear acceleration
+            double acc = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj. getAcc(t1);
             // std::cout << "acc: " << acc << std::endl;
             traj_point->set_a(acc); 
  
-            // SET RELATIVE TIME = relative time from beginning of the trajectory
+            // @ROCY: set_relative_time = relative time from beginning of the trajectory
             traj_point->set_relative_time(t1);
 
-            // SET DA = longitudinal jerk
+            // @ROCY: set_da = longitudinal jerk
             // traj_point->set_da();
 
-            // SET STEER = The angle between vehicle front wheel and vehicle longitudinal axis
-            // traj_point->set_steer();
+            // @ROCY: set_steer = The angle between vehicle front wheel and vehicle longitudinal axis
+            Eigen::Vector2d vel_ = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getdSigma(t1);
+            Eigen::Vector2d acc_ = RFSM.planner_ptr_->traj_container_.singul_traj[i].traj.getddSigma(t1);
+            int singul = RFSM.planner_ptr_->kino_trajs_.at(i).singul;
+            Eigen::Matrix2d B;
+            B << 0, -1,
+                 1,  0;
+            double steer = atan(singul * (acc_.transpose() * B * vel_)(0, 0) * RFSM.car_wheelbase_ / pow(vel_.norm(), 3));
+            traj_point->set_steer(steer);
         }
         
         // there is only one traj in ADCtrajectory

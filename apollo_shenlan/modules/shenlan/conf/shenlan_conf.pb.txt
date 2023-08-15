@@ -65,7 +65,7 @@ mapping_conf {
     lidar_height: 2.3
 
     # (m) obs_low/hight + lidar_height is lazer scan range
-    obs_low: -2.1
+    obs_low: -2.0
     obs_high: 0
 
     # (m^2) surround car
@@ -74,6 +74,9 @@ mapping_conf {
 
 replanfsm_conf {
     # (m) target to map center
+    # target_x: 5
+    # target_y: -92
+
     target_x: -18
     target_y: -380
 
@@ -116,8 +119,9 @@ kinoastar_conf {
     # singul > 0, g +=  arc * traj_forward_penalty
     traj_forward_penalty: 1.0
 
-    # singul <= 0, g +=  arc * traj_back_penalty
+    # singul < 0, g +=  arc * traj_back_penalty
     traj_back_penalty: 2.5
+
     traj_gear_switch_penalty: 15.0
     traj_steer_penalty: 0.5
     traj_steer_change_penalty: 0.0

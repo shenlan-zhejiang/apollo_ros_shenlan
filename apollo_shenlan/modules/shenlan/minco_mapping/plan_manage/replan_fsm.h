@@ -60,6 +60,7 @@ public:
     double cur_yaw_, cur_vel_;
     Eigen::Vector2d start_pos_, start_vel_, start_acc_;
     int car_id_;
+    double car_wheelbase_;
     double car_d_cr_, car_d_cr_x_, car_d_cr_y_;
     double start_world_time_;
     double target_x_, target_y_, target_yaw_, target_vel_;

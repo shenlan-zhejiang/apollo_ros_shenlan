@@ -328,6 +328,7 @@ docker-compose up --build -d
 ./simulator/simulator
 # 点击 go offline 刷新传感器
 
+cd SORA-SVL
 docker-compose up
 
 # 点击 go online

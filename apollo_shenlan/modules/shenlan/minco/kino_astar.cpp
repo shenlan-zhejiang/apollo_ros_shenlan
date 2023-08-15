@@ -506,7 +506,7 @@ namespace path_searching
       // to decide the near end
       bool reach_horizon = (cur_node->state.head(2) - start_state_.head(2)).norm() >= horizon_;
       // double t1 = ros::Time::now().toSec();
-      if((cur_node->state.head(2) - end_state_.head(2)).norm()<15.0&& initsearch){
+      if((cur_node->state.head(2) - end_state_.head(2)).norm() < 15.0 && initsearch){
     
         is_shot_sucess(cur_node->state,end_state_.head(3), buf_msg);
       }
@@ -1129,7 +1129,7 @@ namespace path_searching
 
   }
 
-  // This function is used to find the sinularity point of the kinodynamic trajectory
+  // This function is used to find the singularity point of the kinodynamic trajectory
   /*"direction_change_idx_" is used in later code, which stores the index of the singularity point*/
   // attention: direction_change_idx_ not only includes the index of the direction change point, 
   // but also includes the indexes of the first point and the final point

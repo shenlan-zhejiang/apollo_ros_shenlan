@@ -28,6 +28,8 @@ void ReplanFSM::init(apollo::shenlan::ShenlanConf &shenlan_conf)
     car_d_cr_x_ = shenlan_conf.vehicle_conf().car_d_cr_x();//0;
     car_d_cr_y_ = shenlan_conf.vehicle_conf().car_d_cr_y();//1.3864;
     car_id_ = shenlan_conf.vehicle_conf().car_id();//0;
+    car_wheelbase_ = shenlan_conf.vehicle_conf().car_wheelbase();
+
     imu2car_qw_ = shenlan_conf.vehicle_conf().imu2car_qw();
     imu2car_qx_ = shenlan_conf.vehicle_conf().imu2car_qx();
     imu2car_qy_ = shenlan_conf.vehicle_conf().imu2car_qy();
@@ -161,7 +163,7 @@ int ReplanFSM::execFSM(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &
 
             Eigen::Vector4d replan_init_state;
 
-            planner_ptr_->setInitStateAndInput(replan_start_time, replan_init_state, cur_vel_, cur_yaw_, start_pos_, start_vel_, start_acc_);
+            planner_ptr_->setInitStateAndInput(replan_start_time, replan_init_state, cur_yaw_, start_pos_, start_vel_, start_acc_);
             
             init_state_ = replan_init_state;
 
@@ -244,7 +246,7 @@ int ReplanFSM::execFSM(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &
             std::cout << "case4 EXEC_TRAJ" << std::endl;
             auto t_now = apollo::cyber::Time::Now().ToSecond();
 
-            // EXEC_TRAJ BY POSITION OR BY TIME 
+            // @ROCY: EXEC_TRAJ BY POSITION OR BY TIME 
             if(((cur_pos_ - init_state_.head(2)).norm() > exec_positon_ || (t_now - start_world_time_) > exec_time_) && (cur_pos_ - end_pt_.head(2)).norm() > 5.0 /*&& !collision_with_othercars_*/)
             {
                 // std::cout << "--------------------condition1: "<< std::endl;
