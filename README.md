@@ -4,13 +4,25 @@
 
 ## 1.apollo_shenlan
 
++ apollo_shenlan是基于APOLLO的轻量级自动驾驶系统，实现的功能有实时栅格地图构建、前端路径规划、后端轨迹优化等，主要包括shenlan模块、bridge模块
+
+  + shenlan模块用于建图规划，包括mapping组件、minco组件、minco_mapping组件
+
+  + bridge模块用于跨平台通信，包括bridge_sender组件、bridge_receiver组件
+
+<img src="README.assets/apollo_shenlan.png" alt="apollo_shenlan" style="zoom:30%;" />
+
+
+
 ### 1.1.添加第三方库
+
+1. shenlan模块依赖于ompl、osqp2、oqspeigen第三方库，ompl需要在docker内编译安装，osqp2和oqspeigen直接导入即可使用
 
 1. 复制`apollo_shenlan/third_party`、`apollo_shenlan/third_party_shenlan`到`apollo`目录下
 
 2. 对照`apollo_shenlan/tools/workspace.bzl`在`apollo/tools/workspace.bzl`中添加内容
 
-3. 在docker内编译OMPL库
+3. 在docker内编译ompl库
 
    ```sh
    cd /apollo/third_party_shenlan/repo/ompl/build/
@@ -22,6 +34,8 @@
    sudo ldconfig
    ```
 
+
+
 ### 1.2.shenlan模块
 
 1. 复制`apollo_shenlan/modules/shenlan`、`apollo_shenlan/modules/canbus`、`apollo_shenlan/modules/dreamview`到`apollo/modules`目录下，在docker内编译shenlan
@@ -30,53 +44,67 @@
    ./apollo.sh build_opt shenlan
    ```
 
-2. mapping模块
+2. conf配置文件
+
+   + `modules/shenlan/conf`文件夹下提供了不同场景的配置参数，包括车型、建图、状态机、路径规划、轨迹优化的参数
+   + 场景包括：实车的huzhou，SVL仿真的borregasave、sanfrancisco、shalun，CARLA仿真的town01、town04、town10
+   + 使用方法：将shenlan_conf_xxx.pb.txt内的全部内容复制到shenlan_conf.pb.txt内，并修改mapping.dag和minco_mapping.dag中的点云话题
+
+3. mapping组件
 
    + 用于单独建图，需开启transform、lidar、gnss/imu、localizaiton模块
    + 读入话题(在mapping.dag中修改)：
      + 位姿：/apollo/localization/pose
      + 点云：/apollo/sensor/lidar/compensator/PointCloud2
-   + 写出话题(在mapping_component.cc中修改)：
+   + 输出话题(在mapping_component.cc中修改)：
      + 融合位姿点云(可视化)：/apollo/shenlan/mapping/pointcloud
      + 占据栅格(可视化)：/apollo/shenlan/mapping/gird_map
      + 栅格状态：/apollo/shenlan/mapping/occupancy
 
    ```sh
    cyber_launch start modules/shenlan/mapping/launch/mapping.launch
+   
+   # 或点击dreamview中ApolloShenlan调试模式下的Mapping按钮
    ```
 
-3. minco模块
+4. minco组件
 
    + 用于单独规划，需开启transform、gnss/imu、localizaiton、control、canbus模块
    + 读入话题(在minco.dag中修改)：
      + 位姿：/apollo/localization/pose
      + 栅格状态：/apollo/shenlan/mapping/occupancy
-   + 写出话题(在minco_component.cc中修改)：
+   + 输出话题(在minco_component.cc中修改)：
      + kino轨迹(可视化)：/apollo/shenlan/minco/kino_traj
      + minco轨迹(可视化)：/apollo/shenlan/minco/minco_traj
      + 规划数据：/apollo/planning
 
    ```sh
    cyber_launch start modules/shenlan/minco/launch/minco.launch
+   
+   # 或点击dreamview中ApolloShenlan调试模式下的Minco按钮
    ```
 
-4. minco_mapping模块
+5. minco_mapping组件
 
    + 用于同时建图规划，需开启transform、lidar、gnss/imu、localizaiton、control、canbus模块
    + 读入话题(在minco_mapping.dag中修改)：
      + 位姿：/apollo/localization/pose
      + 点云：/apollo/sensor/lidar/compensator/PointCloud2
-   + 写出话题(在minco_mapping_component.cc中修改)：
+   + 输出话题(在minco_mapping_component.cc中修改)：
      + 融合位姿点云(可视化)：/apollo/shenlan/mapping/pointcloud
      + 占据栅格(可视化)：/apollo/shenlan/mapping/gird_map
      + kino轨迹(可视化)：/apollo/shenlan/minco/kino_traj
      + minco轨迹(可视化)：/apollo/shenlan/minco/minco_traj
      + 原始规划数据：/apollo/shenlan/minco/mpc_trajectory
      + 规划数据：/apollo/planning
-   
+
    ```sh
    cyber_launch start modules/shenlan/minco_mapping/launch/minco_mapping.launch
+   
+   # 或点击dreamview中ApolloShenlan调试模式下的MincoMapping按钮
    ```
+
+
 
 ### 1.3.bridge模块
 
@@ -86,27 +114,31 @@
    ./apollo.sh build_opt bridge
    ```
 
-2. bridge_sender模块
+2. bridge_sender组件
 
-   + 用于apollo向ros发送数据，需配合apollo2ros使用
-   + 配置文件对应bridge_sender.launch、bridge_sender.dag、udp_bridge_sender_89xx_xxx.pb.txt
+   + 用于APOLLO向ROS发送数据，需配合ROS的apollo2ros模块使用
+   + 配置文件对应launch/bridge_sender.launch、dag/bridge_sender.dag、conf/udp_bridge_sender_89xx_xxx.pb.txt
    + 一个dag可以同时发送多个数据
    + 新话题需要在udp_bridge_sender_component.h和udp_bridge_sender_component.cc中注册
 
    ```sh
    cyber_launch start modules/bridge/launch/bridge_sender.launch
+   
+   # 或点击dreamview中ApolloShenlan调试模式下的Bridge按钮
    ```
 
-3. bridge_receiver模块
+3. bridge_receiver组件
 
-   + 用于apollo接收ros的数据，需配合ros2apollo使用
-   + 配置文件对应bridge_receiver.launch、bridge_receiver_89xx_xxx.dag、udp_bridge_receiver_89xx_xxx.pb.txt
+   + 用于APOLLO接收ROS的数据，需配合ROS的ros2apollo模块使用
+   + 配置文件对应launch/bridge_receiver.launch、dag/bridge_receiver_89xx_xxx.dag、conf/udp_bridge_receiver_89xx_xxx.pb.txt
    + 一个dag只能接收一个数据，使用bridge_receiver.launch启动多个dag可以同时接受多个数据
    + 新话题需要在udp_bridge_receiver_component.h和udp_bridge_receiver_component.cc中注册
 
    ```sh
    cyber_launch start modules/bridge/launch/bridge_receiver.launch
    ```
+
+
 
 ### 1.4.注意事项
 
@@ -115,6 +147,15 @@
 
 
 ## 2.apollo_ros_bridge
+
++ apollo_ros_bridge是基于ROS的跨平台实时通信程序，主要包括apollo2ros模块、ros2apollo模块
+  + apollo2ros模块用于ROS接收APOLLO的数据，需配合APOLLO的bridge_sender组件使用
+  + ros2apollo模块用于ROS向APOLLO发送数据，需配合APOLLO的bridge_receiver组件使用
+  + RVIZ配合apollo2ros模块可以实现车辆位姿、点云、栅格地图、规划轨迹等数据的可视化
+
+<img src="README.assets/apollo_ros_bridge.jpg" alt="apollo_ros_bridge" style="zoom:30%;" />
+
+
 
 ### 2.1.安装protobuf
 
@@ -135,11 +176,13 @@
    protoc xxx.proto --cpp_out=./
    ```
 
-### 2.2.apollo2ros
 
-+ tfstatic.sh用于发布lidar到agent_0的静态坐标关系
+
+### 2.2.apollo2ros模块
+
 + tf为agent_0到map的动态坐标关系
-+ lidar为点云数据，坐标系为lidar，需配合tf和tfstatic使用
++ odometry为车辆位姿数据，坐标系为agent_0
++ lidar为点云数据，坐标系为lidar，需配合tf和tfstatic.sh使用，其中tfstatic.sh用于发布lidar到agent_0的静态坐标关系
 + pointcloud为融合姿点云，坐标系为map
 + gridmap为占据栅格，坐标系为map
 + kino为kino轨迹，坐标系为map
@@ -151,16 +194,18 @@ catkin_make
 source devel/setup.bash
 roslaunch apollo2ros xxx.launch
 
-# 或 
+# 或使用脚本启动
 echo "source ~/apollo_ros_shenlan/apollo_ros_bridge/apollo2ros/devel/setup.bash">> ~/.bashrc 
 source ~/.bashrc
 ./shfiles/apollo2ros/xxx.sh
 
-# 修改apollo2ros/src/launch/advanced_param.xml中的地图原点坐标，以配合rviz使用
+# 配合rviz使用，需要修改apollo2ros/src/launch/advanced_param.xml中的地图原点坐标，
 rviz -d xxx.rviz
 ```
 
-### 2.3.ros2apollo
+
+
+### 2.3.ros2apollo模块
 
 ```bash
 cd apollo_ros_bridge/ros2apollo
@@ -168,7 +213,7 @@ catkin_make
 source devel/setup.bash
 roslaunch ros2apollo xxx.launch
 
-# 或 
+# 或使用脚本启动
 echo "source ~/apollo_ros_shenlan/apollo_ros_bridge/ros2apollo/devel/setup.bash">> ~/.bashrc 
 source ~/.bashrc
 ./shfiles/ros2apollo/xxx.sh
@@ -177,6 +222,8 @@ source ~/.bashrc
 
 
 ## 3.planner_src
+
++ planner_src为APOLLO中的shenlan模块的ROS源码
 
 ```bash
 # 复制apollo_ros_shenlan/planner_src文件夹到主目录下
@@ -218,7 +265,7 @@ sudo apt-get install libgoogle-glog-dev
 cd planner_src/
 source devel/setup.bash
 roslaunch traj_planner swarm_apollo.launch
-# 或 ./planner.sh
+# 或使用脚本启动./planner.sh
 
 # 将apollo数据传入planner_src需关闭仿真时间
 rosparam set use_sim_time false
@@ -227,6 +274,10 @@ rosparam set use_sim_time false
 
 
 ## 4.carla_apollo_bridge_guardstrikelab
+
++ carla_apollo_bridge_guardstrikelab用于配置CARLA仿真器
+
+
 
 ### 4.1.github
 
@@ -237,6 +288,8 @@ https://github.com/guardstrikelab/apollo.git
 https://github.com/guardstrikelab/carla_apollo_bridge.git
 ```
 
+
+
 ### 4.2.run apollo
 
 ```sh
@@ -245,6 +298,8 @@ docker start carla_apollo_7.0_dev_shenlan
 ./Apollo_7.0/docker/scripts/dev_into.sh
 ./apollo.sh build_opt
 ```
+
+
 
 ### 4.3.run carla simulator (server)
 
@@ -257,8 +312,10 @@ docker container rename carla-simulator-1 carla_simulator_9.14
 
 # 进入 carla server
 docker start carla_simulator_9.14
-# 或 ./9_simulator_carla.sh
+# 或使用脚本启动./9_simulator_carla.sh
 ```
+
+
 
 ### 4.4.run carla cyber (client)
 
@@ -274,13 +331,13 @@ docker exec -ti carla_cyber_9.14 bash
 # 进入 carla client
 docker start carla_cyber_9.14
 docker exec -ti carla_cyber_9.14 bash
-# 或 ./14_cyber_carla.sh
+# 或使用脚本启动./14_cyber_carla.sh
 
 # 开启 carla bridge
 # 地图参数：carla_apollo_bridge_guardstrikelab/src/carla_cyber_bridge/config/settings.yaml
 cd /apollo/cyber/carla_bridge/
 python carla_cyber_bridge/bridge.py
-# 或 ./bridge.sh
+# 或使用脚本启动./bridge.sh
 # ps -elf | grep carla_cyber_bridge/bridge.py
 
 # 开启 carla spawn
@@ -293,15 +350,17 @@ python carla_spawn_objects/carla_spawn_objects.py
 # 开启 carla manual
 cd /apollo/cyber/carla_bridge/carla_python/examples/
 python manual_control.py 
-# 或 ./manual.sh
+# 或使用脚本启动./manual.sh
 ```
+
+
 
 ### 4.5.teleop and map
 
 ```sh
 # 开启 apollo teleop
 ./bazel-bin/moudules/canbus/tools/teleop 
-# 或 ./teleop.sh
+# 或使用脚本启动./teleop.sh
 
 # 配置 apollo map
 # 将base_map.bin生成为sim_map.bin
@@ -316,6 +375,8 @@ python manual_control.py
 
 
 ## 5.SORA-SVL
+
++ SORA-SVL用于配置SVL仿真器
 
 ```sh
 # 配置仿真器
