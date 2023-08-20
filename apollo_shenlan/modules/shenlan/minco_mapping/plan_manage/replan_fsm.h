@@ -57,7 +57,7 @@ public:
     Eigen::Vector4d init_state_;
     Eigen::Vector4d end_pt_;
     Eigen::Vector2d cur_pos_;
-    double cur_yaw_, cur_vel_;
+    double cur_yaw_, cur_vel_, cur_z;
     Eigen::Vector2d start_pos_, start_vel_, start_acc_;
     int car_id_;
     double car_wheelbase_;

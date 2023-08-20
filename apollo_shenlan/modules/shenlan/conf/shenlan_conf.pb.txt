@@ -7,12 +7,12 @@ vehicle_conf {
     # agent_0
     car_id: 0
 
-    car_width: 2.5
+    car_width: 3.0
     car_length: 5.0
     car_wheelbase: 2.8
 
     # (deg) max steering angle
-    car_max_steering_angle: 35.0
+    car_max_steering_angle: 40.0
 
     # (m) rear axis center to car center, apollo (0, y), ros (x, 0)
     car_d_cr: 1.5
@@ -65,11 +65,11 @@ mapping_conf {
     lidar_height: 2.3
 
     # (m) obs_low/hight + lidar_height is lazer scan range
-    obs_low: -2.0
+    obs_low: -2.1
     obs_high: 0
 
     # (m^2) surround car
-    obs_circle: 25.0
+    obs_circle: 16.0
 }
 
 replanfsm_conf {
@@ -77,8 +77,11 @@ replanfsm_conf {
     # target_x: 5
     # target_y: -92
 
-    target_x: -18
-    target_y: -380
+    # target_x: -18
+    # target_y: -380
+
+    target_x: 6
+    target_y: -92
 
     # target_x: -1
     # target_y: -175
@@ -86,7 +89,7 @@ replanfsm_conf {
     # target_x: 30
     # target_y: -40
 
-    target_yaw: -0.3
+    target_yaw: -0.2
 
     target_vel: 0.0
 
@@ -94,7 +97,7 @@ replanfsm_conf {
     exec_positon: 10.0
 
     # or EXEC_TRAJ before t_now - start_world_time_ > exec_time
-    exec_time: 2.0
+    exec_time: 1.0
 }
 
 kinoastar_conf {
@@ -138,7 +141,7 @@ kinoastar_conf {
     velocity_resolution: 1.0
 
     # the truncated path list includes the points along the path
-    truncate_len: 30.0
+    truncate_len: 20.0
 }
 
 trajplanner_conf {
@@ -170,7 +173,7 @@ trajplanner_conf {
     surround_clearance: 1.0
 
     # dynamic limits
-    max_vel: 4.0
+    max_vel: 5.0
     min_vel: 0
     max_acc: 6.0
     min_acc: -6.0
@@ -179,5 +182,5 @@ trajplanner_conf {
     max_cur: 0.3
 
     # safe margin, car_width/length += 2 * half_margin
-    half_margin: 1.0
+    half_margin: 2.0
 }

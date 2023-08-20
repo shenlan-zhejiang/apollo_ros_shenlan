@@ -1,0 +1,32 @@
+<launch>
+
+  <arg name="car_id" />
+  <arg name="status_topic" />
+  <arg name="odom_topic" />
+  <arg name="traj_topic" />  
+  <arg name="cmd_topic" />  
+  <arg name="pred_path_topic" />
+  <arg name="following_path_topic" />
+  <arg name="reference_path_topic" />
+  <arg name="true_odom_topic" />
+  <arg name="track_err_topic" />
+  <arg name="debug_pose_topic" />
+
+  <param name="use_sim_time" value="true"/>
+  <rosparam command="load" file="$(find mpc)/config/param.yaml" />
+
+  <node pkg="mpc" name="car_$(arg car_id)_mpc_controller_node" type="mpc_controller_node" output="screen">
+    <param name="mpc/car_id" value="$(arg car_id)" />
+    <remap from="status" to="$(arg status_topic)"/>
+    <remap from="odom" to="$(arg odom_topic)"/>
+    <remap from="traj" to="$(arg traj_topic)"/>
+    <remap from="cmd" to="$(arg cmd_topic)"/>
+    <remap from="/predict_path" to="$(arg pred_path_topic)"/>
+    <remap from="/following_path" to="$(arg following_path_topic)"/>
+    <remap from="/reference_path" to="$(arg reference_path_topic)"/>
+    <remap from="/true_odom" to="$(arg true_odom_topic)"/>
+    <remap from="/track_err" to="$(arg track_err_topic)"/>
+    <remap from="/debug_pose" to="$(arg debug_pose_topic)"/>
+  </node>
+  
+ </launch>

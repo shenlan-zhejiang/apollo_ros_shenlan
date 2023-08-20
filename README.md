@@ -10,10 +10,6 @@
 
   + bridge模块用于跨平台通信，包括bridge_sender组件、bridge_receiver组件
 
-<img src="README.assets/apollo_shenlan.png" alt="apollo_shenlan" style="zoom:30%;" />
-
-
-
 ### 1.1.添加第三方库
 
 1. shenlan模块依赖于ompl、osqp2、oqspeigen第三方库，ompl需要在docker内编译安装，osqp2和oqspeigen直接导入即可使用
@@ -33,8 +29,6 @@
    sudo cp -r /apollo/third_party_shenlan/ompl/lib/* /opt/apollo/sysroot/lib/
    sudo ldconfig
    ```
-
-
 
 ### 1.2.shenlan模块
 
@@ -104,8 +98,6 @@
    # 或点击dreamview中ApolloShenlan调试模式下的MincoMapping按钮
    ```
 
-
-
 ### 1.3.bridge模块
 
 1. 替换`apollo_shenlan/modules/bridge`到`apollo/modules/bridge`，在docker内编译bridge
@@ -138,24 +130,17 @@
    cyber_launch start modules/bridge/launch/bridge_receiver.launch
    ```
 
-
-
 ### 1.4.注意事项
 
 + 若cyber_launch无法通过ctrl+c关闭，则在终端中输入`kill -9 xxx` (xxx为 cyber_launch的进程数)， 可输入 `ps -elf | grep mainboard`获取进程数
-
-
 
 ## 2.apollo_ros_bridge
 
 + apollo_ros_bridge是基于ROS的跨平台实时通信程序，主要包括apollo2ros模块、ros2apollo模块
   + apollo2ros模块用于ROS接收APOLLO的数据，需配合APOLLO的bridge_sender组件使用
+  + apollo2ros模块配合rviz可以实现车辆位姿、点云、栅格地图、规划轨迹等数据的可视化
+  
   + ros2apollo模块用于ROS向APOLLO发送数据，需配合APOLLO的bridge_receiver组件使用
-  + RVIZ配合apollo2ros模块可以实现车辆位姿、点云、栅格地图、规划轨迹等数据的可视化
-
-<img src="README.assets/apollo_ros_bridge.jpg" alt="apollo_ros_bridge" style="zoom:30%;" />
-
-
 
 ### 2.1.安装protobuf
 
@@ -176,17 +161,15 @@
    protoc xxx.proto --cpp_out=./
    ```
 
-
-
 ### 2.2.apollo2ros模块
 
 + tf为agent_0到map的动态坐标关系
-+ odometry为车辆位姿数据，坐标系为agent_0
++ tf_marker为车辆位姿数据，坐标系为agent_0
 + lidar为点云数据，坐标系为lidar，需配合tf和tfstatic.sh使用，其中tfstatic.sh用于发布lidar到agent_0的静态坐标关系
 + pointcloud为融合姿点云，坐标系为map
 + gridmap为占据栅格，坐标系为map
-+ kino为kino轨迹，坐标系为map
-+ minco为minco轨迹，坐标系为map
++ kino_marker为kino轨迹，坐标系为map
++ minco_marker为minco轨迹，坐标系为map
 
 ```sh
 cd apollo_ros_bridge/apollo2ros
@@ -197,13 +180,11 @@ roslaunch apollo2ros xxx.launch
 # 或使用脚本启动
 echo "source ~/apollo_ros_shenlan/apollo_ros_bridge/apollo2ros/devel/setup.bash">> ~/.bashrc 
 source ~/.bashrc
-./shfiles/apollo2ros/xxx.sh
+./apollo_ros_bridge/shfiles/apollo2ros/xxx.sh
 
 # 配合rviz使用，需要修改apollo2ros/src/launch/advanced_param.xml中的地图原点坐标，
-rviz -d xxx.rviz
+rviz -d apollo_ros_bridge/shfiles/apollo2ros.rviz
 ```
-
-
 
 ### 2.3.ros2apollo模块
 
@@ -216,10 +197,8 @@ roslaunch ros2apollo xxx.launch
 # 或使用脚本启动
 echo "source ~/apollo_ros_shenlan/apollo_ros_bridge/ros2apollo/devel/setup.bash">> ~/.bashrc 
 source ~/.bashrc
-./shfiles/ros2apollo/xxx.sh
+./apollo_ros_bridge/shfiles/ros2apollo/xxx.sh
 ```
-
-
 
 ## 3.planner_src
 
@@ -271,13 +250,9 @@ roslaunch traj_planner swarm_apollo.launch
 rosparam set use_sim_time false
 ```
 
-
-
 ## 4.carla_apollo_bridge_guardstrikelab
 
 + carla_apollo_bridge_guardstrikelab用于配置CARLA仿真器
-
-
 
 ### 4.1.github
 
@@ -288,8 +263,6 @@ https://github.com/guardstrikelab/apollo.git
 https://github.com/guardstrikelab/carla_apollo_bridge.git
 ```
 
-
-
 ### 4.2.run apollo
 
 ```sh
@@ -298,8 +271,6 @@ docker start carla_apollo_7.0_dev_shenlan
 ./Apollo_7.0/docker/scripts/dev_into.sh
 ./apollo.sh build_opt
 ```
-
-
 
 ### 4.3.run carla simulator (server)
 
@@ -314,8 +285,6 @@ docker container rename carla-simulator-1 carla_simulator_9.14
 docker start carla_simulator_9.14
 # 或使用脚本启动./9_simulator_carla.sh
 ```
-
-
 
 ### 4.4.run carla cyber (client)
 
@@ -353,8 +322,6 @@ python manual_control.py
 # 或使用脚本启动./manual.sh
 ```
 
-
-
 ### 4.5.teleop and map
 
 ```sh
@@ -371,8 +338,6 @@ python manual_control.py
 ./scripts/generate_routing_topo_graph.sh \
 --map_dir /apollo/modules/map/data/san_francisco
 ```
-
-
 
 ## 5.SORA-SVL
 

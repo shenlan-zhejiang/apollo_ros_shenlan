@@ -1,0 +1,43 @@
+<launch>
+
+  <arg name="odom_topic" value="car/odom" />
+  <arg name="command_topic" value="car/ackermann_cmd" />
+  <arg name="wheel_base" value="0.322" />
+  <!-- <arg name="wheel_base" value="2.5" /> -->
+  <arg name="control_a" value="true" />
+
+  <node pkg="mpc" name="mpc" type="mpc" output="screen">
+    <remap from="~position_cmd" to="$(arg command_topic)"/>
+    <param name="mpc/du_threshold" value="0.1" type="double"/>
+    <param name="mpc/dt" value="0.01" type="double"/>
+    <param name="mpc/wheel_base" value="$(arg wheel_base)"/>
+    <param name="mpc/max_iter" value="3"  type="int"/>
+    <param name="mpc/predict_steps" value="120"  type="int" unless="$(arg control_a)"/>
+    <param name="mpc/predict_steps" value="100"  type="int" if="$(arg control_a)"/>
+    <param name="mpc/max_steer" value="0.4055"  type="double"/>
+    <param name="mpc/max_dsteer" value="0.1898"  type="double"/>
+    <param name="mpc/max_speed" value="0.5"  type="double"/>
+    <param name="mpc/min_speed" value="-0.5"  type="double"/>
+    <param name="mpc/max_accel" value="0.2"  type="double"/>
+    <param name="mpc/in_test" value="true"  type="bool"/>
+    <param name="mpc/control_a" value="$(arg control_a)"  type="bool"/>
+    <!-- <remap from="~odometry" to="$(arg odom_topic)"/> -->
+    <remap from="~odom_world" to="$(arg odom_topic)"/>
+  </node>
+   
+  <node pkg="kimatic_simulator" type="kimatic_simulator_node" name="kimatic_simulator_node" output="screen" required="true">
+    <remap from ="~command" to="$(arg command_topic)"/>
+    <param name="simulator/wheelbase" value="$(arg wheel_base)"/>
+    <param name="simulator/max_steer" value="0.4055"  type="double"/>
+    <param name="simulator/max_speed" value="0.5"  type="double"/>
+    <param name="simulator/min_speed" value="-0.5"  type="double"/>
+    <param name="simulator/control_a" value="false"  type="bool"/>
+    <!-- <param name="simulator/control_a" value="$(arg control_a)"  type="bool"/> -->
+    <!-- <remap from="~odometry" to="true_odom"/> -->
+    <remap from="~odometry" to="$(arg odom_topic)"/>
+  </node>
+
+    <!-- rviz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mpc)/rviz/default.rviz" required="true" />
+
+</launch>

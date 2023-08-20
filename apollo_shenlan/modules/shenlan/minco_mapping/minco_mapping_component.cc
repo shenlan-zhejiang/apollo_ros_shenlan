@@ -253,6 +253,9 @@ void MincoMappingShenlanComponent::OdomCallback(const std::shared_ptr<apollo::lo
     RFSM.start_vel_ = linear_velocity.head(2);
     RFSM.start_acc_ = linear_acceleration.head(2);
 
+    // @ROCY: for trajs visualization
+    RFSM.cur_z = msg->pose().position().z();
+
     /*
     static tf::TransformBroadcaster br;
     tf::Transform transform;
@@ -327,7 +330,7 @@ void MincoMappingShenlanComponent::displayKinoPath(const std::shared_ptr<apollo:
             //std::cout << "111111111111kino_pt: " << pt << std::endl;
             position.set_x(pt(0));
             position.set_y(pt(1));
-            position.set_z(0.1);
+            position.set_z(RFSM.cur_z);
             auto pose = kino_msg->add_pose();
             pose->mutable_position()->CopyFrom(position);
             pose->mutable_orientation()->CopyFrom(quaternion); 
@@ -359,10 +362,13 @@ void MincoMappingShenlanComponent::displayMincoTraj(const std::shared_ptr<apollo
             // std::cout << "222222222222minco_pt: " << pt << std::endl;
             position.set_x(pt(0));
             position.set_y(pt(1));
-            position.set_z(0.1);
+            position.set_z(RFSM.cur_z);
             auto pose = minco_msg->add_pose();
             pose->mutable_position()->CopyFrom(position);
             pose->mutable_orientation()->CopyFrom(quaternion); 
+
+            double heading = RFSM.planner_ptr_->traj_container_.singul_traj.at(i).traj.getAngle(t);
+            pose->set_heading(heading);
         }
     }
     auto timestamp = apollo::cyber::Time::Now().ToSecond();

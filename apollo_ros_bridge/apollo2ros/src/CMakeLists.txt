@@ -6,7 +6,7 @@ ADD_COMPILE_OPTIONS(-std=c++11 )
 ADD_COMPILE_OPTIONS(-std=c++14 )
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -pthread -I/usr/local/include -L/usr/local/lib -lprotobuf")
 
-#find_package(Eigen3 REQUIRED)
+find_package(Eigen3 REQUIRED)
 #find_package(PCL 1.7 REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
@@ -16,7 +16,6 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
 )
 
-
 catkin_package(
  LIBRARIES src
  #  DEPENDS system_lib
@@ -25,6 +24,7 @@ catkin_package(
 include_directories( 
     SYSTEM 
     ${catkin_INCLUDE_DIRS}
+    ${EIGEN3_INCLUDE_DIRS}
     /usr/local/include
 )
 
@@ -38,7 +38,7 @@ add_executable( gridmap
 
 target_link_libraries( gridmap
     ${catkin_LIBRARIES}
-    /usr/local/lib
+    # /usr/local/lib
     protobuf
     pthread
     )
@@ -51,7 +51,7 @@ add_executable( pointcloud
 
 target_link_libraries( pointcloud
     ${catkin_LIBRARIES}
-    /usr/local/lib
+    # /usr/local/lib
     protobuf
     pthread
     )
@@ -64,7 +64,7 @@ add_executable( lidar
 
 target_link_libraries( lidar
     ${catkin_LIBRARIES}
-    /usr/local/lib
+    # /usr/local/lib
     protobuf
     pthread
     )
@@ -77,7 +77,7 @@ add_executable( tf
 
 target_link_libraries( tf
     ${catkin_LIBRARIES}
-    /usr/local/lib
+    # /usr/local/lib
     protobuf
     pthread
     )
@@ -90,7 +90,7 @@ add_executable( odometry
 
 target_link_libraries( odometry
     ${catkin_LIBRARIES}
-    /usr/local/lib
+    # /usr/local/lib
     protobuf
     pthread
     )
@@ -103,7 +103,7 @@ add_executable( kino
 
 target_link_libraries( kino
     ${catkin_LIBRARIES}
-    /usr/local/lib
+    # /usr/local/lib
     protobuf
     pthread
     )
@@ -116,7 +116,60 @@ add_executable( minco
 
 target_link_libraries( minco
     ${catkin_LIBRARIES}
-    /usr/local/lib
+    # /usr/local/lib
+    protobuf
+    pthread
+    )
+
+add_executable( kino_marker 
+    kino_marker.cpp
+    ${PROTO_SRC}
+    bridge/bridge_header.cc
+    )
+
+target_link_libraries( kino_marker
+    ${catkin_LIBRARIES}
+    # /usr/local/lib
+    protobuf
+    pthread
+    )
+
+add_executable( minco_marker 
+    minco_marker.cpp
+    ${PROTO_SRC}
+    bridge/bridge_header.cc
+    )
+
+target_link_libraries( minco_marker
+    ${catkin_LIBRARIES}
+    # /usr/local/lib
+    protobuf
+    pthread
+    )
+
+add_executable( odometry_marker 
+    odometry_marker.cpp
+    ${PROTO_SRC}
+    bridge/bridge_header.cc
+    )
+
+target_link_libraries( odometry_marker
+    ${catkin_LIBRARIES}
+    # /usr/local/lib
+    protobuf
+    pthread
+    )
+
+
+add_executable( tf_marker 
+    tf_marker.cpp
+    ${PROTO_SRC}
+    bridge/bridge_header.cc
+    )
+
+target_link_libraries( tf_marker
+    ${catkin_LIBRARIES}
+    # /usr/local/lib
     protobuf
     pthread
     )

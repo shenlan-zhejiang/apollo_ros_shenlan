@@ -83,12 +83,15 @@ void MincoShenlanComponent::OdomCallback(const std::shared_ptr<apollo::localizat
     RFSM.cur_yaw_ = msg->pose().heading();//eulerAngle(2);
     //std::cout << "RFSM.cur_yaw_: " << RFSM.cur_yaw_ << std::endl;
 
-    // @ROCY: use for setInitStateAndInput(replan_start_time, replan_init_state, cur_yaw_, cur_vel_, start_pos_, start_vel_, start_acc_);
+    // @ROCY: for setInitStateAndInput(replan_start_time, replan_init_state, cur_yaw_, cur_vel_, start_pos_, start_vel_, start_acc_);
     Eigen::Vector3d linear_velocity(msg->pose().linear_velocity().x(), msg->pose().linear_velocity().y(), msg->pose().linear_velocity().z());
     Eigen::Vector3d linear_acceleration(msg->pose().linear_acceleration().x(), msg->pose().linear_acceleration().y(), msg->pose().linear_acceleration().z());
     RFSM.start_pos_ = center_pos.head(2);
     RFSM.start_vel_ = linear_velocity.head(2);
     RFSM.start_acc_ = linear_acceleration.head(2);
+
+    // @ROCY: for trajs visualization
+    RFSM.cur_z = msg->pose().position().z();
 }
 
 void MincoShenlanComponent::execFSMCallback(const std::shared_ptr<apollo::shenlan::OccupancyBuffer> &buf_msg)
@@ -131,7 +134,7 @@ void MincoShenlanComponent::displayKinoPath(const std::shared_ptr<apollo::shenla
             //std::cout << "111111111111kino_pt: " << pt << std::endl;
             position.set_x(pt(0));
             position.set_y(pt(1));
-            position.set_z(0.1);
+            position.set_z(RFSM.cur_z);
             auto pose = kino_msg->add_pose();
             pose->mutable_position()->CopyFrom(position);
             pose->mutable_orientation()->CopyFrom(quaternion); 
@@ -162,10 +165,13 @@ void MincoShenlanComponent::displayMincoTraj(const std::shared_ptr<apollo::shenl
             //std::cout << "222222222222minco_pt: " << pt << std::endl;
             position.set_x(pt(0));
             position.set_y(pt(1));
-            position.set_z(0.1);
+            position.set_z(RFSM.cur_z);
             auto pose = minco_msg->add_pose();
             pose->mutable_position()->CopyFrom(position);
-            pose->mutable_orientation()->CopyFrom(quaternion); 
+            pose->mutable_orientation()->CopyFrom(quaternion);
+
+            double heading = RFSM.planner_ptr_->traj_container_.singul_traj.at(i).traj.getAngle(t);
+            pose->set_heading(heading);
         }
     }
     auto timestamp = apollo::cyber::Time::Now().ToSecond();

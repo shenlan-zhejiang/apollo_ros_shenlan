@@ -47,12 +47,6 @@
 #include "bridge/udp_listener.h"
 #include "bridge/util.h"
 
-// #include "cyber/time/clock.h"
-
-// using apollo::cyber::Clock;
-
-// double timestamp_ = Clock::NowInSeconds() + 2.0;
-
 using apollo::bridge::BRIDGE_HEADER_FLAG;
 using apollo::bridge::BridgeHeader;
 using apollo::bridge::FRAME_SIZE;
@@ -66,7 +60,6 @@ double x_, y_, z_;
 
 struct para_t {
   ros::Publisher pub;
-  //ros::Publisher relation_pub;
   int counter_pub;
   int pfd;
   uint16_t port;

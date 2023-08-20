@@ -153,7 +153,7 @@ void *pthread_handle_message(void *para_) {
       geometry_msgs::PoseStamped pose;
       pose.pose.position.x = iter.position().x() - x_;
       pose.pose.position.y = iter.position().y() - y_;
-      pose.pose.position.z = 0 - z_;
+      pose.pose.position.z = iter.position().z() - z_;
 
       pose.pose.orientation.x = 0;
       pose.pose.orientation.y = 0;
