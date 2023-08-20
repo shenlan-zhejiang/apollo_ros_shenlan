@@ -4,7 +4,7 @@
 
 ## 1.apollo_shenlan
 
-+ apollo_shenlan是基于APOLLO的轻量级自动驾驶系统，实现的功能有实时栅格地图构建、前端路径规划、后端轨迹优化等，主要包括shenlan模块、bridge模块
++ apollo_shenlan是基于apollo的轻量级自动驾驶系统，实现的功能有实时栅格地图构建、前端路径规划、后端轨迹优化等，主要包括shenlan模块、bridge模块
 
   + shenlan模块用于建图规划，包括mapping组件、minco组件、minco_mapping组件
 
@@ -48,10 +48,10 @@
 
    + 用于单独建图，需开启transform、lidar、gnss/imu、localizaiton模块
    + 读入话题(在mapping.dag中修改)：
-     + 位姿：/apollo/localization/pose
+     + 定位：/apollo/localization/pose
      + 点云：/apollo/sensor/lidar/compensator/PointCloud2
    + 输出话题(在mapping_component.cc中修改)：
-     + 融合位姿点云(可视化)：/apollo/shenlan/mapping/pointcloud
+     + 融合定位点云(可视化)：/apollo/shenlan/mapping/pointcloud
      + 占据栅格(可视化)：/apollo/shenlan/mapping/grid_map
      + 栅格状态：/apollo/shenlan/mapping/occupancy
 
@@ -65,7 +65,7 @@
 
    + 用于单独规划，需开启transform、gnss/imu、localizaiton、control、canbus模块
    + 读入话题(在minco.dag中修改)：
-     + 位姿：/apollo/localization/pose
+     + 定位：/apollo/localization/pose
      + 栅格状态：/apollo/shenlan/mapping/occupancy
    + 输出话题(在minco_component.cc中修改)：
      + kino轨迹(可视化)：/apollo/shenlan/minco/kino_traj
@@ -82,10 +82,10 @@
 
    + 用于同时建图规划，需开启transform、lidar、gnss/imu、localizaiton、control、canbus模块
    + 读入话题(在minco_mapping.dag中修改)：
-     + 位姿：/apollo/localization/pose
+     + 定位：/apollo/localization/pose
      + 点云：/apollo/sensor/lidar/compensator/PointCloud2
    + 输出话题(在minco_mapping_component.cc中修改)：
-     + 融合位姿点云(可视化)：/apollo/shenlan/mapping/pointcloud
+     + 融合定位点云(可视化)：/apollo/shenlan/mapping/pointcloud
      + 占据栅格(可视化)：/apollo/shenlan/mapping/grid_map
      + kino轨迹(可视化)：/apollo/shenlan/minco/kino_traj
      + minco轨迹(可视化)：/apollo/shenlan/minco/minco_traj
@@ -108,7 +108,7 @@
 
 2. bridge_sender组件
 
-   + 用于APOLLO向ROS发送数据，需配合ROS的apollo2ros模块使用
+   + 用于apollo向ros发送数据，需配合ros的apollo2ros模块使用
    + 配置文件对应launch/bridge_sender.launch、dag/bridge_sender.dag、conf/udp_bridge_sender_89xx_xxx.pb.txt
    + 一个dag可以同时发送多个数据
    + 新话题需要在udp_bridge_sender_component.h和udp_bridge_sender_component.cc中注册
@@ -121,7 +121,7 @@
 
 3. bridge_receiver组件
 
-   + 用于APOLLO接收ROS的数据，需配合ROS的ros2apollo模块使用
+   + 用于apollo接收ros的数据，需配合ros的ros2apollo模块使用
    + 配置文件对应launch/bridge_receiver.launch、dag/bridge_receiver_89xx_xxx.dag、conf/udp_bridge_receiver_89xx_xxx.pb.txt
    + 一个dag只能接收一个数据，使用bridge_receiver.launch启动多个dag可以同时接受多个数据
    + 新话题需要在udp_bridge_receiver_component.h和udp_bridge_receiver_component.cc中注册
@@ -136,11 +136,11 @@
 
 ## 2.apollo_ros_bridge
 
-+ apollo_ros_bridge是基于ROS的跨平台实时通信程序，主要包括apollo2ros模块、ros2apollo模块
-  + apollo2ros模块用于ROS接收APOLLO的数据，需配合APOLLO的bridge_sender组件使用
-  + apollo2ros模块配合rviz可以实现车辆位姿、点云、栅格地图、规划轨迹等数据的可视化
++ apollo_ros_bridge是基于ros的跨平台实时通信程序，主要包括apollo2ros模块、ros2apollo模块
+  + apollo2ros模块用于ros接收apollo的数据，需配合apollo的bridge_sender组件使用
+  + apollo2ros模块配合rviz可以实现车辆定位、点云、栅格地图、规划轨迹等数据的可视化
   
-  + ros2apollo模块用于ROS向APOLLO发送数据，需配合APOLLO的bridge_receiver组件使用
+  + ros2apollo模块用于ros向apollo发送数据，需配合apollo的bridge_receiver组件使用
 
 ### 2.1.安装protobuf
 
@@ -164,7 +164,7 @@
 ### 2.2.apollo2ros模块
 
 + tf为agent_0到map的动态坐标关系
-+ tf_marker为车辆位姿数据，坐标系为agent_0
++ tf_marker为车辆定位数据，坐标系为agent_0
 + lidar为点云数据，坐标系为lidar，需配合tf和tfstatic.sh使用，其中tfstatic.sh用于发布lidar到agent_0的静态坐标关系
 + pointcloud为融合姿点云，坐标系为map
 + gridmap为占据栅格，坐标系为map
@@ -202,7 +202,7 @@ source ~/.bashrc
 
 ## 3.planner_src
 
-+ planner_src为APOLLO中的shenlan模块的ROS源码
++ planner_src为apollo中的shenlan模块的ros源码
 
 ```bash
 # 复制apollo_ros_shenlan/planner_src文件夹到主目录下
@@ -219,7 +219,7 @@ cmake ..
 make -j8
 sudo make install
 
-# 安装ROS依赖包
+# 安装ros依赖包
 # ubuntu20对应ros-noetic
 sudo apt-get install ros-noetic-tf2-geometry-msgs ros-noetic-ackermann-msgs ros-noetic-joy ros-noetic-map-server ros-noetic-astuff-sensor-msgs ros-noetic-ompl*
 # ubuntu18对应ros-melodic
