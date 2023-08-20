@@ -62,7 +62,7 @@ monitored_components {
   key: "Mapping"
   value: {
     channel {
-      name: "/apollo/shenlan/mapping/gird_map"
+      name: "/apollo/shenlan/mapping/grid_map"
     }
   }
 }

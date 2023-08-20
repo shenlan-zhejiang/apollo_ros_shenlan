@@ -20,7 +20,7 @@ bool MappingShenlanComponent::Init()
   mp_.init(shenlan_conf);
 
   pc_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/pointcloud");
-  map_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/gird_map");
+  map_writer_ = node_->CreateWriter<drivers::PointCloud>("/apollo/shenlan/mapping/grid_map");
   buf_writer_ = node_->CreateWriter<apollo::shenlan::OccupancyBuffer>("/apollo/shenlan/mapping/occupancy");
   
   last_timestamp = -1;

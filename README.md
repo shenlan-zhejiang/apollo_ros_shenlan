@@ -52,7 +52,7 @@
      + 点云：/apollo/sensor/lidar/compensator/PointCloud2
    + 输出话题(在mapping_component.cc中修改)：
      + 融合位姿点云(可视化)：/apollo/shenlan/mapping/pointcloud
-     + 占据栅格(可视化)：/apollo/shenlan/mapping/gird_map
+     + 占据栅格(可视化)：/apollo/shenlan/mapping/grid_map
      + 栅格状态：/apollo/shenlan/mapping/occupancy
 
    ```sh
@@ -86,7 +86,7 @@
      + 点云：/apollo/sensor/lidar/compensator/PointCloud2
    + 输出话题(在minco_mapping_component.cc中修改)：
      + 融合位姿点云(可视化)：/apollo/shenlan/mapping/pointcloud
-     + 占据栅格(可视化)：/apollo/shenlan/mapping/gird_map
+     + 占据栅格(可视化)：/apollo/shenlan/mapping/grid_map
      + kino轨迹(可视化)：/apollo/shenlan/minco/kino_traj
      + minco轨迹(可视化)：/apollo/shenlan/minco/minco_traj
      + 原始规划数据：/apollo/shenlan/minco/mpc_trajectory

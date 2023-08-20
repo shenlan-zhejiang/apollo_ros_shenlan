@@ -82,7 +82,7 @@ module_config {
             name: "bridge_sender_GridMap"
             config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_8906_gridmap.pb.txt"
             readers {
-              channel: "/apollo/shenlan/mapping/gird_map"
+              channel: "/apollo/shenlan/mapping/grid_map"
             }
       }
     }
